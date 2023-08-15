@@ -1,2 +1,3 @@
-# zenzephyr-messenger
+# zephyr-messenger
+
 A messenger application built using the WebSocket API.
