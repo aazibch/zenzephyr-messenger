@@ -1,0 +1,30 @@
+{
+  "artificialDelayMilliseconds": 700,
+  "keepExistingTerminalsOpen": false,
+  "runOnStartup": true,
+  "terminals": [
+    {
+      "splitTerminals": [
+        {
+          "name": "client",
+          "commands": ["cd client"]
+        }
+      ]
+    },
+    {
+      "splitTerminals": [
+        {
+          "name": "server",
+          "commands": ["cd server"]
+        }
+      ]
+    },
+    {
+      "splitTerminals": [
+        {
+          "name": "git"
+        }
+      ]
+    }
+  ]
+}
