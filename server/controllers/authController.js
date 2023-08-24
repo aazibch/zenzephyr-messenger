@@ -74,8 +74,6 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(' ')[1];
   }
 
-  console.log('token', token);
-
   if (!token) {
     return next(new AppError("You're not logged in.", 401));
   }
