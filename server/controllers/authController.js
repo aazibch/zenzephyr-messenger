@@ -95,3 +95,25 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = user;
   next();
 });
+
+exports.updateMyPassword = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user._id).select('+password');
+
+  if (
+    !(await user.isPasswordCorrect(req.body.currentPassword, user.password))
+  ) {
+    return next(new AppError('Incorrect value for the current password.', 400));
+  }
+
+  user.password = req.body.password;
+  user.confirmPassword = req.body.confirmPassword;
+  await user.save();
+
+  const token = signToken(user._id);
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Your password was updated successfully.',
+    token
+  });
+});
