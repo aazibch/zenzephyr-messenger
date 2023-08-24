@@ -8,7 +8,15 @@ router.post('/login', authController.login);
 
 router.use(authController.protect);
 
-router.get('/me', userController.getMe);
+router
+  .route('/me')
+  .get(userController.getMe)
+  .patch(
+    userController.uploadProfilePhoto,
+    userController.resizeProfilePhoto,
+    userController.saveProfilePhotoToCloud,
+    userController.updateMe
+  );
 router.patch('/updateMyPassword', authController.updateMyPassword);
 
 module.exports = router;
