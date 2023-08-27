@@ -8,6 +8,8 @@ router.post('/login', authController.login);
 
 router.use(authController.protect);
 
+router.get('/find/:username', userController.findUserToConnect);
+
 router
   .route('/me')
   .get(userController.getMe)

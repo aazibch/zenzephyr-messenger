@@ -4,6 +4,7 @@ const { v2: cloudinary } = require('cloudinary');
 const catchAsync = require('../middleware/catchAsync');
 const User = require('../models/userModel');
 const { filterObject } = require('../utils/index');
+const AppError = require('../utils/AppError');
 
 exports.getMe = catchAsync(async (req, res, next) => {
   let user = await User.findById(req.user._id);
@@ -85,6 +86,27 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     message: 'Your data was updated successfully.',
+    data: user
+  });
+});
+
+exports.findUserToConnect = catchAsync(async (req, res, next) => {
+  const { username } = req.params;
+
+  const user = await User.findOne({
+    username: {
+      $regex: username + '$',
+      $options: 'im'
+    }
+  });
+
+  if (!user || user._id.toString() === req.user._id.toString())
+    return next(new AppError('User not found.', 404));
+
+  // @todo: Check if there is an existing conversation with the user that was searched for.
+
+  res.status(200).json({
+    status: 'success',
     data: user
   });
 });

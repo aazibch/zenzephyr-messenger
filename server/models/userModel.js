@@ -3,6 +3,9 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
+  displayName: {
+    type: String
+  },
   username: {
     type: String,
     required: [true, 'Please provide a username.'],
@@ -15,7 +18,8 @@ const userSchema = new mongoose.Schema({
       message:
         'The username can only contain alphanumeric characters (letters A-Z, numbers 0-9) and underscores (_).'
     },
-    unique: [true, 'The username already exists.']
+    unique: [true, 'The username already exists.'],
+    lowercase: true
   },
   email: {
     type: String,

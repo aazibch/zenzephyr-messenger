@@ -20,6 +20,8 @@ exports.signup = catchAsync(async (req, res, next) => {
     'confirmPassword'
   );
 
+  filteredBody.displayName = filteredBody.username;
+
   const newUser = await User.create(filteredBody);
 
   const token = signToken(newUser._id);
