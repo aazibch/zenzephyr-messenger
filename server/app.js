@@ -5,6 +5,7 @@ const cors = require('cors');
 const AppError = require('./utils/AppError');
 const errorMiddleware = require('./middleware/error');
 const userRoutes = require('./routes/userRoutes');
+const conversationRoutes = require('./routes/conversationRoutes');
 
 const app = express();
 
@@ -16,6 +17,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/conversations', conversationRoutes);
 
 app.all('*', (req, res, next) => {
   next(new AppError('Route not found.', 404));
