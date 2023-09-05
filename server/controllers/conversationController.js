@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const Conversation = require('../models/conversationModel');
+const Message = require('../models/messageModel');
 const catchAsync = require('../middleware/catchAsync');
 const { filterObject } = require('../utils/index');
 const AppError = require('../utils/AppError');
@@ -23,7 +24,6 @@ exports.approveConversation = catchAsync(async (req, res, next) => {
   });
 });
 
-// @todo: refactor
 exports.createConversation = catchAsync(async (req, res, next) => {
   const filteredConversation = filterObject(
     req.body,
@@ -32,22 +32,21 @@ exports.createConversation = catchAsync(async (req, res, next) => {
   );
   const filteredMessage = filterObject(req.body.message, 'content');
 
-  filteredConversation.messages = [
-    { ...filteredMessage, sender: req.user._id }
-  ];
   filteredConversation.unreadBy = filteredConversation.participants[0];
   filteredConversation.participants.push(req.user._id);
 
   const conversation = await Conversation.create(filteredConversation);
+  const message = await Message.create({
+    ...filteredMessage,
+    conversation: conversation._id,
+    sender: req.user._id
+  });
 
-  const sender = await User.findById(
-    conversation.messages[conversation.messages.length - 1].sender
-  );
+  const sender = await User.findById(message.sender);
 
   // Returning data pertaining to the message.
   const data = {
-    ...conversation.messages[conversation.messages.length - 1].toObject(),
-    conversationId: conversation._id,
+    ...message.toObject(),
     sender,
     recipient: conversation.participants.find(
       (user) => user._id.toString() !== sender._id.toString()
