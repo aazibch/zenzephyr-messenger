@@ -12,7 +12,7 @@ exports.approveConversation = catchAsync(async (req, res, next) => {
 
   if (!conversation) return next(new AppError('Conversation not found.', 404));
 
-  if (conversation.participants[0]._id.toString() !== req.user._id.toString())
+  if (conversation.participants[1]._id.toString() !== req.user._id.toString())
     return next(new AppError('Conversation not found.', 404));
 
   conversation.approved = true;

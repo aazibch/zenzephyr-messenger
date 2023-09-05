@@ -1,12 +1,15 @@
 const Conversation = require('../models/conversationModel');
 const User = require('../models/userModel');
+const Message = require('../models/messageModel');
 const catchAsync = require('../middleware/catchAsync');
 const { filterObject } = require('../utils/index');
 const AppError = require('../utils/AppError');
 
 exports.createMessage = catchAsync(async (req, res, next) => {
+  const { conversationId } = req.params;
+
   const conversation = await Conversation.findOne({
-    _id: req.params.conversationId,
+    _id: conversationId,
     participants: { $in: [req.user._id] }
   });
 
@@ -25,9 +28,9 @@ exports.createMessage = catchAsync(async (req, res, next) => {
   let filteredBody = filterObject(req.body, 'content', 'unread');
 
   filteredBody.sender = req.user._id;
-  conversation.deletedBy = undefined;
+  filteredBody.conversation = conversationId;
 
-  conversation.messages.push(filteredBody);
+  const newMessage = await Message.create(filteredBody);
 
   if (!conversation.unreadBy && filteredBody.unread) {
     conversation.unreadBy = conversation.participants.find(
@@ -47,8 +50,7 @@ exports.createMessage = catchAsync(async (req, res, next) => {
 
   data = {
     ...data,
-    ...conversation.messages[conversation.messages.length - 1].toObject(),
-    conversationId: conversation._id.toString(),
+    ...newMessage.toObject(),
     recipient,
     sender
   };
