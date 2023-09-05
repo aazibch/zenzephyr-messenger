@@ -31,9 +31,8 @@ exports.createConversation = catchAsync(async (req, res, next) => {
     'message'
   );
   const filteredMessage = filterObject(req.body.message, 'content');
-
-  filteredConversation.unreadBy = filteredConversation.participants[0];
-  filteredConversation.participants.push(req.user._id);
+  filteredConversation.participants.unshift(req.user._id);
+  filteredConversation.unreadBy = filteredConversation.participants[1];
 
   const conversation = await Conversation.create(filteredConversation);
   const message = await Message.create({
@@ -48,9 +47,7 @@ exports.createConversation = catchAsync(async (req, res, next) => {
   const data = {
     ...message.toObject(),
     sender,
-    recipient: conversation.participants.find(
-      (user) => user._id.toString() !== sender._id.toString()
-    ),
+    recipient: conversation[1],
     notification: true
   };
 
@@ -78,12 +75,16 @@ exports.deleteConversation = catchAsync(async (req, res, next) => {
   } else {
     conversation.deletedBy = req.user._id;
 
-    conversation.messages = conversation.messages.map((el) => {
-      el.deletedBy = req.user._id;
-      return el;
-    });
+    await Message.updateMany(
+      { conversation: conversationId },
+      { deletedBy: req.user._id }
+    );
 
     await conversation.save();
+    // conversation.messages = conversation.messages.map((el) => {
+    //   el.deletedBy = req.user._id;
+    //   return el;
+    // });
   }
 
   res.status(204).json({
