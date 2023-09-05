@@ -1,29 +1,5 @@
 const mongoose = require('mongoose');
 
-const messageSchema = new mongoose.Schema({
-  sender: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  content: {
-    type: String,
-    maxlength: [
-      255,
-      'Message content should have fewer than two hundred and fifty six characters.'
-    ],
-    required: true
-  },
-  dateSent: {
-    type: Date,
-    default: Date.now
-  },
-  deletedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }
-});
-
 const checkIfValidParticipant = function (val) {
   return this.participants.includes(val);
 };
@@ -36,10 +12,6 @@ const conversationSchema = new mongoose.Schema({
         ref: 'User'
       }
     ]
-  },
-  messages: {
-    type: [messageSchema],
-    required: [true, 'The conversation must contain at least one message.']
   },
   deletedBy: {
     type: mongoose.Schema.Types.ObjectId,
