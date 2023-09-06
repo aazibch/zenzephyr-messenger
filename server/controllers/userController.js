@@ -5,6 +5,7 @@ const catchAsync = require('../middleware/catchAsync');
 const User = require('../models/userModel');
 const { filterObject } = require('../utils/index');
 const AppError = require('../utils/AppError');
+const Conversation = require('../models/conversationModel');
 
 exports.getMe = catchAsync(async (req, res, next) => {
   let user = await User.findById(req.user._id);
@@ -103,7 +104,17 @@ exports.findUserToConnect = catchAsync(async (req, res, next) => {
   if (!user || user._id.toString() === req.user._id.toString())
     return next(new AppError('User not found.', 404));
 
-  // @todo: Check if there is an existing conversation with the user that was searched for.
+  const existingConversation = await Conversation.findOne({
+    $and: [
+      { participants: { $in: [user._id] } },
+      { participants: { $in: [req.user._id] } }
+    ]
+  });
+
+  if (existingConversation)
+    return next(
+      new AppError('A conversation with the user already exists.', 400)
+    );
 
   res.status(200).json({
     status: 'success',
