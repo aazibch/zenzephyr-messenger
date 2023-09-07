@@ -6,6 +6,9 @@ const User = require('../models/userModel');
 const { filterObject } = require('../utils/index');
 const AppError = require('../utils/AppError');
 const Conversation = require('../models/conversationModel');
+const {
+  getExistingConversation
+} = require('../controllers/conversationController');
 
 exports.getMe = catchAsync(async (req, res, next) => {
   let user = await User.findById(req.user._id);
@@ -104,12 +107,10 @@ exports.findUserToConnect = catchAsync(async (req, res, next) => {
   if (!user || user._id.toString() === req.user._id.toString())
     return next(new AppError('User not found.', 404));
 
-  const existingConversation = await Conversation.findOne({
-    $and: [
-      { participants: { $in: [user._id] } },
-      { participants: { $in: [req.user._id] } }
-    ]
-  });
+  const existingConversation = await getExistingConversation(
+    req.user._id,
+    user._id
+  );
 
   if (existingConversation)
     return next(

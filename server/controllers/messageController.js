@@ -55,7 +55,7 @@ exports.createMessage = catchAsync(async (req, res, next) => {
     sender
   };
 
-  res.status(200).json({
+  res.status(201).json({
     status: 'success',
     data
   });
