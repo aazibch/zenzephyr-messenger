@@ -5,31 +5,36 @@ const catchAsync = require('../middleware/catchAsync');
 const { filterObject } = require('../utils/index');
 const AppError = require('../utils/AppError');
 
-exports.approveConversation = catchAsync(async (req, res, next) => {
-  const { conversationId } = req.params;
-
-  const conversation = await Conversation.findById(conversationId);
-
-  if (!conversation) return next(new AppError('Conversation not found.', 404));
-
-  if (conversation.participants[1]._id.toString() !== req.user._id.toString())
-    return next(new AppError('Conversation not found.', 404));
-
-  conversation.approved = true;
-  await conversation.save();
-
-  res.status(200).json({
-    status: 'success',
-    data: conversation
+const getExistingConversation = async (userOne, userTwo) => {
+  const conversation = await Conversation.findOne({
+    $and: [
+      { participants: { $in: [userOne] } },
+      { participants: { $in: [userTwo] } }
+    ]
   });
-});
+
+  return conversation;
+};
+
+exports.getExistingConversation = getExistingConversation;
 
 exports.createConversation = catchAsync(async (req, res, next) => {
+  const existingConversation = await getExistingConversation(
+    req.user._id,
+    req.body.participants[0]
+  );
+
+  if (existingConversation)
+    return next(
+      new AppError('A conversation with the provided user already exists.', 400)
+    );
+
   const filteredConversation = filterObject(
     req.body,
     'participants',
     'message'
   );
+
   const filteredMessage = filterObject(req.body.message, 'content');
   filteredConversation.participants.unshift(req.user._id);
   filteredConversation.unreadBy = filteredConversation.participants[1];
@@ -57,6 +62,28 @@ exports.createConversation = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.approveConversation = catchAsync(async (req, res, next) => {
+  const { conversationId } = req.params;
+
+  const conversation = await Conversation.findById(conversationId);
+
+  if (!conversation) return next(new AppError('Conversation not found.', 404));
+
+  if (conversation.participants[1]._id.toString() !== req.user._id.toString())
+    return next(new AppError('Conversation not found.', 404));
+
+  if (conversation.approved)
+    return next(new AppError('Conversation has already been approved', 400));
+
+  conversation.approved = true;
+  await conversation.save();
+
+  res.status(200).json({
+    status: 'success',
+    data: conversation
+  });
+});
+
 exports.deleteConversation = catchAsync(async (req, res, next) => {
   const { conversationId } = req.params;
 
@@ -81,10 +108,6 @@ exports.deleteConversation = catchAsync(async (req, res, next) => {
     );
 
     await conversation.save();
-    // conversation.messages = conversation.messages.map((el) => {
-    //   el.deletedBy = req.user._id;
-    //   return el;
-    // });
   }
 
   res.status(204).json({

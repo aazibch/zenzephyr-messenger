@@ -113,7 +113,7 @@ exports.findUserToConnect = catchAsync(async (req, res, next) => {
 
   if (existingConversation)
     return next(
-      new AppError('A conversation with the user already exists.', 400)
+      new AppError('A conversation with the provided user already exists.', 400)
     );
 
   res.status(200).json({
