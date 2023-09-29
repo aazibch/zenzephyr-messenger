@@ -1,7 +1,25 @@
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+
+import RootPage from './pages/RootPage';
+import HomePage from './pages/HomePage';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <RootPage />,
+    children: [
+      {
+        index: true,
+        element: <HomePage />
+      }
+    ]
+  }
+]);
+
 function App() {
   return (
     <>
-      <h1>App.tsx</h1>
+      <RouterProvider router={router} />
     </>
   );
 }
