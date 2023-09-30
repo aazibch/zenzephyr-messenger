@@ -1,4 +1,4 @@
-import AuthFormContainer from '../components/Auth/AuthFormContainer';
+import { Outlet } from 'react-router-dom';
 import AppIntro from '../components/UI/AppIntro';
 
 const HomePage = () => {
@@ -8,7 +8,7 @@ const HomePage = () => {
         <AppIntro />
       </section>
       <section className="flex items-center justify-center basis-1/2">
-        <AuthFormContainer />
+        <Outlet />
       </section>
     </div>
   );

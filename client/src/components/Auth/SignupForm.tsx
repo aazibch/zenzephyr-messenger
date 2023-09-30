@@ -1,10 +1,19 @@
 import Input from '../UI/Input';
 import Button from '../UI/Button';
 
-const LoginForm = () => {
+const SignupForm = () => {
   return (
     <form className="rounded-md">
       <Input
+        className="mb-5"
+        label="Username"
+        input={{
+          id: 'username',
+          type: 'name'
+        }}
+      />
+      <Input
+        className="mb-5"
         label="Email"
         input={{
           id: 'email',
@@ -19,11 +28,19 @@ const LoginForm = () => {
           type: 'password'
         }}
       />
+      <Input
+        className="mb-5"
+        label="Password Confirmation"
+        input={{
+          id: 'passwordConfirmation',
+          type: 'password'
+        }}
+      />
       <Button type="submit" styleType="primary">
-        Login
+        Signup
       </Button>
     </form>
   );
 };
 
-export default LoginForm;
+export default SignupForm;

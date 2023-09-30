@@ -10,7 +10,9 @@ const Logo = ({ size, className }: { size?: string; className?: string }) => {
   }
 
   return (
-    <div className={`flex items-center text-slate-800 ${className}`}>
+    <div
+      className={`flex items-center text-slate-800 select-none ${className}`}
+    >
       <BiPaperPlane className={`inline ${planeIconSizeClass}`} />
       <span className={`inline-block ml-1 ${textSizeClass} font-semibold`}>
         ZephyrMessenger
