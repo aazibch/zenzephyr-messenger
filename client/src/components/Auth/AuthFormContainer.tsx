@@ -4,7 +4,7 @@ import styles from './AuthFormContainer.module.css';
 
 const AuthFormContainer = () => {
   return (
-    <div className="border rounded-md border-gray-300 p-10 basis-[30rem]">
+    <div className="border rounded-md border-gray-300 p-10 basis-[30rem] shadow-xl">
       <LoginForm />
       <div className="mt-5">
         <p className={`${styles.signupMessage} text-gray-500 text-sm mb-5`}>
