@@ -6,10 +6,12 @@ const AppError = require('./utils/AppError');
 const errorMiddleware = require('./middleware/error');
 const userRoutes = require('./routes/userRoutes');
 const conversationRoutes = require('./routes/conversationRoutes');
+const { clientUrl } = require('./constants');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ credentials: true, origin: clientUrl }));
+app.options('*', cors({ credentials: true, origin: clientUrl }));
 app.use(express.json());
 
 if (process.env.NODE_ENV === 'development') {

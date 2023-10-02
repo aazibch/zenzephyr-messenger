@@ -1,14 +1,24 @@
+import { useNavigation, Form } from 'react-router-dom';
 import Input from '../UI/Input';
 import Button from '../UI/Button';
 
 const LoginForm = () => {
+  const navigation = useNavigation();
+
+  const isLoading =
+    navigation.state === 'submitting' &&
+    navigation.formData != null &&
+    (navigation.formAction === navigation.location?.pathname ||
+      navigation.formAction === navigation.location?.pathname + '?index');
+
   return (
-    <form className="rounded-md">
+    <Form method="post" className="rounded-md">
       <Input
         label="Email"
         input={{
           id: 'email',
-          type: 'email'
+          type: 'email',
+          name: 'email'
         }}
       />
       <Input
@@ -16,13 +26,14 @@ const LoginForm = () => {
         label="Password"
         input={{
           id: 'password',
-          type: 'password'
+          type: 'password',
+          name: 'password'
         }}
       />
-      <Button type="submit" styleType="primary">
+      <Button type="submit" styleType="primary" disabled={isLoading}>
         Login
       </Button>
-    </form>
+    </Form>
   );
 };
 

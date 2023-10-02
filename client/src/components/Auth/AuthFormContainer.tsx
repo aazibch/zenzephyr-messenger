@@ -15,11 +15,11 @@ const AuthFormContainer = ({ mode }: { mode: 'login' | 'signup' }) => {
         </p>
         {mode === 'login' ? (
           <LinkButton className="block w-full" to="/signup">
-            Signup
+            Signup Instead
           </LinkButton>
         ) : (
           <LinkButton className="block w-full" to="/">
-            Login
+            Login Instead
           </LinkButton>
         )}
       </div>

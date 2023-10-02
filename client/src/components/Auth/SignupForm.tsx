@@ -1,15 +1,24 @@
+import { Form, useNavigation } from 'react-router-dom';
 import Input from '../UI/Input';
 import Button from '../UI/Button';
 
 const SignupForm = () => {
+  const navigation = useNavigation();
+
+  const isLoading =
+    navigation.state === 'submitting' &&
+    navigation.formData != null &&
+    navigation.formAction === navigation.location?.pathname;
+
   return (
-    <form className="rounded-md">
+    <Form method="post" className="rounded-md">
       <Input
         className="mb-5"
         label="Username"
         input={{
           id: 'username',
-          type: 'name'
+          type: 'name',
+          name: 'username'
         }}
       />
       <Input
@@ -17,7 +26,8 @@ const SignupForm = () => {
         label="Email"
         input={{
           id: 'email',
-          type: 'email'
+          type: 'email',
+          name: 'email'
         }}
       />
       <Input
@@ -25,21 +35,23 @@ const SignupForm = () => {
         label="Password"
         input={{
           id: 'password',
-          type: 'password'
+          type: 'password',
+          name: 'password'
         }}
       />
       <Input
         className="mb-5"
         label="Password Confirmation"
         input={{
-          id: 'passwordConfirmation',
-          type: 'password'
+          id: 'confirmPassword',
+          type: 'password',
+          name: 'confirmPassword'
         }}
       />
-      <Button type="submit" styleType="primary">
+      <Button type="submit" styleType="primary" disabled={isLoading}>
         Signup
       </Button>
-    </form>
+    </Form>
   );
 };
 
