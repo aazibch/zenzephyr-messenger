@@ -12,7 +12,7 @@ const LoginForm = () => {
       navigation.formAction === navigation.location?.pathname + '?index');
 
   return (
-    <Form method="post" className="rounded-md">
+    <Form action="/" method="post" className="rounded-md">
       <Input
         label="Email"
         input={{

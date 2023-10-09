@@ -1,13 +1,8 @@
 import { BiPaperPlane } from 'react-icons/bi';
 
-const Logo = ({ size, className }: { size?: string; className?: string }) => {
-  let planeIconSizeClass = 'text-2xl';
-  let textSizeClass = 'text-xl';
-
-  if (size === 'lg') {
-    planeIconSizeClass = 'text-4xl';
-    textSizeClass = 'text-2xl';
-  }
+const Logo = ({ className }: { size?: string; className?: string }) => {
+  let planeIconSizeClass = 'text-[1.5em]';
+  let textSizeClass = 'text-[1em]';
 
   return (
     <div

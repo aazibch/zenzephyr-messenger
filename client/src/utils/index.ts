@@ -1,10 +1,10 @@
-type HttpMethods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+import { HttpMethods, FormDataObj, HttpResponseDataObj } from '../types';
 
 interface HttpConfigArguments {
   url: string;
   method: HttpMethods;
   allowCredentials: boolean;
-  body?: Record<string, FormDataEntryValue>;
+  body?: FormDataObj;
 }
 
 export const generateHttpConfig = ({
@@ -17,6 +17,7 @@ export const generateHttpConfig = ({
     url,
     method,
     credentials: allowCredentials ? 'include' : undefined,
+    withCredentials: allowCredentials,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
@@ -26,7 +27,7 @@ export const generateHttpConfig = ({
 };
 
 export const convertFormDataToObject = (data: FormData) => {
-  const dataObj: Record<string, FormDataEntryValue> = {};
+  const dataObj: FormDataObj = {};
 
   data.forEach((value, key) => (dataObj[key] = value));
 
@@ -37,7 +38,9 @@ type RequestConfig = {
   url: string;
   method: HttpMethods;
   withCredentials?: boolean;
-  headers?: Record<string, string>;
+  headers?: {
+    [key: string]: string;
+  };
   body?: BodyInit;
 };
 
@@ -51,11 +54,18 @@ export const sendHttpRequest = async (requestConfig: RequestConfig) => {
 
   const parsedResponse = await response.json();
 
-  const prettierResponse = {
+  const prettierResponse: HttpResponseDataObj = {
     httpStatus: response.status,
-    status: parsedResponse.status,
-    message: parsedResponse.message
+    status: parsedResponse.status
   };
+
+  if (parsedResponse.message) {
+    prettierResponse.message = parsedResponse.message;
+  }
+
+  if (parsedResponse.data) {
+    prettierResponse.data = parsedResponse.data;
+  }
 
   return prettierResponse;
 };

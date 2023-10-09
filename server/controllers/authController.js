@@ -11,6 +11,21 @@ const signToken = (id) => {
   });
 };
 
+const createSendToken = (userId, req, res) => {
+  const token = signToken(userId);
+
+  res.cookie('jwt', token, {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRATION * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+    secure: req.secure,
+    sameSite: 'Lax'
+  });
+
+  return token;
+};
+
 exports.signup = catchAsync(async (req, res, next) => {
   const filteredBody = filterObject(
     req.body,
@@ -48,20 +63,23 @@ exports.login = catchAsync(async (req, res, next) => {
     );
   }
 
-  const user = await User.findOne({ email }).select('+password');
+  let user = await User.findOne({ email }).select('+password');
 
   if (!user || !(await user.isPasswordCorrect(password, user.password))) {
     return next(new AppError('Incorrect email address or password.', 401));
   }
 
-  const token = signToken(user._id);
+  const token = createSendToken(user._id, req, res);
+
+  user = user.toObject();
+  delete user.password;
 
   res.status(200).json({
     status: 'success',
     message: 'You were logged in successfully.',
     token,
     data: {
-      userId: user._id
+      user
     }
   });
 });
@@ -74,6 +92,15 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
+  }
+
+  if (!token && req.originalUrl === '/api/v1/users/me') {
+    return res.status(200).json({
+      status: 'success',
+      message: 'No user found.'
+    });
   }
 
   if (!token) {
