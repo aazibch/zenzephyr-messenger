@@ -1,13 +1,19 @@
 const AppError = require('../utils/AppError');
 
+const capitalizeFirstLetter = (value) => {
+  return value[0].toUpperCase() + value.slice(1);
+};
+
 const getCastError = (err) => {
-  const message = `Invalid value "${err.value}" for the path "${err.path}".`;
+  const message = `Invalid value "${
+    err.value
+  }" for the field "${capitalizeFirstLetter(err.path)}".`;
   return new AppError(message, 400);
 };
 
 const getDublicateFieldError = (err) => {
-  const key = Object.keys(err.keyPattern)[0];
-  const message = `Duplicate value for the key "${key}".`;
+  let field = capitalizeFirstLetter(Object.keys(err.keyPattern)[0]);
+  const message = `Duplicate value for the field "${field}".`;
   return new AppError(message, 400);
 };
 

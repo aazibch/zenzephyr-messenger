@@ -3,6 +3,7 @@ import { ComponentPropsWithoutRef } from 'react';
 interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   styleType?: 'default' | 'primary' | 'danger';
   isLoading?: boolean;
+  iconButton?: boolean;
 }
 
 const Button = ({
@@ -10,11 +11,12 @@ const Button = ({
   className,
   children,
   isLoading,
+  iconButton,
   ...props
 }: ButtonProps) => {
   let styleSpecificClasses = '';
 
-  if (styleType === 'default') {
+  if (styleType === 'default' || iconButton) {
     styleSpecificClasses =
       'text-gray-600 bg-white border-gray-300 hover:bg-[#e2e6ea] disabled:hover:bg-white';
   }
@@ -29,7 +31,11 @@ const Button = ({
       'text-white bg-red-600 border-red-600 hover:bg-[#b73131] hover:border-[#b73131] disabled:hover:bg-red-600 disabled:hover:border-red-600';
   }
 
-  const classNames = `${styleSpecificClasses} font-inter px-4 py-2 rounded-md text-center disabled:opacity-50 border ${className}`;
+  let classNames = `${styleSpecificClasses} font-inter px-4 py-2 rounded-md text-center disabled:opacity-50 border ${className}`;
+
+  if (iconButton) {
+    classNames = `${styleSpecificClasses} rounded-full disabled:opacity-50 inline-flex px-2 py-2 ${className}`;
+  }
 
   return (
     <button className={classNames} {...props}>

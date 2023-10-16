@@ -1,4 +1,3 @@
-import { json } from 'react-router-dom';
 import AuthFormContainer from '../../components/Auth/AuthFormContainer';
 import { convertFormDataToObject, sendHttpRequest } from '../../utils';
 import { generateHttpConfig } from '../../utils';
@@ -31,10 +30,7 @@ export const action =
     }
 
     if (response.status === 'failure') {
-      throw json(
-        { message: response.message },
-        { status: response.httpStatus }
-      );
+      return response;
     }
 
     if (response.status === 'success') {

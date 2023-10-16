@@ -54,9 +54,11 @@ export const sendHttpRequest = async (requestConfig: RequestConfig) => {
 
   const parsedResponse = await response.json();
 
+  console.log('parsedResponse', parsedResponse);
+
   const prettierResponse: HttpResponseDataObj = {
     httpStatus: response.status,
-    status: parsedResponse.status
+    status: parsedResponse.status || parsedResponse.httpStatus
   };
 
   if (parsedResponse.message) {

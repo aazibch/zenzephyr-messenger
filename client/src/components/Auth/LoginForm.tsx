@@ -1,9 +1,11 @@
-import { useNavigation, Form } from 'react-router-dom';
+import { useNavigation, Form, useActionData } from 'react-router-dom';
 import Input from '../UI/Input';
 import Button from '../UI/Button';
+import { HttpResponseDataObj } from '../../types';
 
 const LoginForm = () => {
   const navigation = useNavigation();
+  const actionData = useActionData() as HttpResponseDataObj;
 
   const isLoading =
     navigation.state === 'submitting' &&
@@ -13,6 +15,9 @@ const LoginForm = () => {
 
   return (
     <Form action="/" method="post" className="rounded-md">
+      {actionData?.message && (
+        <p className="mb-5 text-red-500 text-center">{actionData.message}</p>
+      )}
       <Input
         label="Email"
         input={{

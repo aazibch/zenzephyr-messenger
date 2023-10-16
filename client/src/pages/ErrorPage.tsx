@@ -11,6 +11,8 @@ interface ErrorObj extends Response {
 const ErrorPage = () => {
   const error = useRouteError() as ErrorObj;
 
+  console.log(error, error);
+
   return (
     <Layout>
       <div className="flex items-center justify-center max-w-2xl h-full mx-auto">
