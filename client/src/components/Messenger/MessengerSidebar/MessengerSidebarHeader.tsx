@@ -9,10 +9,10 @@ const SidebarHeader = () => {
       <ProfilePhoto src="https://res.cloudinary.com/aazibch/image/upload/v1692366211/zephyr-messenger/users/default.jpg" />
       <div className="ml-auto">
         <Button iconButton className="mr-1">
-          <BsPersonAdd size="1.25rem" />
+          <BsPersonAdd size="1.25em" />
         </Button>
         <Button iconButton>
-          <BsThreeDotsVertical size="1.25rem" />
+          <BsThreeDotsVertical size="1.25em" />
         </Button>
       </div>
     </div>

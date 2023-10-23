@@ -36,7 +36,7 @@ const MessageInputContainer = () => {
             )}
           </div>
           <Button onClick={emojiPickerButtonHandler} iconButton>
-            <BsEmojiSmile size="1.25rem" />
+            <BsEmojiSmile size="1.25em" />
           </Button>
         </div>
         <TextareaAutosize
@@ -48,7 +48,7 @@ const MessageInputContainer = () => {
           className="text-gray-600 bg-white border-gray-300 hover:bg-[#e2e6ea] disabled:hover:bg-white rounded-full disabled:opacity-50 inline-flex px-2 py-2 cursor-pointer"
           htmlFor="image-upload"
         >
-          <BsCardImage size="1.25rem" />
+          <BsCardImage size="1.25em" />
         </label>
         <input
           onChange={imageUploadHandler}
