@@ -2,8 +2,10 @@ import { ReactNode } from 'react';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="container mx-auto bg-white h-0 min-h-screen p-10">
-      <div className="border rounded h-0 min-h-full">{children}</div>
+    <div className="container mx-auto box-border h-full p-4">
+      <div className="bg-white border border-gray-300 rounded h-full">
+        {children}
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import ProfilePhoto from '../UI/ProfilePhoto';
+import ProfilePhoto from '../../../UI/ProfilePhoto';
 
 const Conversation = () => {
   return (

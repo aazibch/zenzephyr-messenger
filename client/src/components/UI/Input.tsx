@@ -10,7 +10,7 @@ const Input = ({ className, input, label }: InputProps) => {
   return (
     <div className={`${className} mb-4`}>
       <div className="flex items-center gap-2 mb-2">
-        <label className="block font-medium" htmlFor={input.id}>
+        <label className="block" htmlFor={input.id}>
           {label}
         </label>
       </div>
