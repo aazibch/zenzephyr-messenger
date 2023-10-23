@@ -4,6 +4,7 @@ interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   styleType?: 'default' | 'primary' | 'danger';
   isLoading?: boolean;
   iconButton?: boolean;
+  isSelected?: boolean;
 }
 
 const Button = ({
@@ -12,13 +13,15 @@ const Button = ({
   children,
   isLoading,
   iconButton,
+  isSelected,
   ...props
 }: ButtonProps) => {
   let styleSpecificClasses = '';
 
   if (styleType === 'default' || iconButton) {
-    styleSpecificClasses =
-      'text-gray-600 bg-white border-gray-300 hover:bg-[#e2e6ea] disabled:hover:bg-white';
+    styleSpecificClasses = `text-gray-600 ${
+      isSelected ? 'bg-[#e2e6ea]' : 'bg-white'
+    } border-gray-300 hover:bg-[#e2e6ea] disabled:hover:bg-white`;
   }
 
   if (styleType === 'primary') {

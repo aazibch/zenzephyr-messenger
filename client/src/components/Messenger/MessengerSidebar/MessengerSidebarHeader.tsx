@@ -2,6 +2,18 @@ import { BsPersonAdd, BsThreeDotsVertical } from 'react-icons/bs';
 
 import ProfilePhoto from '../../UI/ProfilePhoto';
 import Button from '../../UI/Button';
+import DropdownMenu from '../../UI/DropdownMenu';
+
+const menuItems = [
+  {
+    content: 'Settings',
+    link: '/settings'
+  },
+  {
+    content: 'Logout',
+    link: '/logout'
+  }
+];
 
 const SidebarHeader = () => {
   return (
@@ -11,9 +23,10 @@ const SidebarHeader = () => {
         <Button iconButton className="mr-1">
           <BsPersonAdd size="1.25em" />
         </Button>
-        <Button iconButton>
-          <BsThreeDotsVertical size="1.25em" />
-        </Button>
+        <DropdownMenu
+          buttonContent={<BsThreeDotsVertical size="1.25em" />}
+          items={menuItems}
+        />
       </div>
     </div>
   );

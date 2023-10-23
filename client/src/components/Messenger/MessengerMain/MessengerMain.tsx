@@ -1,4 +1,4 @@
-import MessageInputContainer from './MessageInputContainer';
+import MessageInputContainer from './MessageInputContainer/MessageInputContainer';
 import MessengerMainContent from './MessengerMainContent/MessengerMainContent';
 import MessengerMainHeader from './MessengerMainHeader';
 
