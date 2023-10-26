@@ -25,6 +25,10 @@ function App() {
             {
               path: '',
               element: <HomePage />,
+              loader: () => {
+                console.log('home page loader');
+                return null;
+              },
               children: [
                 {
                   index: true,
