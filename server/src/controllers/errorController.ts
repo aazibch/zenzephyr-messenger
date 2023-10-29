@@ -6,13 +6,18 @@ import AppError from '../utils/AppError';
 const getDublicateFieldError = (err: MongooseError) => {
   if ('keyPattern' in err && Object.keys(err.keyPattern)[0]) {
     let field = startCase(Object.keys(err.keyPattern)[0]);
-    const message = `Duplicate value for the field "${field}".`;
+    const message = `Duplicate value for the "${field}" property.`;
     return new AppError(message, 400);
   }
 };
 
 const getDublicateFieldErrorForEmail = () => {
   const message = 'An account with the same email address already exists.';
+  return new AppError(message, 400);
+};
+
+const getDublicateFieldErrorForUsername = () => {
+  const message = 'An account with the same username already exists.';
   return new AppError(message, 400);
 };
 
@@ -43,12 +48,15 @@ const handleError = (
   const { originalUrl } = req;
 
   if ('code' in err && err.code === 11000) {
-    if (
-      originalUrl === '/api/v1/users/signup' &&
-      'keyPattern' in err &&
-      Object.keys(err.keyPattern)[0] === 'email'
-    ) {
-      err = getDublicateFieldErrorForEmail();
+    if (originalUrl === '/api/v1/users/signup') {
+      if ('keyPattern' in err && Object.keys(err.keyPattern)[0] === 'email') {
+        err = getDublicateFieldErrorForEmail();
+      } else if (
+        'keyPattern' in err &&
+        Object.keys(err.keyPattern)[0] === 'username'
+      ) {
+        err = getDublicateFieldErrorForUsername();
+      }
     } else {
       err = getDublicateFieldError(err as MongooseError);
     }
@@ -56,5 +64,7 @@ const handleError = (
 
   sendError(err as AppError, req, res);
 };
+
+//TODO: Is looking for JWT errors necessary?
 
 export default handleError;
