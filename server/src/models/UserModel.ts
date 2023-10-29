@@ -10,13 +10,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a username.'],
     maxlength: [50, 'The username should have fewer than fifty characters.'],
-    minlength: [3, 'The name should at least have three characters.'],
+    minlength: [3, 'The username should at least have three characters.'],
     validate: {
-      validator: function (val) {
+      validator: function (val: string) {
         return /^[a-zA-Z0-9_]*$/.test(val);
       },
       message:
-        'The username can only contain alphanumeric characters (letters A-Z, numbers 0-9) and underscores (_).'
+        'The username may only contain alphanumeric characters (letters A-Z, numbers 0-9) and underscores (_).'
     },
     unique: [true, 'The username already exists.']
   },
@@ -45,13 +45,22 @@ const userSchema = new mongoose.Schema({
   confirmPassword: {
     type: String,
     validate: {
-      validator: function (val) {
+      validator: function (val: string) {
         return val === this.password;
       },
       message: 'Passwords do not match.'
     }
   },
   passwordChangeDate: Date
+});
+
+userSchema.pre('save', async function (next) {
+  if (!this.isNew) return next();
+
+  this.displayName = this.username;
+  this.username = this.username.toLowerCase();
+
+  next();
 });
 
 userSchema.pre('save', async function (next) {
@@ -71,14 +80,14 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.methods.isPasswordCorrect = async function (
-  inputPass,
-  encryptedPass
+  inputPass: string,
+  encryptedPass: string
 ) {
   return await bcrypt.compare(inputPass, encryptedPass);
 };
 
 userSchema.methods.changedPasswordAfterToken = function (
-  tokenIssuanceTimestamp
+  tokenIssuanceTimestamp: number
 ) {
   if (this.passwordChangeDate) {
     const passwordChangeTimestamp = this.passwordChangeDate.getTime() / 1000;
