@@ -2,7 +2,23 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 
-const userSchema = new mongoose.Schema({
+interface IUser {
+  displayName: string;
+  username: string;
+  email: string;
+  profileImage: string;
+  password: string;
+  passwordChangeDate: Date;
+}
+
+interface IUserMethods {
+  isPasswordCorrect(inputPass: string, encryptedPass: string): Promise<boolean>;
+  changedPasswordAfterToken(tokenIssuanceTimestamp: number): boolean;
+}
+
+type UserModel = mongoose.Model<IUser, {}, IUserMethods>;
+
+const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
   displayName: {
     type: String
   },
@@ -18,13 +34,13 @@ const userSchema = new mongoose.Schema({
       message:
         'The username may only contain alphanumeric characters (letters A-Z, numbers 0-9) and underscores (_).'
     },
-    unique: [true, 'The username already exists.']
+    unique: true
   },
   email: {
     type: String,
     required: [true, 'Please provide an email address.'],
     validate: [validator.isEmail, 'Please provide a valid email address.'],
-    unique: [true, 'The email address already exists.'],
+    unique: true,
     maxlength: [
       50,
       'The email address should have fewer than fifty characters.'
@@ -42,15 +58,6 @@ const userSchema = new mongoose.Schema({
     minlength: [8, 'The password should at least have eight characters.'],
     select: false
   },
-  confirmPassword: {
-    type: String,
-    validate: {
-      validator: function (val: string) {
-        return val === this.password;
-      },
-      message: 'Passwords do not match.'
-    }
-  },
   passwordChangeDate: Date
 });
 
@@ -67,7 +74,6 @@ userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
-  delete this.confirmPassword;
 
   next();
 });
@@ -98,6 +104,6 @@ userSchema.methods.changedPasswordAfterToken = function (
   return false;
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model<IUser, UserModel>('User', userSchema);
 
 export default User;

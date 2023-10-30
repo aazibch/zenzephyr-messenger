@@ -1,13 +1,13 @@
+import { StatusCodes } from 'http-status-codes';
 import { Request, Response, NextFunction } from 'express';
 import { ObjectId } from 'mongodb';
-import Joi from 'joi';
 import jwt from 'jsonwebtoken';
 import { pick } from 'lodash';
 
 import AppError from '../utils/AppError';
 import User from '../models/UserModel';
 import catchAsync from '../middleware/catchAsync';
-import { generateValidationMessage } from '../utils';
+import { signupSchema, loginSchema } from '../schemas';
 
 const signToken = (id: string | ObjectId) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -37,61 +37,66 @@ const createSendToken = (
 
 export const signup = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const schema = Joi.object({
-      username: Joi.string()
-        .pattern(new RegExp(/^[a-zA-Z0-9_]*$/))
-        .min(3)
-        .max(50)
-        .required()
-        .messages({
-          'string.pattern.base':
-            'The username may only contain alphanumeric characters (letters A-Z, numbers 0-9) and underscores (_).',
-          'string.min': generateValidationMessage('min', 'username', 3),
-          'string.max': generateValidationMessage('max', 'username', 50),
-          'any.required': generateValidationMessage('required', 'username')
-        }),
-      email: Joi.string()
-        .min(5)
-        .max(50)
-        .email()
-        .required()
-        .messages({
-          'string.min': generateValidationMessage('min', 'email address', 5),
-          'string.max': generateValidationMessage('max', 'email address', 50),
-          'string.email': generateValidationMessage('email'),
-          'any.required': generateValidationMessage('required', 'email address')
-        }),
-      password: Joi.string()
-        .min(8)
-        .required()
-        .messages({
-          'string.min': generateValidationMessage('min', 'password', 8),
-          'any.required': generateValidationMessage('required', 'password')
-        }),
-      passwordConfirmation: Joi.string()
-        .valid(Joi.ref('password'))
-        .required()
-        .messages({
-          'any.required': generateValidationMessage(
-            'required',
-            'password confirmation'
-          ),
-          'any.only': generateValidationMessage('passwordConfirmation')
-        })
-    });
+    const schema = signupSchema;
 
     const { error, value } = schema.validate(req.body);
 
-    if (error) next(new AppError(error.details[0].message, 400));
+    if (error)
+      next(new AppError(error.details[0].message, StatusCodes.BAD_REQUEST));
 
     const filteredBody = pick({ ...value }, ['username', 'email', 'password']);
 
     const user = (await User.create(filteredBody)).toObject();
     delete user.password;
 
-    const token = signToken(user._id);
+    const token = createSendToken(user._id, req, res);
 
-    res.status(201).json({
+    res.status(StatusCodes.CREATED).json({
+      status: 'success',
+      token,
+      data: {
+        user
+      }
+    });
+  }
+);
+
+export const login = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const schema = loginSchema;
+
+    const { error, value } = schema.validate(req.body);
+    const { email, password } = value;
+
+    if (error)
+      next(new AppError(error.details[0].message, StatusCodes.BAD_REQUEST));
+
+    if (!email || !password) {
+      return next(
+        new AppError(
+          'Please provide an email address and password.',
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
+
+    let user = await User.findOne({ email: email }).select('+password');
+
+    if (!user || !(await user.isPasswordCorrect(password, user.password))) {
+      return next(
+        new AppError(
+          'Incorrect email address or password.',
+          StatusCodes.UNAUTHORIZED
+        )
+      );
+    }
+
+    const token = createSendToken(user._id, req, res);
+
+    user = user.toObject();
+    delete user.password;
+
+    res.status(StatusCodes.OK).json({
       status: 'success',
       token,
       data: {
