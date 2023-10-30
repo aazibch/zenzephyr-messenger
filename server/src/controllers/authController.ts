@@ -146,5 +146,6 @@ export const protect = catchAsync(
     }
 
     req.user = user;
+    next();
   }
 );
