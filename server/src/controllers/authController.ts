@@ -8,6 +8,8 @@ import AppError from '../utils/AppError';
 import User from '../models/UserModel';
 import catchAsync from '../middleware/catchAsync';
 import { signupSchema, loginSchema } from '../schemas';
+import { jwtVerify } from '../utils/jwtVerify';
+import { AuthenticatedRequest } from '../types';
 
 const signToken = (id: string | ObjectId) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -33,6 +35,10 @@ const createSendToken = (
   });
 
   return token;
+};
+
+const notLoggedInResponse = (next: NextFunction) => {
+  next(new AppError('You are not logged in.', StatusCodes.UNAUTHORIZED));
 };
 
 export const signup = catchAsync(
@@ -103,5 +109,42 @@ export const login = catchAsync(
         user
       }
     });
+  }
+);
+
+export const protect = catchAsync(
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    // 1) Getting token
+    let token;
+
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer')
+    ) {
+      token = req.headers.authorization.split(' ')[1];
+    } else if (req.cookies.jwt) {
+      token = req.cookies.jwt;
+    }
+
+    if (!token) {
+      return notLoggedInResponse(next);
+    }
+
+    // 2) Verfying token
+    const decodedData = await jwtVerify(token, process.env.JWT_SECRET);
+
+    // 3) Checking if user still exists.
+    const user = await User.findById(decodedData.id);
+
+    if (!user) {
+      return notLoggedInResponse(next);
+    }
+
+    // 4) Checking if user changed password after token was issued.
+    if (user.changedPasswordAfterToken(decodedData.iat)) {
+      return notLoggedInResponse(next);
+    }
+
+    req.user = user;
   }
 );
