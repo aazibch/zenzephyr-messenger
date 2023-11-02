@@ -15,7 +15,6 @@ export interface HttpResponseDataObj {
   message?: string;
   data?: {
     [key: string]: any;
-    user?: UserObj;
   };
 }
 
@@ -26,4 +25,10 @@ export interface FormDataObj {
 export interface MessengerContextObj {
   user?: UserObj | null;
   login: (user: UserObj) => void;
+}
+
+export interface AuthObj {
+  status: 'AUTHENTICATED' | 'EXPIRED';
+  tokenDuration: number;
+  user: UserObj;
 }

@@ -1,14 +1,14 @@
-import { useContext } from 'react';
-import MessengerContext from '../store/messenger-context';
+import { useRouteLoaderData } from 'react-router-dom';
 import HomeLoggedOut from '../components/Home/HomeLoggedOut';
 import HomeLoggedIn from '../components/Home/HomeLoggedIn';
+import { AuthObj } from '../types';
 
 const HomePage = () => {
-  const messengerCtx = useContext(MessengerContext);
+  const auth = useRouteLoaderData('root') as AuthObj;
 
   let content = <HomeLoggedOut />;
 
-  if (messengerCtx.user) content = <HomeLoggedIn />;
+  if (auth?.status === 'AUTHENTICATED') content = <HomeLoggedIn />;
 
   return content;
 };

@@ -126,6 +126,16 @@ export const login = catchAsync(
   }
 );
 
+export const logout = (req: Request, res: Response, next: NextFunction) => {
+  res.cookie('jwt', '', {
+    expires: new Date(Date.now() + 1000),
+    httpOnly: true,
+    sameSite: 'strict'
+  });
+
+  res.status(200).json({ status: 'success' });
+};
+
 export const protect = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     // 1) Getting token
