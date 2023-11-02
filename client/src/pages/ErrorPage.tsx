@@ -1,17 +1,15 @@
-import { useRouteError } from 'react-router-dom';
+import { ErrorResponse, useRouteError } from 'react-router-dom';
 import Layout from '../components/UI/Layout';
 import Logo from '../components/UI/Logo';
 
-interface ErrorObj extends Response {
-  data: {
-    message?: string;
-  };
-}
-
 const ErrorPage = () => {
-  const error = useRouteError() as ErrorObj;
+  const error = useRouteError() as ErrorResponse;
 
-  console.log(error, error);
+  let message = error.data;
+
+  if (error.status === 404) {
+    message = 'Page not found.';
+  }
 
   return (
     <Layout>
@@ -19,8 +17,7 @@ const ErrorPage = () => {
         <div>
           <Logo className="mb-1" />
           <p className="text-lg">
-            <span className="font-medium text-red-500">Error:</span>{' '}
-            {error.data.message}
+            <span className="font-medium text-red-500">Error:</span> {message}
           </p>
         </div>
       </div>

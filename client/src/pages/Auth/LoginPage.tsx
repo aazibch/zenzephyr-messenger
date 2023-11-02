@@ -2,7 +2,7 @@ import AuthFormContainer from '../../components/Auth/AuthFormContainer';
 import { convertFormDataToObject, sendHttpRequest } from '../../utils';
 import { generateHttpConfig } from '../../utils';
 import { apiUrl } from '../../constants';
-import { redirect } from 'react-router-dom';
+import { json, redirect } from 'react-router-dom';
 
 const LoginPage = () => {
   return <AuthFormContainer mode="login" />;
@@ -23,15 +23,15 @@ export const action = async ({ request }: { request: Request }) => {
 
   const response = await sendHttpRequest(httpConfig);
 
-  if (response.status === 'error') {
-    throw response;
+  if (response.statusText === 'error') {
+    throw json(response.message, { status: response.status });
   }
 
-  if (response.status === 'failure') {
+  if (response.statusText === 'failure') {
     return response;
   }
 
-  if (response.status === 'success') {
+  if (response.statusText === 'success') {
     console.log('loginPage', response.data?.auth);
 
     localStorage.setItem(
@@ -42,4 +42,6 @@ export const action = async ({ request }: { request: Request }) => {
     localStorage.setItem('user', JSON.stringify(response.data?.user));
     return redirect('/');
   }
+
+  return null;
 };

@@ -10,8 +10,8 @@ export interface UserObj {
 }
 
 export interface HttpResponseDataObj {
-  httpStatus: number;
-  status: 'success' | 'failure' | 'error';
+  status: number;
+  statusText: 'success' | 'failure' | 'error';
   message?: string;
   data?: {
     [key: string]: any;

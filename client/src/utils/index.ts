@@ -55,8 +55,8 @@ export const sendHttpRequest = async (requestConfig: RequestConfig) => {
   const parsedResponse = await response.json();
 
   const prettierResponse: HttpResponseDataObj = {
-    httpStatus: response.status,
-    status: parsedResponse.status || parsedResponse.httpStatus
+    status: response.status,
+    statusText: parsedResponse.status
   };
 
   if (parsedResponse.message) {
