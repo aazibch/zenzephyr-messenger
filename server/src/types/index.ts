@@ -1,6 +1,9 @@
 import { Request } from 'express';
+import { ObjectId } from 'mongoose';
 
 export interface IUser {
+  _id: string | ObjectId;
+  __v: number;
   displayName: string;
   username: string;
   email: string;
