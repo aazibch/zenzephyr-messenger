@@ -24,7 +24,7 @@ export const getUser = catchAsync(
   }
 );
 
-export const getAuthenticatedUser = catchAsync(
+export const getMe = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const user = await User.findById(req.user._id);
 

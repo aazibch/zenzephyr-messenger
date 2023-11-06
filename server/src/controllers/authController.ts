@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response, NextFunction } from 'express';
-import { ObjectId } from 'mongodb';
+import { ObjectId } from 'mongoose';
 import jwt from 'jsonwebtoken';
 import { pick } from 'lodash';
 
