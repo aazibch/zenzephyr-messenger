@@ -7,6 +7,25 @@ import Conversation from '../models/ConversationModel';
 import catchAsync from '../middleware/catchAsync';
 import Message from '../models/MessageModel';
 
+export const getConversations = catchAsync(
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const conversations = await Conversation.find({
+      participants: {
+        $in: [req.user._id]
+      }
+    }).populate('participants');
+
+    res.status(StatusCodes.OK).json({
+      status: 'success',
+      data: {
+        conversations
+      }
+    });
+  }
+);
+
+// TODO: How to populate users?
+
 export const createConversation = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const schema = conversationSchema;

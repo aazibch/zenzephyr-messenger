@@ -78,20 +78,30 @@ export const conversationSchema = Joi.object({
       .valid('text', 'image')
       .required()
       .messages({
-        'any.required': generateValidationMessage('required', 'type'),
-        'any.only': generateValidationMessage('only', 'type', ['text', 'image'])
+        'any.required': generateValidationMessage(
+          'required',
+          'contentProps.type'
+        ),
+        'any.only': generateValidationMessage('only', 'contentProps.type', [
+          'text',
+          'image'
+        ])
       }),
     text: Joi.when('type', {
       is: 'text',
       then: Joi.string().required().messages({
-        'any.required': 'The "text" is required if "type" is "text".'
+        'any.required':
+          'The contentProps.text is required if contentProps.type is "text".'
       })
     }),
     image: Joi.when('type', {
       is: 'image',
       then: Joi.string().required().messages({
-        'any.required': 'The "image" is required if "type" is "image".'
+        'any.required':
+          'The contentProps.image is required if contentProps.type is "image".'
       })
     })
   })
 });
+
+// TODO: Change format of the messages if necessary.
