@@ -1,9 +1,28 @@
-import mongoose from 'mongoose';
+import mongoose, { ObjectId, Types } from 'mongoose';
 
-const messageSchema = new mongoose.Schema({
+interface TextContentProps {
+  type: 'text';
+  text: string;
+}
+
+interface ImageContentProps {
+  type: 'image';
+  image: string;
+}
+
+interface IMessage {
+  conversation: ObjectId;
+  recipient: ObjectId;
+  sender: ObjectId;
+  contentProps: TextContentProps | ImageContentProps;
+  deletedBy: ObjectId;
+}
+
+const messageSchema = new mongoose.Schema<IMessage>({
   conversation: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Conversation'
+    ref: 'Conversation',
+    required: true
   },
   recipient: {
     type: mongoose.Schema.Types.ObjectId,
@@ -25,19 +44,22 @@ const messageSchema = new mongoose.Schema({
     image: {
       type: mongoose.Schema.Types.String,
       required: function () {
-        this.contentProps.type === 'image';
+        return this.contentProps.type === 'image';
       }
     },
     text: {
       type: mongoose.Schema.Types.String,
       required: function () {
-        this.contentProps.type === 'text';
+        return this.contentProps.type === 'text';
       }
-    },
-    required: true
+    }
   },
   deletedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }
 });
+
+const Message = mongoose.model<IMessage>('Message', messageSchema);
+
+export default Message;
