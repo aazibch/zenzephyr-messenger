@@ -12,6 +12,9 @@ export const getConversations = catchAsync(
     const conversations = await Conversation.find({
       participants: {
         $in: [req.user._id]
+      },
+      deletedBy: {
+        $ne: req.user._id
       }
     }).populate('participants');
 
@@ -23,8 +26,6 @@ export const getConversations = catchAsync(
     });
   }
 );
-
-// TODO: How to populate users?
 
 export const createConversation = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
@@ -74,5 +75,45 @@ export const createConversation = catchAsync(
         message
       }
     });
+  }
+);
+
+// TODO: Once, messages functionality is implemented, check if deletion works as expected.
+export const deleteConversation = catchAsync(
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const conversation = await Conversation.findOne({
+      _id: req.params.id,
+      participants: {
+        $in: [req.user._id]
+      }
+    });
+
+    if (!conversation)
+      return next(
+        new AppError('Conversation not found.', StatusCodes.NOT_FOUND)
+      );
+
+    if (conversation.deletedBy && conversation.deletedBy !== req.user._id) {
+      await Conversation.findByIdAndDelete(conversation._id);
+      await Message.deleteMany({ conversation: conversation._id });
+    } else {
+      await Conversation.findByIdAndUpdate(conversation._id, {
+        deletedBy: req.user._id
+      });
+
+      await Message.deleteMany({
+        conversation: conversation._id,
+        deletedBy: conversation.participants.find((val) => val !== req.user._id)
+      });
+
+      await Message.updateMany(
+        { conversation: conversation._id },
+        {
+          deletedBy: req.user._id
+        }
+      );
+    }
+
+    res.status(StatusCodes.NO_CONTENT).send();
   }
 );
