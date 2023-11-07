@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 
 import { clientUrl } from './constants';
 import usersRoutes from './routes/usersRoutes';
-import errorController from './controllers/errorController';
+import conversationsRoutes from './routes/conversationsRoutes';
 import handleError from './controllers/errorController';
 
 const app = express();
@@ -19,6 +19,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use('/api/v1/users/', usersRoutes);
+app.use('/api/v1/conversations/', conversationsRoutes);
 app.use(handleError);
 
 export default app;

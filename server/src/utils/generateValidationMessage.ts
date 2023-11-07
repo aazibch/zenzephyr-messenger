@@ -1,8 +1,14 @@
 export const generateValidationMessage = (
   type: string,
   property?: string,
-  restriction?: number
+  restriction?: number | string[]
 ) => {
+  const updatedProperty = `"${property}"`;
+
+  if (type === 'length') {
+    return `The ${property} should be ${restriction} characters.`;
+  }
+
   if (type === 'min') {
     return `The ${property} should be at least ${restriction} characters.`;
   }
@@ -21,5 +27,20 @@ export const generateValidationMessage = (
 
   if (type === 'passwordConfirmation') {
     return 'The passwords do not match.';
+  }
+
+  if (type === 'only') {
+    if (Array.isArray(restriction)) {
+      const updatedRestriction = restriction.map((elem) => `"${elem}"`);
+
+      if (updatedRestriction.length > 2) {
+        updatedRestriction[updatedRestriction.length - 1] =
+          'or ' + updatedRestriction[updatedRestriction.length - 1];
+
+        return `The ${property} must be ${updatedRestriction.join(', ')}.`;
+      }
+
+      return `The ${property} must be ${updatedRestriction.join(' or ')}.`;
+    }
   }
 };

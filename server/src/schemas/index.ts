@@ -64,3 +64,34 @@ export const loginSchema = Joi.object({
 }).messages({
   'any.required': 'Please provide an email address and password.'
 });
+
+export const conversationSchema = Joi.object({
+  recipient: Joi.string()
+    .length(24)
+    .required()
+    .messages({
+      'string.length': generateValidationMessage('length', 'recipient', 24),
+      'any.required': generateValidationMessage('required', 'recipient')
+    }),
+  contentProps: Joi.object({
+    type: Joi.string()
+      .valid('text', 'image')
+      .required()
+      .messages({
+        'any.required': generateValidationMessage('required', 'type'),
+        'any.only': generateValidationMessage('only', 'type', ['text', 'image'])
+      }),
+    text: Joi.when('type', {
+      is: 'text',
+      then: Joi.string().required().messages({
+        'any.required': 'The "text" is required if "type" is "text".'
+      })
+    }),
+    image: Joi.when('type', {
+      is: 'image',
+      then: Joi.string().required().messages({
+        'any.required': 'The "image" is required if "type" is "image".'
+      })
+    })
+  })
+});

@@ -65,15 +65,6 @@ const conversationSchema = new mongoose.Schema<IConversation>({
       checkIfValidParticipant,
       '{PATH} must have a participant as its value.'
     ]
-  },
-  messages: {
-    type: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Message'
-      }
-    ],
-    required: [true, 'The conversation must contain at least 1 message.']
   }
 });
 
