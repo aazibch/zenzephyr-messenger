@@ -31,7 +31,8 @@ const conversationSchema = new mongoose.Schema<IConversation>({
       checkIfValidNumOfParticipants,
       'There must be 2 participants in a conversation.'
     ],
-    required: true
+    required: true,
+    unique: true
   },
   startedBy: {
     type: mongoose.Schema.Types.ObjectId,

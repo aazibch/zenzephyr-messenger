@@ -30,6 +30,7 @@ export const getConversations = catchAsync(
 export const createConversation = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const schema = conversationSchema;
+    let conversation;
 
     const { error, value } = schema.validate(req.body);
 
@@ -42,7 +43,34 @@ export const createConversation = catchAsync(
       participants: { $in: [req.user._id, value.recipient] }
     });
 
-    if (existingConversation) {
+    if (!existingConversation) {
+      const conversationBody = {
+        participants: [req.user._id, value.recipient],
+        startedBy: req.user._id,
+        unreadBy: value.recipient
+      };
+
+      conversation = await Conversation.create(conversationBody);
+    }
+
+    if (
+      existingConversation?.deletedBy?.toString() === req.user._id.toString()
+    ) {
+      conversation = await Conversation.findByIdAndUpdate(
+        existingConversation._id,
+        {
+          $unset: {
+            deletedBy: ''
+          }
+        },
+        { new: true }
+      );
+    }
+
+    if (
+      existingConversation &&
+      existingConversation.deletedBy?.toString() !== req.user._id.toString()
+    ) {
       return next(
         new AppError(
           'A conversation with the recipient already exists',
@@ -50,14 +78,6 @@ export const createConversation = catchAsync(
         )
       );
     }
-
-    const conversationBody = {
-      participants: [req.user._id, value.recipient],
-      startedBy: req.user._id,
-      unreadBy: value.recipient
-    };
-
-    const conversation = await Conversation.create(conversationBody);
 
     const messageBody = {
       conversation: conversation._id,
