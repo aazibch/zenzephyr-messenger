@@ -1,5 +1,5 @@
 import express from 'express';
-import { getMessages } from '../controllers/messagesController';
+import { createMessage, getMessages } from '../controllers/messagesController';
 import { protect } from '../controllers/authController';
 
 const router = express.Router({
@@ -7,5 +7,6 @@ const router = express.Router({
 });
 
 router.get('/', protect, getMessages);
+router.post('/', protect, createMessage);
 
 export default router;

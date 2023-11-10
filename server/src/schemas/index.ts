@@ -65,6 +65,37 @@ export const loginSchema = Joi.object({
   'any.required': 'Please provide an email address and password.'
 });
 
+export const messageSchema = Joi.object({
+  type: Joi.string()
+    .valid('text', 'image')
+    .required()
+    .messages({
+      'any.required': generateValidationMessage(
+        'required',
+        'contentProps.type'
+      ),
+      'any.only': generateValidationMessage('only', 'contentProps.type', [
+        'text',
+        'image'
+      ])
+    }),
+  text: Joi.when('type', {
+    is: 'text',
+    then: Joi.string().required().messages({
+      'any.required':
+        'The contentProps.text is required if contentProps.type is "text".'
+    })
+  }),
+  image: Joi.when('type', {
+    is: 'image',
+    then: Joi.string().required().messages({
+      'any.required':
+        'The contentProps.image is required if contentProps.type is "image".'
+    })
+  })
+});
+
+// TODO: Change format of the messages if necessary.
 export const conversationSchema = Joi.object({
   recipient: Joi.string()
     .length(24)
@@ -73,35 +104,5 @@ export const conversationSchema = Joi.object({
       'string.length': generateValidationMessage('length', 'recipient', 24),
       'any.required': generateValidationMessage('required', 'recipient')
     }),
-  contentProps: Joi.object({
-    type: Joi.string()
-      .valid('text', 'image')
-      .required()
-      .messages({
-        'any.required': generateValidationMessage(
-          'required',
-          'contentProps.type'
-        ),
-        'any.only': generateValidationMessage('only', 'contentProps.type', [
-          'text',
-          'image'
-        ])
-      }),
-    text: Joi.when('type', {
-      is: 'text',
-      then: Joi.string().required().messages({
-        'any.required':
-          'The contentProps.text is required if contentProps.type is "text".'
-      })
-    }),
-    image: Joi.when('type', {
-      is: 'image',
-      then: Joi.string().required().messages({
-        'any.required':
-          'The contentProps.image is required if contentProps.type is "image".'
-      })
-    })
-  })
+  contentProps: messageSchema
 });
-
-// TODO: Change format of the messages if necessary.
