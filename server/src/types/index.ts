@@ -15,3 +15,9 @@ export interface IUser {
 export interface AuthenticatedRequest extends Request {
   user?: IUser;
 }
+
+export interface AuthenticatedRequestWithFile extends AuthenticatedRequest {
+  file: Express.Multer.File & {
+    publicUrl?: string;
+  };
+}

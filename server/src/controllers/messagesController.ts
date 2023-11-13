@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import catchAsync from '../middleware/catchAsync';
 import Message from '../models/MessageModel';
-import { AuthenticatedRequest } from '../types';
+import { AuthenticatedRequest, AuthenticatedRequestWithFile } from '../types';
 import AppError from '../utils/AppError';
 import { StatusCodes } from 'http-status-codes';
 import Conversation from '../models/ConversationModel';
@@ -32,7 +32,11 @@ export const getMessages = catchAsync(
 );
 
 export const createMessage = catchAsync(
-  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  async (
+    req: AuthenticatedRequestWithFile,
+    res: Response,
+    next: NextFunction
+  ) => {
     const { conversationId } = req.params;
     const schema = messageSchema;
 
@@ -52,18 +56,34 @@ export const createMessage = catchAsync(
       (element) => element.toString() !== req.user._id.toString()
     );
 
-    const { error, value } = schema.validate(req.body);
+    if (!req.file?.publicUrl) {
+      const { error } = schema.validate(req.body);
 
-    if (error)
-      return next(
-        new AppError(error.details[0].message, StatusCodes.BAD_REQUEST)
-      );
+      if (error)
+        return next(
+          new AppError(error.details[0].message, StatusCodes.BAD_REQUEST)
+        );
+    }
+
+    let contentProps;
+
+    if (req.file?.publicUrl) {
+      contentProps = {
+        type: 'image',
+        image: req.file.publicUrl
+      };
+    } else {
+      contentProps = {
+        type: 'text',
+        text: req.body.text
+      };
+    }
 
     const messageBody = {
       conversation: conversationId,
       recipient,
       sender: req.user._id,
-      contentProps: value
+      contentProps
     };
 
     const message = await Message.create(messageBody);

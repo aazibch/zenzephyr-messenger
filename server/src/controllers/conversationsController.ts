@@ -1,8 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { AuthenticatedRequest } from '../types';
+import { AuthenticatedRequest, AuthenticatedRequestWithFile } from '../types';
 import AppError from '../utils/AppError';
-import { conversationSchema } from '../schemas';
+import {
+  conversationWithTextSchema,
+  conversationWithImageSchema
+} from '../schemas';
 import Conversation from '../models/ConversationModel';
 import catchAsync from '../middleware/catchAsync';
 import Message from '../models/MessageModel';
@@ -28,26 +31,50 @@ export const getConversations = catchAsync(
 );
 
 export const createConversation = catchAsync(
-  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const schema = conversationSchema;
+  async (
+    req: AuthenticatedRequestWithFile,
+    res: Response,
+    next: NextFunction
+  ) => {
     let conversation;
 
-    const { error, value } = schema.validate(req.body);
+    let error;
+
+    if (!req.file?.publicUrl) {
+      const result = conversationWithTextSchema.validate(req.body);
+
+      error = result.error;
+    }
+
+    if (req.file?.publicUrl) {
+      const result = conversationWithImageSchema.validate(req.body);
+
+      error = result.error;
+    }
 
     if (error)
       return next(
         new AppError(error.details[0].message, StatusCodes.BAD_REQUEST)
       );
 
+    if (req.body.recipient === req.user._id.toString()) {
+      return next(
+        new AppError(
+          'The recipient cannot be your own user id.',
+          StatusCodes.BAD_REQUEST
+        )
+      );
+    }
+
     const existingConversation = await Conversation.findOne({
-      participants: { $in: [req.user._id, value.recipient] }
+      participants: { $in: [req.user._id, req.body.recipient] }
     });
 
     if (!existingConversation) {
       const conversationBody = {
-        participants: [req.user._id, value.recipient],
+        participants: [req.user._id, req.body.recipient],
         startedBy: req.user._id,
-        unreadBy: value.recipient
+        unreadBy: req.body.recipient
       };
 
       conversation = await Conversation.create(conversationBody);
@@ -79,11 +106,25 @@ export const createConversation = catchAsync(
       );
     }
 
+    let contentProps;
+
+    if (req.file?.publicUrl) {
+      contentProps = {
+        type: 'image',
+        image: req.file.publicUrl
+      };
+    } else {
+      contentProps = {
+        type: 'text',
+        text: req.body.text
+      };
+    }
+
     const messageBody = {
       conversation: conversation._id,
-      recipient: value.recipient,
+      recipient: req.body.recipient,
       sender: req.user._id,
-      contentProps: value.contentProps
+      contentProps
     };
 
     const message = await Message.create(messageBody);
@@ -98,7 +139,6 @@ export const createConversation = catchAsync(
   }
 );
 
-// TODO: Once, messages functionality is implemented, check if deletion works as expected.
 export const deleteConversation = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const conversation = await Conversation.findOne({

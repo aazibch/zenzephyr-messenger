@@ -47,7 +47,15 @@ const handleError = (
 ) => {
   const { originalUrl } = req;
 
-  if ('code' in err && err.code === 11000) {
+  console.log('[handleError] err', err);
+
+  if (
+    typeof err === 'object' &&
+    !Array.isArray(err) &&
+    err !== null &&
+    'code' in err &&
+    err.code === 11000
+  ) {
     if (originalUrl === '/api/v1/users/signup') {
       if ('keyPattern' in err && Object.keys(err.keyPattern)[0] === 'email') {
         err = getDublicateFieldErrorForEmail();
