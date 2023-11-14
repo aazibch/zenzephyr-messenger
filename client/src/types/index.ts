@@ -6,7 +6,16 @@ export interface UserObj {
   displayName: string;
   username: string;
   email: string;
-  profilePhoto: URL;
+  profileImage: string;
+}
+
+export interface ConversationObj {
+  _id: string;
+  __v: number;
+  participants: string[];
+  startedBy: string;
+  unreadBy: string;
+  otherParticipant: UserObj;
 }
 
 export interface HttpResponseDataObj {

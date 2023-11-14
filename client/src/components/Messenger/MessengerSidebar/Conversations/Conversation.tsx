@@ -5,8 +5,8 @@ interface ConversationProps {
   profileImageUrl: string;
   displayName: string;
   snippet?: string;
-  isOnline: boolean;
-  isUnread: boolean;
+  isOnline?: boolean;
+  isUnread?: boolean;
 }
 
 const Conversation = ({
