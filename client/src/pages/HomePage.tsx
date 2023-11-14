@@ -1,16 +1,18 @@
-import { useRouteLoaderData } from 'react-router-dom';
+import { redirect } from 'react-router-dom';
 import HomeLoggedOut from '../components/Home/HomeLoggedOut';
-import HomeLoggedIn from '../components/Home/HomeLoggedIn';
-import { AuthObj } from '../types';
 
 const HomePage = () => {
-  const auth = useRouteLoaderData('root') as AuthObj;
+  return <HomeLoggedOut />;
+};
 
-  let content = <HomeLoggedOut />;
+export const loader = () => {
+  const user = localStorage.getItem('user');
 
-  if (auth?.status === 'AUTHENTICATED') content = <HomeLoggedIn />;
+  if (user) {
+    return redirect('/messenger');
+  }
 
-  return content;
+  return null;
 };
 
 export default HomePage;

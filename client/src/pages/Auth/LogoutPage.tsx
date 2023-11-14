@@ -11,7 +11,7 @@ export const action = async () => {
 
   const response = await sendHttpRequest(httpConfig);
 
-  if (response.status === 'success') {
+  if (response.statusText === 'success') {
     localStorage.removeItem('user');
     localStorage.removeItem('tokenExpirationDate');
     return redirect('/');

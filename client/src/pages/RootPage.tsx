@@ -45,5 +45,5 @@ export const loader = () => {
     return { status: 'EXPIRED' };
   }
 
-  return { status: 'AUTHENTICATED', tokenDuration, user };
+  return { status: 'AUTHENTICATED', tokenDuration, user: JSON.parse(user) };
 };

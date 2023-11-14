@@ -1,12 +1,15 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import RootPage, { loader as rootLoader } from './pages/RootPage';
-import HomePage from './pages/HomePage';
+import HomePage, { loader as homeLoader } from './pages/HomePage';
 import LoginPage, { action as loginAction } from './pages/Auth/LoginPage';
 import SignupPage, { action as signupAction } from './pages/Auth/SignupPage';
 import { action as logoutAction } from './pages/Auth/LogoutPage';
 import ErrorPage from './pages/ErrorPage';
 import { protectLoader } from './utils/auth';
+import MessengerPage, {
+  loader as messengerLoader
+} from './pages/MessengerPage';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +23,7 @@ const router = createBrowserRouter([
       {
         path: '',
         element: <HomePage />,
+        loader: homeLoader,
         children: [
           {
             index: true,
@@ -31,6 +35,11 @@ const router = createBrowserRouter([
             action: signupAction
           }
         ]
+      },
+      {
+        path: 'messenger',
+        element: <MessengerPage />,
+        loader: messengerLoader
       },
       { path: 'logout', loader: protectLoader, action: logoutAction }
     ]

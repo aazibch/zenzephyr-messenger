@@ -11,6 +11,8 @@ export const getTokenDuration = () => {
 export const protectLoader = () => {
   const user = localStorage.getItem('user');
 
+  console.log('user', user);
+
   if (!user) {
     throw json({ message: 'Page not found.' }, { status: 404 });
   }

@@ -1,14 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { AuthenticatedRequest, AuthenticatedRequestWithFile } from '../types';
+import {
+  AuthenticatedRequest,
+  AuthenticatedRequestWithFile,
+  IUser
+} from '../types';
 import AppError from '../utils/AppError';
 import {
   conversationWithTextSchema,
   conversationWithImageSchema
 } from '../schemas';
 import Conversation from '../models/ConversationModel';
+import User from '../models/UserModel';
 import catchAsync from '../middleware/catchAsync';
 import Message from '../models/MessageModel';
+import { ObjectId, Query } from 'mongoose';
 
 export const getConversations = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
@@ -19,12 +25,33 @@ export const getConversations = catchAsync(
       deletedBy: {
         $ne: req.user._id
       }
-    }).populate('participants');
+    });
+
+    const otherParticipantsIds: Promise<IUser>[] = [];
+
+    conversations.forEach((elem) => {
+      const otherParticipant = elem.participants.find(
+        (participantId: ObjectId) =>
+          participantId.toString() !== req.user._id.toString()
+      );
+      otherParticipantsIds.push(User.findById(otherParticipant));
+    });
+
+    const otherParticipants = await Promise.all(otherParticipantsIds);
+
+    const conversationsWithOtherParticipants = conversations.map(
+      (elem, index) => {
+        const conversation: Record<string, any> = { ...elem.toObject() };
+
+        conversation.otherParticipant = otherParticipants[index];
+        return conversation;
+      }
+    );
 
     res.status(StatusCodes.OK).json({
       status: 'success',
       data: {
-        conversations
+        conversations: conversationsWithOtherParticipants
       }
     });
   }
