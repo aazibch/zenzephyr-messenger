@@ -10,6 +10,10 @@ import { protectLoader } from './utils/auth';
 import MessengerPage, {
   loader as messengerLoader
 } from './pages/MessengerPage';
+import ConversationPage, {
+  loader as conversationLoader
+} from './pages/ConversationPage';
+import NoConversationPage from './pages/NoConversationPage';
 
 const router = createBrowserRouter([
   {
@@ -39,7 +43,18 @@ const router = createBrowserRouter([
       {
         path: 'messenger',
         element: <MessengerPage />,
-        loader: messengerLoader
+        loader: messengerLoader,
+        children: [
+          {
+            index: true,
+            element: <NoConversationPage />
+          },
+          {
+            path: ':id',
+            element: <ConversationPage />,
+            loader: conversationLoader
+          }
+        ]
       },
       {
         path: 'test',

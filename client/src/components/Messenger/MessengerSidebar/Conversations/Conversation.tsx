@@ -7,6 +7,7 @@ interface ConversationProps {
   snippet?: string;
   isOnline?: boolean;
   isUnread?: boolean;
+  link: string;
 }
 
 const Conversation = ({
@@ -14,10 +15,11 @@ const Conversation = ({
   displayName,
   snippet,
   isOnline,
-  isUnread
+  isUnread,
+  link
 }: ConversationProps) => {
   return (
-    <Link to="#" className="block hover:bg-gray-100">
+    <Link to={link} className="block hover:bg-gray-100">
       <div className="flex p-4 border-b items-center">
         <ProfilePhoto src={profileImageUrl} className="mr-3" />
         <div>

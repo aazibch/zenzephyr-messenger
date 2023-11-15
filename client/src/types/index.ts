@@ -18,6 +18,25 @@ export interface ConversationObj {
   otherParticipant: UserObj;
 }
 
+interface TextContentProps {
+  type: 'text';
+  text: string;
+}
+
+interface ImageContentProps {
+  type: 'image';
+  text: string;
+}
+
+export interface MessageObj {
+  _id: string;
+  __v: number;
+  conversation: string;
+  recipient: string;
+  sender: string;
+  contentProps: TextContentProps | ImageContentProps;
+}
+
 export interface HttpResponseDataObj {
   status: number;
   statusText: 'success' | 'failure' | 'error';

@@ -1,6 +1,5 @@
-import { json } from 'react-router-dom';
+import { Outlet, json } from 'react-router-dom';
 import MessengerSidebar from '../components/Messenger/MessengerSidebar/MessengerSidebar';
-import MessengerMain from '../components/Messenger/MessengerMain/MessengerMain';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
 import { protect } from '../utils/auth';
@@ -9,7 +8,7 @@ const MessengerPage = () => {
   return (
     <div className="flex h-full overflow-hidden">
       <MessengerSidebar />
-      <MessengerMain />
+      <Outlet />
     </div>
   );
 };
