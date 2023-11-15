@@ -1,32 +1,15 @@
-import { useEffect } from 'react';
-import { Outlet, useLoaderData } from 'react-router-dom';
-import { useSubmit } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import Layout from '../components/UI/Layout';
 import { getTokenDuration } from '../utils/auth';
-import { AuthObj } from '../types';
+import AutoLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
 
 const RootPage = () => {
-  const auth = useLoaderData() as AuthObj;
-  const submit = useSubmit();
-
-  useEffect(() => {
-    if (!auth) {
-      return;
-    }
-
-    if (auth.status === 'EXPIRED') {
-      submit(null, { action: '/logout', method: 'post' });
-    }
-
-    setTimeout(() => {
-      submit(null, { action: '/logout', method: 'post' });
-    }, auth.tokenDuration);
-  }, [auth]);
-
   return (
-    <Layout>
-      <Outlet />
-    </Layout>
+    <AutoLogoutWrapper>
+      <Layout>
+        <Outlet />
+      </Layout>
+    </AutoLogoutWrapper>
   );
 };
 

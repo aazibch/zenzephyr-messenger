@@ -8,6 +8,7 @@ const Conversations = () => {
   const conversations = conversationsData.map((elem) => {
     return (
       <Conversation
+        key={elem._id}
         profileImageUrl={elem.otherParticipant.profileImage}
         displayName={elem.otherParticipant.displayName}
       />

@@ -8,14 +8,20 @@ export const getTokenDuration = () => {
   return duration;
 };
 
-export const protectLoader = () => {
+export const protect = () => {
   const user = localStorage.getItem('user');
 
-  console.log('user', user);
-
   if (!user) {
-    throw json({ message: 'Page not found.' }, { status: 404 });
+    return json({ message: 'Page not found.' }, { status: 404 });
   }
+
+  return null;
+};
+
+export const protectLoader = () => {
+  const notFoundError = protect();
+
+  if (notFoundError) throw notFoundError;
 
   return null;
 };

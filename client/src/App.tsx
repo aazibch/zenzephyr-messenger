@@ -41,6 +41,12 @@ const router = createBrowserRouter([
         element: <MessengerPage />,
         loader: messengerLoader
       },
+      {
+        path: 'test',
+        loader: () => {
+          throw new Error('Something is not right');
+        }
+      },
       { path: 'logout', loader: protectLoader, action: logoutAction }
     ]
   }

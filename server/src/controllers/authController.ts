@@ -13,7 +13,7 @@ import { AuthenticatedRequest } from '../types';
 
 const signToken = (id: string | ObjectId) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRATION_TIME
+    expiresIn: '5s'
   });
 };
 
@@ -26,8 +26,8 @@ const createSendToken = (
 
   res.cookie('jwt', token, {
     expires: new Date(
-      Date.now() +
-        parseInt(process.env.JWT_COOKIE_EXPIRATION) * 24 * 60 * 60 * 1000
+      Date.now() + 5000
+      // parseInt(process.env.JWT_COOKIE_EXPIRATION) * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
     secure: req.secure,
@@ -65,8 +65,8 @@ export const signup = catchAsync(
         auth: {
           token,
           tokenExpirationDate: new Date(
-            Date.now() +
-              parseInt(process.env.JWT_COOKIE_EXPIRATION) * 24 * 60 * 60 * 1000
+            Date.now() + 5000
+            // parseInt(process.env.JWT_COOKIE_EXPIRATION) * 24 * 60 * 60 * 1000
           )
         }
       }
@@ -117,8 +117,8 @@ export const login = catchAsync(
         auth: {
           token,
           tokenExpirationDate: new Date(
-            Date.now() +
-              parseInt(process.env.JWT_COOKIE_EXPIRATION) * 24 * 60 * 60 * 1000
+            Date.now() + 5000
+            // parseInt(process.env.JWT_COOKIE_EXPIRATION) * 24 * 60 * 60 * 1000
           )
         }
       }
@@ -126,13 +126,16 @@ export const login = catchAsync(
   }
 );
 
-export const logout = (req: Request, res: Response, next: NextFunction) => {
+const sendLogoutCookie = (res: Response) => {
   res.cookie('jwt', '', {
     expires: new Date(Date.now() + 1000),
     httpOnly: true,
     sameSite: 'strict'
   });
+};
 
+export const logout = (req: Request, res: Response, next: NextFunction) => {
+  sendLogoutCookie(res);
   res.status(200).json({ status: 'success' });
 };
 
@@ -151,6 +154,7 @@ export const protect = catchAsync(
     }
 
     if (!token) {
+      sendLogoutCookie(res);
       return notLoggedInResponse(next);
     }
 
@@ -161,11 +165,13 @@ export const protect = catchAsync(
     const user = await User.findById(decodedData.id);
 
     if (!user) {
+      sendLogoutCookie(res);
       return notLoggedInResponse(next);
     }
 
     // 4) Checking if user changed password after token was issued.
     if (user.changedPasswordAfterToken(decodedData.iat)) {
+      sendLogoutCookie(res);
       return notLoggedInResponse(next);
     }
 

@@ -1,15 +1,26 @@
 import { json } from 'react-router-dom';
-import HomeLoggedIn from '../components/Home/HomeLoggedIn';
+import MessengerSidebar from '../components/Messenger/MessengerSidebar/MessengerSidebar';
+import MessengerMain from '../components/Messenger/MessengerMain/MessengerMain';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
+import { protect } from '../utils/auth';
 
 const MessengerPage = () => {
-  return <HomeLoggedIn />;
+  return (
+    <div className="flex h-full overflow-hidden">
+      <MessengerSidebar />
+      <MessengerMain />
+    </div>
+  );
 };
 
 export default MessengerPage;
 
 export const loader = async () => {
+  const notFoundError = protect();
+
+  if (notFoundError) throw notFoundError;
+
   const httpConfig = generateHttpConfig({
     url: `${apiUrl}/api/v1/conversations`,
     method: 'GET',
