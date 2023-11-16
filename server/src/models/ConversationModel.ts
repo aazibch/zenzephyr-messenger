@@ -9,6 +9,7 @@ interface IConversation {
   deletedBy?: ObjectId;
   unreadBy?: ObjectId;
   messages: ObjectId[];
+  snippet: string;
 }
 
 const checkIfValidParticipant = function (val: ObjectId) {
@@ -66,6 +67,9 @@ const conversationSchema = new mongoose.Schema<IConversation>({
       checkIfValidParticipant,
       '{PATH} must have a participant as its value.'
     ]
+  },
+  snippet: {
+    type: mongoose.Schema.Types.String
   }
 });
 

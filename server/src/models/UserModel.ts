@@ -2,14 +2,6 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import { IUser } from '../types';
-// interface IUser {
-//   displayName: string;
-//   username: string;
-//   email: string;
-//   profileImage: string;
-//   password?: string;
-//   passwordChangeDate: Date;
-// }
 
 interface IUserMethods {
   isPasswordCorrect(inputPass: string, encryptedPass: string): Promise<boolean>;

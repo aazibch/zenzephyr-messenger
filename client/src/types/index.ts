@@ -16,6 +16,7 @@ export interface ConversationObj {
   startedBy: string;
   unreadBy: string;
   otherParticipant: UserObj;
+  snippet?: string;
 }
 
 interface TextContentProps {

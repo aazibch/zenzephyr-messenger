@@ -1,4 +1,5 @@
-import mongoose, { ObjectId, Types } from 'mongoose';
+import mongoose, { ObjectId, Model } from 'mongoose';
+import Conversation from './ConversationModel';
 
 interface TextContentProps {
   type: 'text';
@@ -18,7 +19,11 @@ interface IMessage {
   deletedBy: ObjectId;
 }
 
-const messageSchema = new mongoose.Schema<IMessage>({
+interface MessageModel extends Model<IMessage> {
+  setSnippet(doc: IMessage): void;
+}
+
+const messageSchema = new mongoose.Schema<IMessage, MessageModel>({
   conversation: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Conversation',
@@ -60,6 +65,25 @@ const messageSchema = new mongoose.Schema<IMessage>({
   }
 });
 
-const Message = mongoose.model<IMessage>('Message', messageSchema);
+messageSchema.statics.setSnippet = async function (messageDoc) {
+  let snippet: string;
+
+  if (messageDoc.contentProps.type === 'text') {
+    snippet = messageDoc.contentProps.text;
+  } else if (messageDoc.contentProps.type === 'image') {
+    snippet = 'Image';
+  }
+
+  await Conversation.findByIdAndUpdate(messageDoc.conversation, { snippet });
+};
+
+messageSchema.post('save', function () {
+  Message.setSnippet(this);
+});
+
+const Message = mongoose.model<IMessage, MessageModel>(
+  'Message',
+  messageSchema
+);
 
 export default Message;

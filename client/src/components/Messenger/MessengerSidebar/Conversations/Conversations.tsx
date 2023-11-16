@@ -12,6 +12,7 @@ const Conversations = () => {
         link={`/messenger/${elem._id}`}
         profileImageUrl={elem.otherParticipant.profileImage}
         displayName={elem.otherParticipant.displayName}
+        snippet={elem.snippet}
       />
     );
   });
