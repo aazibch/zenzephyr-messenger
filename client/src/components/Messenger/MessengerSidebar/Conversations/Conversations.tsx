@@ -1,6 +1,7 @@
 import { useLoaderData } from 'react-router-dom';
 import Conversation from './Conversation';
 import { ConversationObj } from '../../../../types';
+import styles from './Conversations.module.css';
 
 const Conversations = () => {
   const conversationsData = useLoaderData() as ConversationObj[];
@@ -17,7 +18,11 @@ const Conversations = () => {
     );
   });
 
-  return <div className="h-full overflow-y-auto">{conversations}</div>;
+  return (
+    <div className={`h-full overflow-y-auto`}>
+      <div className={styles.navItems}>{conversations}</div>
+    </div>
+  );
 };
 
 export default Conversations;

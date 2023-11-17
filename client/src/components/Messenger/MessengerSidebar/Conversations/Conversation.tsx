@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import ProfilePhoto from '../../../UI/ProfilePhoto';
 import { RiImageFill } from 'react-icons/ri';
 import { ReactElement } from 'react';
+import styles from './Conversations.module.css';
 
 interface ConversationProps {
   profileImageUrl: string;
@@ -31,7 +32,12 @@ const Conversation = ({
   }
 
   return (
-    <Link to={link} className="block hover:bg-gray-100">
+    <NavLink
+      to={link}
+      className={({ isActive }) => {
+        return isActive ? styles.active : undefined;
+      }}
+    >
       <div className="flex p-4 border-b items-center">
         <ProfilePhoto size="large" src={profileImageUrl} className="mr-3" />
         <div>
@@ -49,7 +55,7 @@ const Conversation = ({
           <div className="rounded-full h-[0.65rem] w-[0.65rem] bg-blue-500 ml-auto"></div>
         )}
       </div>
-    </Link>
+    </NavLink>
   );
 };
 

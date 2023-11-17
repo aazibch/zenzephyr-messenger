@@ -18,10 +18,8 @@ export const loader = async ({ params }: { params: Params }) => {
 
   const response = await sendHttpRequest(httpConfig);
 
-  console.log('[ConversationPage] response', response);
-
   if (response.statusText === 'success') {
-    return response.data!.messages;
+    return response.data;
   }
 
   throw json({ message: 'Page not found.' }, { status: 404 });

@@ -1,16 +1,16 @@
 import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
 import Message from './Message';
-import { MessageObj } from '../../../../types';
+import { MessagesObj } from '../../../../types';
 import { AuthObj } from '../../../../types';
 
 const MessengerMainContent = () => {
   const auth = useRouteLoaderData('root') as AuthObj;
-  const messages = useLoaderData() as MessageObj[];
+  const messagesData = useLoaderData() as MessagesObj;
 
   let messagesContent;
 
-  if (messages.length !== 0) {
-    messagesContent = messages.map((elem) => {
+  if (messagesData.messages.length !== 0) {
+    messagesContent = messagesData.messages.map((elem) => {
       return (
         <Message
           key={elem._id}

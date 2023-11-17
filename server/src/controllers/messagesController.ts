@@ -6,10 +6,19 @@ import AppError from '../utils/AppError';
 import { StatusCodes } from 'http-status-codes';
 import Conversation from '../models/ConversationModel';
 import { messageSchema } from '../schemas';
+import { ObjectId } from 'mongoose';
+import User from '../models/UserModel';
 
 export const getMessages = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const { conversationId } = req.params;
+
+    const conversation = await Conversation.findById(conversationId);
+
+    if (!conversation)
+      return next(
+        new AppError('Conversation not found.', StatusCodes.NOT_FOUND)
+      );
 
     const messages = await Message.find({
       conversation: conversationId,
@@ -22,9 +31,17 @@ export const getMessages = catchAsync(
         new AppError('Conversation not found.', StatusCodes.NOT_FOUND)
       );
 
+    const otherParticipantId = conversation.participants.find(
+      (participantId: ObjectId) =>
+        participantId.toString() !== req.user._id.toString()
+    );
+
+    const otherParticipant = await User.findById(otherParticipantId);
+
     res.status(StatusCodes.OK).json({
       status: 'success',
       data: {
+        otherParticipant: otherParticipant,
         messages
       }
     });
