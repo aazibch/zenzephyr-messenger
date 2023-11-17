@@ -1,12 +1,12 @@
 import MessageInputContainer from './MessageInputContainer/MessageInputContainer';
-import MessengerMainContent from './MessengerMainContent/MessengerMainContent';
-import MessengerMainHeader from './MessengerMainHeader';
+import ConversationMainContent from './ConversationMainContent/ConversationMainContent';
+import ConversationMainHeader from './ConversationMainHeader';
 
 const MessengerMain = () => {
   return (
     <div className="flex flex-col flex-grow">
-      <MessengerMainHeader />
-      <MessengerMainContent />
+      <ConversationMainHeader />
+      <ConversationMainContent />
       <MessageInputContainer />
     </div>
   );

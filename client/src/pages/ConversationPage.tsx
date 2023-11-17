@@ -1,10 +1,10 @@
 import { Params, json } from 'react-router-dom';
-import MessengerMain from '../components/Messenger/ConversationPage/MessengerMain';
+import ConversationMain from '../components/Messenger/ConversationPage/ConversationMain';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
 
 const ConversationPage = () => {
-  return <MessengerMain />;
+  return <ConversationMain />;
 };
 
 export default ConversationPage;

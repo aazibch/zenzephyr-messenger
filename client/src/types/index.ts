@@ -26,7 +26,7 @@ interface TextContentProps {
 
 interface ImageContentProps {
   type: 'image';
-  text: string;
+  image: string;
 }
 
 export interface MessageObj {

@@ -11,11 +11,20 @@ const MessengerMainContent = () => {
 
   if (messagesData.messages.length !== 0) {
     messagesContent = messagesData.messages.map((elem) => {
+      let message = '';
+
+      if (elem.contentProps.type === 'text') {
+        message = elem.contentProps.text;
+      } else if (elem.contentProps.type === 'image') {
+        message = elem.contentProps.image;
+      }
+
       return (
         <Message
           key={elem._id}
           byLoggedInUser={elem.sender.toString() === auth.user._id}
-          message={elem.contentProps.text}
+          messageType={elem.contentProps.type}
+          messageContent={message}
           timestamp="1 month ago"
         />
       );
