@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import ProfilePhoto from '../../../UI/ProfilePhoto';
+import ProfileImage from '../../../UI/ProfileImage';
 
 interface MessageProps {
   byLoggedInUser?: boolean;
@@ -45,7 +45,7 @@ const Message = ({
     <div className={containerClassNames}>
       <div className={contentClassNames}>
         {!byLoggedInUser && profileImage && (
-          <ProfilePhoto className="mr-2" src={profileImage} />
+          <ProfileImage className="mr-2" src={profileImage} />
         )}
         <div className={messageClassNames}>{messageContentElement}</div>
       </div>

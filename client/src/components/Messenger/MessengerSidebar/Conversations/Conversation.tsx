@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import ProfilePhoto from '../../../UI/ProfilePhoto';
+import ProfileImage from '../../../UI/ProfileImage';
 import { RiImageFill } from 'react-icons/ri';
 import { ReactElement } from 'react';
 import styles from './Conversations.module.css';
@@ -39,7 +39,7 @@ const Conversation = ({
       }}
     >
       <div className="flex p-4 border-b items-center">
-        <ProfilePhoto size="large" src={profileImageUrl} className="mr-3" />
+        <ProfileImage size="large" src={profileImageUrl} className="mr-3" />
         <div>
           <div className="flex items-center">
             <h3 className="font-medium mr-2">{displayName}</h3>

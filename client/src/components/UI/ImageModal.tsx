@@ -2,11 +2,20 @@ import { IoIosClose } from 'react-icons/io';
 
 const ImageModal = ({
   src,
+  isProfileImage = false,
   closeHandler
 }: {
   src: string;
   closeHandler: () => void;
+  isProfileImage?: boolean;
 }) => {
+  let className = 'max-w-[800px] max-h-[600px] object-cover';
+
+  if (isProfileImage) {
+    className =
+      'max-w-[300px] max-h-[300px] object-cover border-2 border-gray-300 rounded-full';
+  }
+
   return (
     <div
       onClick={closeHandler}
@@ -22,11 +31,7 @@ const ImageModal = ({
       </a>
 
       {/* <!-- Image --> */}
-      <img
-        src={src}
-        alt="Open attached image"
-        className="max-w-[800px] max-h-[600px] object-cover"
-      />
+      <img src={src} alt="Open attached image" className={className} />
     </div>
   );
 };
