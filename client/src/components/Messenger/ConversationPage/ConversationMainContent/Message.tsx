@@ -7,6 +7,7 @@ interface MessageProps {
   messageType: 'image' | 'text';
   messageContent: string;
   timestamp: string;
+  attachedImageClickHandler?: (imageSource: string) => void;
 }
 
 const Message = ({
@@ -14,7 +15,8 @@ const Message = ({
   profileImage,
   messageType,
   messageContent,
-  timestamp
+  timestamp,
+  attachedImageClickHandler
 }: MessageProps) => {
   let containerClassNames = 'mb-4';
   let messageClassNames = 'bg-gray-200 rounded-lg p-3 max-w-md';
@@ -28,9 +30,14 @@ const Message = ({
 
   let messageContentElement: string | ReactElement = messageContent;
 
-  if (messageType === 'image') {
+  if (messageType === 'image' && attachedImageClickHandler) {
     messageContentElement = (
-      <img className="max-w-sm" src={messageContent} alt="Attached Image" />
+      <img
+        className="max-w-sm cursor-pointer"
+        src={messageContent}
+        alt="Attached Image"
+        onClick={() => attachedImageClickHandler(messageContent)}
+      />
     );
   }
 

@@ -25,15 +25,13 @@ const Emojis = ({
 
   return (
     <div ref={emojiPickerRef} className="relative">
-      <div className="absolute z-50 bottom-14">
-        {isOpen && (
-          <EmojiPicker
-            skinTonesDisabled
-            searchDisabled
-            width="20rem"
-            onEmojiClick={emojiClickHandler}
-          />
-        )}
+      <div className={`absolute z-50 bottom-14 ${isOpen ? '' : 'hidden'}`}>
+        <EmojiPicker
+          skinTonesDisabled
+          searchDisabled
+          width="20rem"
+          onEmojiClick={emojiClickHandler}
+        />
       </div>
       <Button isSelected={isOpen} onClick={emojiPickerButtonHandler} iconButton>
         <BsEmojiSmile size="1.25em" />
