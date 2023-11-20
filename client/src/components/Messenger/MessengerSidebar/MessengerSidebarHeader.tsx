@@ -6,7 +6,7 @@ import Button from '../../UI/Button';
 import DropdownMenu from '../../UI/DropdownMenu';
 import { useRouteLoaderData } from 'react-router-dom';
 import { AuthObj } from '../../../types';
-import ImageModal from '../../UI/ImageModal';
+import ImageModal from '../../UI/Modals/ImageModal';
 
 const menuItems = [
   {

@@ -3,7 +3,7 @@ import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
 import Message from './Message';
 import { MessagesObj } from '../../../../types';
 import { AuthObj } from '../../../../types';
-import ImageModal from '../../../UI/ImageModal';
+import ImageModal from '../../../UI/Modals/ImageModal';
 
 const MessengerMainContent = () => {
   const [maximizedImage, setMaximizedImage] = useState<string | null>(null);
