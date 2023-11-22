@@ -19,14 +19,11 @@ export const loader = () => {
   const user = localStorage.getItem('user');
   const duration = getTokenDuration();
 
-  console.log('duration', duration);
-
   if (duration <= 0) {
     redirect('/logout');
   }
 
   if (user) {
-    // return redirect('/test');
     return redirect('/messenger');
   }
 

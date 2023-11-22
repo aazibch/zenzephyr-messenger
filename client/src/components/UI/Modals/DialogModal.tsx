@@ -7,10 +7,12 @@ const DialogModal = ({
   heading,
   textBody,
   dismissHandler,
+  isLoading,
   confirmHandler
 }: {
   heading: string;
   textBody: string;
+  isLoading: boolean;
   dismissHandler: () => void;
   confirmHandler: () => void;
 }) => {
@@ -40,7 +42,6 @@ const DialogModal = ({
             {/* <!-- Modal body --> */}
             <div className="p-4 md:p-5 space-y-4">
               <p className="text-base leading-relaxed text-gray-500 ">
-                modalContentRef
                 {textBody}
               </p>
             </div>
@@ -50,6 +51,7 @@ const DialogModal = ({
                 onClick={confirmHandler}
                 className="mr-1"
                 styleType="danger"
+                disabled={isLoading}
               >
                 Delete
               </Button>

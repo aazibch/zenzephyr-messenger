@@ -52,9 +52,20 @@ export const sendHttpRequest = async (requestConfig: RequestConfig) => {
     body: requestConfig.body ? requestConfig.body : null
   });
 
+  let prettierResponse: HttpResponseDataObj;
+
+  if (response.status === 204) {
+    prettierResponse = {
+      status: response.status,
+      statusText: 'success'
+    };
+
+    return prettierResponse;
+  }
+
   const parsedResponse = await response.json();
 
-  const prettierResponse: HttpResponseDataObj = {
+  prettierResponse = {
     status: response.status,
     statusText: parsedResponse.status
   };

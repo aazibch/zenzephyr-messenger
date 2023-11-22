@@ -1,18 +1,10 @@
-// import { useEffect } from 'react';
-import {
-  ErrorResponse,
-  useRouteError
-  // useRouteLoaderData,
-  // useSubmit
-} from 'react-router-dom';
+import { ErrorResponse, useRouteError } from 'react-router-dom';
 import Layout from '../components/UI/Layout';
 import Logo from '../components/UI/Logo';
-// import { AuthObj } from '../types';
 import AuthLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
 
 const ErrorPage = () => {
   const error = useRouteError() as ErrorResponse;
-
   let message = error.data;
 
   if (error.status === 404) {

@@ -11,7 +11,8 @@ import MessengerPage, {
   loader as messengerLoader
 } from './pages/MessengerPage';
 import ConversationPage, {
-  loader as conversationLoader
+  loader as conversationLoader,
+  action as conversationAction
 } from './pages/ConversationPage';
 import NoConversationPage from './pages/NoConversationPage';
 
@@ -52,7 +53,8 @@ const router = createBrowserRouter([
           {
             path: ':id',
             element: <ConversationPage />,
-            loader: conversationLoader
+            loader: conversationLoader,
+            action: conversationAction
           }
         ]
       },
