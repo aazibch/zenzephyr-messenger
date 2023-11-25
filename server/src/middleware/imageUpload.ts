@@ -25,7 +25,7 @@ const upload = multer({
   fileFilter: multerFilter
 });
 
-export const uploadAttachedImage = upload.single('attachedImage');
+export const uploadAttachedImage = upload.single('image');
 
 export const editAttachedImage = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {

@@ -4,25 +4,34 @@ interface HttpConfigArguments {
   url: string;
   method: HttpMethods;
   allowCredentials: boolean;
-  body?: FormDataObj;
+  body?: FormDataObj | FormData;
+  headers?: {
+    [index: string]: string;
+  };
 }
 
 export const generateHttpConfig = ({
   url,
   method,
   allowCredentials,
-  body
+  body,
+  headers
 }: HttpConfigArguments) => {
+  let requestBody: BodyInit | undefined;
+
+  if (body instanceof FormData) {
+    requestBody = body;
+  } else if (body !== undefined) {
+    requestBody = JSON.stringify(body);
+  }
+
   return {
     url,
     method,
     credentials: allowCredentials ? 'include' : undefined,
     withCredentials: allowCredentials,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: body ? JSON.stringify(body) : undefined
+    headers,
+    body: requestBody
   };
 };
 

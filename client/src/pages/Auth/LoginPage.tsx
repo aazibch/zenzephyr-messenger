@@ -18,7 +18,10 @@ export const action = async ({ request }: { request: Request }) => {
     url: `${apiUrl}/api/v1/users/login`,
     method: 'POST',
     allowCredentials: true,
-    body: body
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body
   });
 
   const response = await sendHttpRequest(httpConfig);
@@ -32,13 +35,10 @@ export const action = async ({ request }: { request: Request }) => {
   }
 
   if (response.statusText === 'success') {
-    console.log('loginPage', response.data?.auth);
-
     localStorage.setItem(
       'tokenExpirationDate',
       response.data?.auth.tokenExpirationDate
     );
-    console.log('localStorage', localStorage.getItem('tokenExpirationDate'));
     localStorage.setItem('user', JSON.stringify(response.data?.user));
     return redirect('/');
   }

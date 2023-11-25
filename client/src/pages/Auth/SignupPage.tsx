@@ -16,6 +16,9 @@ export const action = async ({ request }: { request: Request }) => {
     url: `${apiUrl}/api/v1/users/signup`,
     method: 'POST',
     allowCredentials: true,
+    headers: {
+      'Content-Type': 'application/json'
+    },
     body: body
   });
 

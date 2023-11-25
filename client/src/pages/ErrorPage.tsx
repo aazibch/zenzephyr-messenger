@@ -7,6 +7,10 @@ const ErrorPage = () => {
   const error = useRouteError() as ErrorResponse;
   let message = error.data;
 
+  if (!error.data) {
+    message = 'Something went wrong.';
+  }
+
   if (error.status === 404) {
     message = 'Page not found.';
   }

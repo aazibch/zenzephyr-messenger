@@ -47,4 +47,34 @@ export const action = async ({
 
     throw json(response.message, { status: response.status });
   }
+
+  if (request.method === 'POST') {
+    const formData = await request.formData();
+
+    const image = formData.get('image') as File;
+    const text = formData.get('text');
+
+    if (image.name !== '' && text !== '') {
+      formData.delete('text');
+    }
+
+    if (image.name === '') {
+      formData.delete('image');
+    }
+
+    const httpConfig = generateHttpConfig({
+      url: `${apiUrl}/api/v1/conversations/${params.id}/messages`,
+      method: 'POST',
+      allowCredentials: true,
+      body: formData
+    });
+
+    const response = await sendHttpRequest(httpConfig);
+
+    if (response.statusText === 'success') {
+      return response;
+    }
+
+    throw json(response.message, { status: response.status });
+  }
 };

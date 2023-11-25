@@ -8,13 +8,18 @@ const LoginForm = () => {
   const actionData = useActionData() as HttpResponseDataObj;
 
   const isLoading =
-    navigation.state === 'submitting' &&
+    (navigation.state === 'submitting' || navigation.state === 'loading') &&
     navigation.formData != null &&
     (navigation.formAction === navigation.location?.pathname ||
       navigation.formAction === navigation.location?.pathname + '?index');
 
   return (
-    <Form action="/" method="post" className="rounded-md">
+    <Form
+      action="/"
+      method="post"
+      encType="application/x-www-form-urlencoded"
+      className="rounded-md"
+    >
       {actionData?.message && (
         <p className="mb-5 text-red-500 text-center">{actionData.message}</p>
       )}
