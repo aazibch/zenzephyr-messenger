@@ -18,6 +18,10 @@ export interface AuthenticatedRequest extends Request {
 
 export interface AuthenticatedRequestWithFile extends AuthenticatedRequest {
   file: Express.Multer.File & {
-    publicUrl?: string;
+    image: {
+      url: string;
+      width: number;
+      height: number;
+    };
   };
 }

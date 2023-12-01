@@ -73,7 +73,7 @@ export const createMessage = catchAsync(
       (element) => element.toString() !== req.user._id.toString()
     );
 
-    if (!req.file?.publicUrl) {
+    if (!req.file?.image) {
       const { error } = schema.validate(req.body);
 
       if (error)
@@ -84,15 +84,21 @@ export const createMessage = catchAsync(
 
     let contentProps;
 
-    if (req.file?.publicUrl) {
+    if (req.file?.image) {
       contentProps = {
         type: 'image',
-        image: req.file.publicUrl
+        image: {
+          url: req.file.image.url,
+          width: req.file.image.width,
+          height: req.file.image.height
+        }
       };
     } else {
       contentProps = {
         type: 'text',
-        text: req.body.text
+        text: {
+          content: req.body.text
+        }
       };
     }
 

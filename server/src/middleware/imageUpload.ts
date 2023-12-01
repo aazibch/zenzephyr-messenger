@@ -69,7 +69,13 @@ export const saveAttachedImageToCloud = catchAsync(
       public_id: req.file.filename
     });
 
-    req.file.publicUrl = savedImage.url.replace('http', 'https');
+    console.log('[imageUpload.ts] savedImage', savedImage);
+
+    req.file.image = {
+      url: savedImage.secure_url,
+      width: savedImage.width,
+      height: savedImage.height
+    };
 
     next();
   }

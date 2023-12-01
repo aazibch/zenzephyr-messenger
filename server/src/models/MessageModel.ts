@@ -3,12 +3,18 @@ import Conversation from './ConversationModel';
 
 interface TextContentProps {
   type: 'text';
-  text: string;
+  text: {
+    content: string;
+  };
 }
 
 interface ImageContentProps {
   type: 'image';
-  image: string;
+  image: {
+    url: string;
+    width: number;
+    height: number;
+  };
 }
 
 interface IMessage {
@@ -47,13 +53,21 @@ const messageSchema = new mongoose.Schema<IMessage, MessageModel>({
       required: true
     },
     image: {
-      type: mongoose.Schema.Types.String,
+      type: {
+        url: { type: mongoose.Schema.Types.String },
+        width: { type: mongoose.Schema.Types.Number },
+        height: { type: mongoose.Schema.Types.Number }
+      },
       required: function () {
         return this.contentProps.type === 'image';
       }
     },
     text: {
-      type: mongoose.Schema.Types.String,
+      type: {
+        content: {
+          type: mongoose.Schema.Types.String
+        }
+      },
       required: function () {
         return this.contentProps.type === 'text';
       }
@@ -69,7 +83,7 @@ messageSchema.statics.setSnippet = async function (messageDoc) {
   let snippet: string;
 
   if (messageDoc.contentProps.type === 'text') {
-    snippet = messageDoc.contentProps.text;
+    snippet = messageDoc.contentProps.text.content;
   } else if (messageDoc.contentProps.type === 'image') {
     snippet = 'Image';
   }

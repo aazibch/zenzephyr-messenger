@@ -67,13 +67,13 @@ export const createConversation = catchAsync(
 
     let error;
 
-    if (!req.file?.publicUrl) {
+    if (!req.file?.image) {
       const result = conversationWithTextSchema.validate(req.body);
 
       error = result.error;
     }
 
-    if (req.file?.publicUrl) {
+    if (req.file?.image) {
       const result = conversationWithImageSchema.validate(req.body);
 
       error = result.error;
@@ -135,15 +135,21 @@ export const createConversation = catchAsync(
 
     let contentProps;
 
-    if (req.file?.publicUrl) {
+    if (req.file?.image) {
       contentProps = {
         type: 'image',
-        image: req.file.publicUrl
+        image: {
+          url: req.file.image.url,
+          width: req.file.image.width,
+          height: req.file.image.height
+        }
       };
     } else {
       contentProps = {
         type: 'text',
-        text: req.body.text
+        text: {
+          content: req.body.text
+        }
       };
     }
 
