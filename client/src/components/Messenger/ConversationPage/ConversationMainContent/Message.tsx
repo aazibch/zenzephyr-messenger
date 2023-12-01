@@ -49,12 +49,12 @@ const Message = ({
     let updatedWidth;
     let updatedHeight;
 
-    if (originalWidth > 384) {
-      updatedWidth = 384;
+    if (originalWidth > 236) {
+      updatedWidth = 236;
       updatedHeight = calculateAspectRatioHeight(
         originalWidth,
         originalHeight,
-        384
+        236
       );
     } else {
       updatedWidth = originalWidth;
