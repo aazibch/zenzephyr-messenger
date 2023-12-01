@@ -44,17 +44,18 @@ const Message = ({
   }
 
   if (messageContent.type === 'image' && attachedImageClickHandler) {
+    const cutoffWidth = 236;
     const originalWidth = messageContent.image.width;
     const originalHeight = messageContent.image.height;
     let updatedWidth;
     let updatedHeight;
 
-    if (originalWidth > 236) {
-      updatedWidth = 236;
+    if (originalWidth > cutoffWidth) {
+      updatedWidth = cutoffWidth;
       updatedHeight = calculateAspectRatioHeight(
         originalWidth,
         originalHeight,
-        236
+        cutoffWidth
       );
     } else {
       updatedWidth = originalWidth;
