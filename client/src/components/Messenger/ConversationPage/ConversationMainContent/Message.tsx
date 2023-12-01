@@ -31,6 +31,11 @@ const Message = ({
   let messageClassNames = 'bg-gray-200 rounded-lg p-3 max-w-md';
   let contentClassNames = 'flex items-center mb-1';
   let metaClassNames = 'text-xs text-gray-600 block';
+  let imageClassNames = 'w-full';
+
+  if (attachedImageClickHandler) {
+    imageClassNames += ' cursor-pointer';
+  }
 
   if (byLoggedInUser) {
     containerClassNames = 'flex flex-col mb-4 items-end';
@@ -43,7 +48,7 @@ const Message = ({
     messageContentElement = messageContent.text.content;
   }
 
-  if (messageContent.type === 'image' && attachedImageClickHandler) {
+  if (messageContent.type === 'image') {
     const cutoffWidth = 236;
     const originalWidth = messageContent.image.width;
     const originalHeight = messageContent.image.height;
@@ -65,10 +70,14 @@ const Message = ({
     messageContentElement = (
       <div style={{ width: `${updatedWidth}px`, height: `${updatedHeight}px` }}>
         <img
-          className="w-full cursor-pointer"
+          className={imageClassNames}
           src={messageContent.image.url}
           alt="Attached Image"
-          onClick={() => attachedImageClickHandler(messageContent.image.url)}
+          onClick={
+            attachedImageClickHandler
+              ? () => attachedImageClickHandler(messageContent.image.url)
+              : undefined
+          }
         />
       </div>
     );

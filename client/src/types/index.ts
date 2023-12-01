@@ -44,6 +44,11 @@ export interface MessageObj {
   contentProps: TextContentProps | ImageContentProps;
 }
 
+export interface OptimisticMessageObj {
+  sender: string;
+  contentProps: TextContentProps | ImageContentProps;
+}
+
 export interface MessagesObj {
   otherParticipant: UserObj;
   messages: MessageObj[];

@@ -21,8 +21,7 @@ const MessageInputContainer = () => {
 
   const submitForm = () => {
     submit(formRef.current, {
-      method: 'POST',
-      encType: 'multipart/form-data'
+      method: 'POST'
     });
   };
 
