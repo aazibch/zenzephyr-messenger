@@ -19,14 +19,20 @@ export interface ConversationObj {
   snippet?: string;
 }
 
-interface TextContentProps {
+export interface TextContentProps {
   type: 'text';
-  text: string;
+  text: {
+    content: string;
+  };
 }
 
-interface ImageContentProps {
+export interface ImageContentProps {
   type: 'image';
-  image: string;
+  image: {
+    url: string;
+    width: number;
+    height: number;
+  };
 }
 
 export interface MessageObj {

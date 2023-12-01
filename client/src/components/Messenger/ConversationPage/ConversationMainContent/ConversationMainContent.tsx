@@ -34,17 +34,16 @@ const MessengerMainContent = () => {
       let message = '';
 
       if (elem.contentProps.type === 'text') {
-        message = elem.contentProps.text;
+        message = elem.contentProps.text.content;
       } else if (elem.contentProps.type === 'image') {
-        message = elem.contentProps.image;
+        message = elem.contentProps.image.url;
       }
 
       return (
         <Message
           key={elem._id}
           byLoggedInUser={elem.sender.toString() === auth.user._id}
-          messageType={elem.contentProps.type}
-          messageContent={message}
+          messageContent={elem.contentProps}
           timestamp="1 month ago"
           attachedImageClickHandler={attachedImageClickHandler}
         />
