@@ -25,6 +25,14 @@ const MessageInputContainer = () => {
     });
   };
 
+  const keyDownHandler = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      submitForm();
+      textareaRef.current!.value = '';
+    }
+  };
+
   const imageUploadHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     submitForm();
     e.target.value = '';
@@ -35,6 +43,14 @@ const MessageInputContainer = () => {
     submitForm();
     textareaRef.current!.value = '';
   };
+
+  let labelClassNames =
+    'text-gray-600 bg-white border-gray-300 hover:bg-[#e2e6ea] disabled:hover:bg-white rounded-full disabled:opacity-50 inline-flex px-2 py-2 cursor-pointer';
+
+  if (isSubmitting) {
+    labelClassNames =
+      'text-gray-600 bg-white border-gray-300 hover:bg-white rounded-full opacity-50 inline-flex px-2 py-2';
+  }
 
   return (
     <div className="p-4">
@@ -47,14 +63,12 @@ const MessageInputContainer = () => {
       >
         <Emojis textareaRef={textareaRef} />
         <TextareaAutosize
+          onKeyDown={keyDownHandler}
           name="text"
           className="resize-none outline-none flex-1 mr-1 p-3"
           ref={textareaRef}
         />
-        <label
-          className="text-gray-600 bg-white border-gray-300 hover:bg-[#e2e6ea] disabled:hover:bg-white rounded-full disabled:opacity-50 inline-flex px-2 py-2 cursor-pointer"
-          htmlFor="image-upload"
-        >
+        <label className={labelClassNames} htmlFor="image-upload">
           <BsCardImage size="1.25em" />
         </label>
         <input
@@ -64,6 +78,7 @@ const MessageInputContainer = () => {
           className="hidden"
           type="file"
           name="image"
+          disabled={isSubmitting}
           accept="image/png, image/gif, image/jpeg"
         />
 
