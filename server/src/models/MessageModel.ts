@@ -29,55 +29,58 @@ interface MessageModel extends Model<IMessage> {
   setSnippet(doc: IMessage): void;
 }
 
-const messageSchema = new mongoose.Schema<IMessage, MessageModel>({
-  conversation: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Conversation',
-    required: true
-  },
-  recipient: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  sender: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-
-    required: true
-  },
-  contentProps: {
-    type: {
-      type: mongoose.Schema.Types.String,
-      enum: ['text', 'image'],
+const messageSchema = new mongoose.Schema<IMessage, MessageModel>(
+  {
+    conversation: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Conversation',
       required: true
     },
-    image: {
-      type: {
-        url: { type: mongoose.Schema.Types.String },
-        width: { type: mongoose.Schema.Types.Number },
-        height: { type: mongoose.Schema.Types.Number }
-      },
-      required: function () {
-        return this.contentProps.type === 'image';
-      }
+    recipient: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
     },
-    text: {
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+
+      required: true
+    },
+    contentProps: {
       type: {
-        content: {
-          type: mongoose.Schema.Types.String
+        type: mongoose.Schema.Types.String,
+        enum: ['text', 'image'],
+        required: true
+      },
+      image: {
+        type: {
+          url: { type: mongoose.Schema.Types.String },
+          width: { type: mongoose.Schema.Types.Number },
+          height: { type: mongoose.Schema.Types.Number }
+        },
+        required: function () {
+          return this.contentProps.type === 'image';
         }
       },
-      required: function () {
-        return this.contentProps.type === 'text';
+      text: {
+        type: {
+          content: {
+            type: mongoose.Schema.Types.String
+          }
+        },
+        required: function () {
+          return this.contentProps.type === 'text';
+        }
       }
+    },
+    deletedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
     }
   },
-  deletedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }
-});
+  { timestamps: true }
+);
 
 messageSchema.statics.setSnippet = async function (messageDoc) {
   let snippet: string;

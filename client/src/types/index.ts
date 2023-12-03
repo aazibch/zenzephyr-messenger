@@ -42,6 +42,8 @@ export interface MessageObj {
   recipient: string;
   sender: string;
   contentProps: TextContentProps | ImageContentProps;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface OptimisticMessageObj {

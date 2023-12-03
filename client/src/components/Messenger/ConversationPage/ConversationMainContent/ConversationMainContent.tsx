@@ -5,8 +5,7 @@ import {
   useRouteLoaderData
 } from 'react-router-dom';
 import Message from './Message';
-import { MessagesObj } from '../../../../types';
-import { AuthObj, OptimisticMessageObj } from '../../../../types';
+import { AuthObj, MessagesObj, OptimisticMessageObj } from '../../../../types';
 import ImageModal from '../../../UI/Modals/ImageModal';
 
 const ConversationMainContent = () => {
@@ -114,7 +113,7 @@ const ConversationMainContent = () => {
           key={elem._id}
           byLoggedInUser={elem.sender.toString() === auth.user._id}
           messageContent={elem.contentProps}
-          timestamp="1 month ago"
+          timestamp={elem.createdAt}
           attachedImageClickHandler={attachedImageClickHandler}
         />
       );
@@ -142,18 +141,6 @@ const ConversationMainContent = () => {
             timestamp="1 month ago"
           />
         )}
-
-        <Message
-          isOptimistic
-          byLoggedInUser
-          messageContent={{
-            type: 'text',
-            text: {
-              content: 'This is for testing purposes only.'
-            }
-          }}
-          timestamp="1 month ago"
-        />
       </div>
     </>
   );

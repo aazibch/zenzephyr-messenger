@@ -7,7 +7,7 @@ interface MessageProps {
   byLoggedInUser?: boolean;
   profileImage?: string;
   messageContent: TextContentProps | ImageContentProps;
-  timestamp: string;
+  timestamp?: string;
   attachedImageClickHandler?: (imageSource: string) => void;
 }
 
@@ -29,11 +29,22 @@ const Message = ({
   isOptimistic,
   attachedImageClickHandler
 }: MessageProps) => {
+  let formattedTimestamp;
   let containerClassNames = 'mb-4';
   let messageClassNames = 'bg-gray-200 rounded-lg p-3 max-w-md';
-  let contentClassNames = 'flex items-center mb-1';
+  let contentClassNames = 'flex items-center mb-2';
   let metaClassNames = 'text-xs text-gray-600 block';
   let imageClassNames = 'w-full';
+
+  if (timestamp) {
+    formattedTimestamp = new Date(timestamp).toLocaleTimeString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
 
   if (attachedImageClickHandler) {
     imageClassNames += ' cursor-pointer';
@@ -94,7 +105,7 @@ const Message = ({
         <div className={messageClassNames}>{messageContentElement}</div>
       </div>
       <span className={metaClassNames}>
-        {isOptimistic ? 'Sending...' : timestamp}
+        {isOptimistic ? 'Sending...' : formattedTimestamp}
       </span>
     </div>
   );
