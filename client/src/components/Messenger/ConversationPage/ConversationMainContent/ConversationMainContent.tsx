@@ -136,11 +136,24 @@ const ConversationMainContent = () => {
         {messagesContent}
         {optimisticMessage && (
           <Message
+            isOptimistic
             byLoggedInUser
             messageContent={optimisticMessage.contentProps}
             timestamp="1 month ago"
           />
         )}
+
+        <Message
+          isOptimistic
+          byLoggedInUser
+          messageContent={{
+            type: 'text',
+            text: {
+              content: 'This is for testing purposes only.'
+            }
+          }}
+          timestamp="1 month ago"
+        />
       </div>
     </>
   );

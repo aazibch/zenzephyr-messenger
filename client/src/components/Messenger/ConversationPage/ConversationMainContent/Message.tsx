@@ -3,6 +3,7 @@ import ProfileImage from '../../../UI/ProfileImage';
 import { TextContentProps, ImageContentProps } from '../../../../types';
 
 interface MessageProps {
+  isOptimistic?: boolean;
   byLoggedInUser?: boolean;
   profileImage?: string;
   messageContent: TextContentProps | ImageContentProps;
@@ -25,6 +26,7 @@ const Message = ({
   profileImage,
   messageContent,
   timestamp,
+  isOptimistic,
   attachedImageClickHandler
 }: MessageProps) => {
   let containerClassNames = 'mb-4';
@@ -91,7 +93,9 @@ const Message = ({
         )}
         <div className={messageClassNames}>{messageContentElement}</div>
       </div>
-      <span className={metaClassNames}>{timestamp}</span>
+      <span className={metaClassNames}>
+        {isOptimistic ? 'Sending...' : timestamp}
+      </span>
     </div>
   );
 };
