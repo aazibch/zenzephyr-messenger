@@ -33,7 +33,12 @@ const Emojis = ({
           onEmojiClick={emojiClickHandler}
         />
       </div>
-      <Button isSelected={isOpen} onClick={emojiPickerButtonHandler} iconButton>
+      <Button
+        type="button"
+        isSelected={isOpen}
+        onClick={emojiPickerButtonHandler}
+        iconButton
+      >
         <BsEmojiSmile size="1.25em" />
       </Button>
     </div>

@@ -20,12 +20,14 @@ const MessageInputContainer = () => {
       navigation.formAction === navigation.location.pathname);
 
   const submitForm = () => {
+    console.log('[submitForm]');
     submit(formRef.current, {
       method: 'POST'
     });
   };
 
   const keyDownHandler = (e: React.KeyboardEvent) => {
+    console.log('[keyDownHandler]');
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       submitForm();
@@ -34,11 +36,13 @@ const MessageInputContainer = () => {
   };
 
   const imageUploadHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('[imageUploadHandler]');
     submitForm();
     e.target.value = '';
   };
 
   const formSubmitHandler = (e: React.FormEvent) => {
+    console.log('[formSubmitHandler]');
     e.preventDefault();
     submitForm();
     textareaRef.current!.value = '';
