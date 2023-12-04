@@ -4,7 +4,8 @@ import { ObjectId } from 'mongoose';
 export interface IUser {
   _id: string | ObjectId;
   __v: number;
-  displayName: string;
+  fullName: string;
+  displayUsername: string;
   username: string;
   email: string;
   profileImage: string;

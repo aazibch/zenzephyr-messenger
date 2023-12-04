@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import { IUser } from '../types';
+import { generateValidationMessage } from '../utils/generateValidationMessage';
 
 interface IUserMethods {
   isPasswordCorrect(inputPass: string, encryptedPass: string): Promise<boolean>;
@@ -11,14 +12,26 @@ interface IUserMethods {
 type UserModel = mongoose.Model<IUser, {}, IUserMethods>;
 
 const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
-  displayName: {
+  fullName: {
+    type: String,
+    required: [true, generateValidationMessage('required', 'full name')],
+    maxlength: [75, generateValidationMessage('max', 'full name', 75)],
+    minlength: [3, generateValidationMessage('min', 'full name', 3)],
+    validate: {
+      validator: function (val: string) {
+        return /^[a-zA-Z ]*$/.test(val);
+      },
+      message: 'The full name may only contain alphabets and spaces.'
+    }
+  },
+  displayUsername: {
     type: String
   },
   username: {
     type: String,
-    required: [true, 'Please provide a username.'],
-    maxlength: [50, 'The username should have fewer than fifty characters.'],
-    minlength: [3, 'The username should at least have three characters.'],
+    required: [true, generateValidationMessage('required', 'username')],
+    maxlength: [50, generateValidationMessage('max', 'username', 50)],
+    minlength: [3, generateValidationMessage('min', 'username', 3)],
     validate: {
       validator: function (val: string) {
         return /^[a-zA-Z0-9_]*$/.test(val);
@@ -30,14 +43,11 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
   },
   email: {
     type: String,
-    required: [true, 'Please provide an email address.'],
-    validate: [validator.isEmail, 'Please provide a valid email address.'],
+    required: [true, generateValidationMessage('required', 'email address')],
+    validate: [validator.isEmail, generateValidationMessage('email')],
     unique: true,
-    maxlength: [
-      50,
-      'The email address should have fewer than fifty characters.'
-    ],
-    minlength: [5, 'The email address should at least have five characters.']
+    maxlength: [50, generateValidationMessage('max', 'email address', 50)],
+    minlength: [5, generateValidationMessage('min', 'email address', 5)]
   },
   profileImage: {
     type: String,
@@ -46,8 +56,8 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
   },
   password: {
     type: String,
-    required: [true, 'Please provide a password.'],
-    minlength: [8, 'The password should at least have eight characters.'],
+    required: [true, generateValidationMessage('required', 'password')],
+    minlength: [8, generateValidationMessage('min', 'password', 8)],
     select: false
   },
   passwordChangeDate: Date
@@ -56,7 +66,7 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
 userSchema.pre('save', async function (next) {
   if (!this.isNew) return next();
 
-  this.displayName = this.username;
+  this.displayUsername = this.username;
   this.username = this.username.toLowerCase();
 
   next();
