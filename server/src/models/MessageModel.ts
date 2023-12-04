@@ -44,7 +44,6 @@ const messageSchema = new mongoose.Schema<IMessage, MessageModel>(
     sender: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-
       required: true
     },
     contentProps: {

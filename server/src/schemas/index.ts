@@ -2,6 +2,18 @@ import Joi from 'joi';
 import { generateValidationMessage } from '../utils/generateValidationMessage';
 
 export const signupSchema = Joi.object({
+  fullName: Joi.string()
+    .pattern(new RegExp(/^[a-zA-Z ]*$/))
+    .min(3)
+    .max(75)
+    .required()
+    .messages({
+      'string.pattern.base':
+        'The full name may only contain alphabets and spaces.',
+      'string.min': generateValidationMessage('min', 'full name', 3),
+      'string.max': generateValidationMessage('max', 'full name', 75),
+      'any.required': generateValidationMessage('required', 'full name')
+    }),
   username: Joi.string()
     .pattern(new RegExp(/^[a-zA-Z0-9_]*$/))
     .min(3)

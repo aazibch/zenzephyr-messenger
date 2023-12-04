@@ -24,9 +24,6 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
       message: 'The full name may only contain alphabets and spaces.'
     }
   },
-  displayUsername: {
-    type: String
-  },
   username: {
     type: String,
     required: [true, generateValidationMessage('required', 'username')],
@@ -66,7 +63,6 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
 userSchema.pre('save', async function (next) {
   if (!this.isNew) return next();
 
-  this.displayUsername = this.username;
   this.username = this.username.toLowerCase();
 
   next();

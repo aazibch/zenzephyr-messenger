@@ -50,7 +50,12 @@ export const signup = catchAsync(
     if (error)
       next(new AppError(error.details[0].message, StatusCodes.BAD_REQUEST));
 
-    const filteredBody = pick({ ...value }, ['username', 'email', 'password']);
+    const filteredBody = pick({ ...value }, [
+      'fullName',
+      'username',
+      'email',
+      'password'
+    ]);
 
     const user = (await User.create(filteredBody)).toObject();
     delete user.password;

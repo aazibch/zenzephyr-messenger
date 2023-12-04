@@ -5,7 +5,6 @@ export interface IUser {
   _id: string | ObjectId;
   __v: number;
   fullName: string;
-  displayUsername: string;
   username: string;
   email: string;
   profileImage: string;
