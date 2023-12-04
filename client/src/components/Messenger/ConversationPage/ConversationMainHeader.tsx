@@ -50,7 +50,7 @@ const MessengerMainHeader = () => {
           isLoading={isLoading}
         />
       )}
-      <h2>{messagesData.otherParticipant.username}</h2>
+      <h2>{messagesData.otherParticipant.fullName}</h2>
       <Button onClick={deleteButtonClickHandler} iconButton className="ml-auto">
         <BsTrash3 size="1.25em" />
       </Button>

@@ -3,6 +3,7 @@ export type HttpMethods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 export interface UserObj {
   _id: string;
   __v: number;
+  fullName: string;
   username: string;
   email: string;
   profileImage: string;

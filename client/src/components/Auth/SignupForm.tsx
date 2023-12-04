@@ -19,6 +19,15 @@ const SignupForm = () => {
       )}
       <Input
         className="mb-5"
+        label="Full Name"
+        input={{
+          id: 'fullName',
+          type: 'name',
+          name: 'fullName'
+        }}
+      />
+      <Input
+        className="mb-5"
         label="Username"
         input={{
           id: 'username',
@@ -48,9 +57,9 @@ const SignupForm = () => {
         className="mb-5"
         label="Password Confirmation"
         input={{
-          id: 'confirmPassword',
+          id: 'passwordConfirmation',
           type: 'password',
-          name: 'confirmPassword'
+          name: 'passwordConfirmation'
         }}
       />
       <Button type="submit" styleType="primary" disabled={isLoading}>
