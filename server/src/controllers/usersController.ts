@@ -65,9 +65,13 @@ export const blockUser = catchAsync(
       );
     }
 
-    const user = await User.findByIdAndUpdate(req.user._id, {
-      $push: { blockedUsers: userToBlock._id }
-    });
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $push: { blockedUsers: userToBlock._id }
+      },
+      { new: true }
+    );
 
     res.status(StatusCodes.OK).json({
       status: 'success',

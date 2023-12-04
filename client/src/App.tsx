@@ -45,6 +45,7 @@ const router = createBrowserRouter([
         path: 'messenger',
         element: <MessengerPage />,
         loader: messengerLoader,
+        id: 'messenger',
         children: [
           {
             index: true,

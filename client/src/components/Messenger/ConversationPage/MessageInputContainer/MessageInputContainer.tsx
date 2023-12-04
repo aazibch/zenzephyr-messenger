@@ -6,7 +6,13 @@ import { BsCardImage } from 'react-icons/bs';
 import Button from '../../../UI/Button';
 import Emojis from './Emojis';
 
-const MessageInputContainer = () => {
+interface MessageInputContainerProps {
+  blockedMessage?: string;
+}
+
+const MessageInputContainer = ({
+  blockedMessage
+}: MessageInputContainerProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -20,14 +26,12 @@ const MessageInputContainer = () => {
       navigation.formAction === navigation.location.pathname);
 
   const submitForm = () => {
-    console.log('[submitForm]');
     submit(formRef.current, {
       method: 'POST'
     });
   };
 
   const keyDownHandler = (e: React.KeyboardEvent) => {
-    console.log('[keyDownHandler]');
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       submitForm();
@@ -36,13 +40,11 @@ const MessageInputContainer = () => {
   };
 
   const imageUploadHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('[imageUploadHandler]');
     submitForm();
     e.target.value = '';
   };
 
   const formSubmitHandler = (e: React.FormEvent) => {
-    console.log('[formSubmitHandler]');
     e.preventDefault();
     submitForm();
     textareaRef.current!.value = '';
@@ -57,7 +59,12 @@ const MessageInputContainer = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="relative p-4">
+      {blockedMessage && (
+        <div className="absolute top-0 left-0 right-0 bottom-0 bg-black opacity-75 z-10 flex items-center justify-center text-white">
+          <p>{blockedMessage}</p>
+        </div>
+      )}
       <form
         onSubmit={formSubmitHandler}
         ref={formRef}

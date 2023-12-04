@@ -17,6 +17,7 @@ export interface ConversationObj {
   unreadBy: string;
   otherParticipant: UserObj;
   snippet?: string;
+  blockedBy?: string;
 }
 
 export interface TextContentProps {

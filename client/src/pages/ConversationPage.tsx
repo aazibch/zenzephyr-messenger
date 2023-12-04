@@ -77,4 +77,23 @@ export const action = async ({
 
     throw json(response.message, { status: response.status });
   }
+
+  if (request.method === 'PATCH') {
+    const data = await request.json();
+
+    const httpConfig = generateHttpConfig({
+      url: `${apiUrl}/api/v1/users/${data.id}/${data.action}`,
+      method: 'PATCH',
+      allowCredentials: true
+    });
+
+    const response = await sendHttpRequest(httpConfig);
+
+    if (response.statusText === 'success') {
+      localStorage.setItem('user', JSON.stringify(response.data?.user));
+      return response;
+    }
+
+    throw json(response.message, { status: response.status });
+  }
 };

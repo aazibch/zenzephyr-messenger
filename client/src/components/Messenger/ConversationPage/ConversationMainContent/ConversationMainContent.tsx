@@ -28,7 +28,7 @@ const ConversationMainContent = () => {
     ) {
       const { formData } = navigation;
 
-      if (formData) {
+      if (navigation.formMethod === 'post' && formData) {
         const image = formData.get('image') as File;
         const text = formData.get('text') as string;
 
