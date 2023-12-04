@@ -14,6 +14,7 @@ const ConversationMain = () => {
     (elem) => elem._id.toString() === params.id
   );
 
+  let isBlockedByMe = false;
   let blockedMessage;
 
   if (activeConversation!.blockedBy) {
@@ -24,6 +25,7 @@ const ConversationMain = () => {
         activeConversation!.otherParticipant.fullName
       } has blocked you.`;
     } else {
+      isBlockedByMe = true;
       blockedMessage = `You have blocked ${
         activeConversation!.otherParticipant.fullName
       }.`;
@@ -32,7 +34,7 @@ const ConversationMain = () => {
 
   return (
     <div className="flex flex-col flex-grow">
-      <ConversationMainHeader />
+      <ConversationMainHeader isBlockedByMe={isBlockedByMe} />
       <ConversationMainContent />
       <MessageInputContainer blockedMessage={blockedMessage} />
     </div>

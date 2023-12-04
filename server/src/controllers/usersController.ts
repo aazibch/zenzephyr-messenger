@@ -56,19 +56,46 @@ export const blockUser = catchAsync(
       { new: true }
     );
 
-    if (!conversation) {
-      return next(
-        new AppError(
-          'No active conversation found between you and the user you are attempting to block.',
-          StatusCodes.BAD_REQUEST
-        )
-      );
-    }
-
     const user = await User.findByIdAndUpdate(
       req.user._id,
       {
         $push: { blockedUsers: userToBlock._id }
+      },
+      { new: true }
+    );
+
+    res.status(StatusCodes.OK).json({
+      status: 'success',
+      data: {
+        user,
+        conversation
+      }
+    });
+  }
+);
+
+export const unblockUser = catchAsync(
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const userToUnblock = await User.findById(req.params.id);
+
+    if (!userToUnblock) {
+      return next(new AppError('User not found.', StatusCodes.NOT_FOUND));
+    }
+
+    const conversation = await Conversation.findOneAndUpdate(
+      {
+        participants: {
+          $in: [req.user._id, userToUnblock._id]
+        }
+      },
+      { $unset: { blockedBy: '' } },
+      { new: true }
+    );
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $pull: { blockedUsers: userToUnblock._id }
       },
       { new: true }
     );

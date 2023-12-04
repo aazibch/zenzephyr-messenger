@@ -1,6 +1,11 @@
 import express from 'express';
 import { signup, login, logout, protect } from '../controllers/authController';
-import { blockUser, getMe, getUser } from '../controllers/usersController';
+import {
+  getMe,
+  getUser,
+  blockUser,
+  unblockUser
+} from '../controllers/usersController';
 
 const router = express.Router();
 
@@ -11,5 +16,6 @@ router.get('/me', protect, getMe);
 
 router.get('/:id', protect, getUser);
 router.patch('/:id/block', protect, blockUser);
+router.patch('/:id/unblock', protect, unblockUser);
 
 export default router;

@@ -6,9 +6,13 @@ import { MessagesObj } from '../../../types';
 import DialogModal from '../../UI/Modals/DialogModal';
 import DropdownMenu from '../../UI/DropdownMenu';
 
-const MessengerMainHeader = () => {
+interface MessengerMainHeaderProps {
+  isBlockedByMe: boolean;
+}
+
+const MessengerMainHeader = ({ isBlockedByMe }: MessengerMainHeaderProps) => {
   const [displayingModal, setDisplayingModal] = useState<
-    'delete' | 'block' | null
+    'delete' | 'block' | 'unblock' | null
   >(null);
   const messagesData = useLoaderData() as MessagesObj;
   const submit = useSubmit();
@@ -44,24 +48,36 @@ const MessengerMainHeader = () => {
     });
   };
 
-  const blockButtonClickHandler = () => {
-    setDisplayingModal('block');
+  const blockUnblockButtonClickHandler = () => {
+    setDisplayingModal(isBlockedByMe ? 'unblock' : 'block');
   };
 
-  const blockUserHandler = () => {
-    submit(
-      { id: messagesData.otherParticipant._id, action: 'block' },
-      {
-        method: 'PATCH',
-        encType: 'application/json'
-      }
-    );
+  const blockUnblockUserHandler = () => {
+    if (displayingModal === 'block') {
+      return submit(
+        { id: messagesData.otherParticipant._id, action: 'block' },
+        {
+          method: 'PATCH',
+          encType: 'application/json'
+        }
+      );
+    }
+
+    if (displayingModal === 'unblock') {
+      return submit(
+        { id: messagesData.otherParticipant._id, action: 'unblock' },
+        {
+          method: 'PATCH',
+          encType: 'application/json'
+        }
+      );
+    }
   };
 
   const menuItems = [
     {
-      content: 'Block User',
-      onClick: blockButtonClickHandler
+      content: isBlockedByMe ? 'Unblock User' : 'Block User',
+      onClick: blockUnblockButtonClickHandler
     },
     {
       content: 'Delete Conversation',
@@ -71,13 +87,15 @@ const MessengerMainHeader = () => {
 
   let modalElement;
 
-  if (displayingModal === 'block') {
+  if (displayingModal === 'block' || displayingModal === 'unblock') {
     modalElement = (
       <DialogModal
         heading="Block User"
-        textBody="Are you sure you want to block this user?"
+        textBody={`Are you sure you want to ${
+          displayingModal === 'block' ? 'block' : 'unblock'
+        } this user?`}
         dismissHandler={dismissModalHandler}
-        confirmHandler={blockUserHandler}
+        confirmHandler={blockUnblockUserHandler}
         isLoading={isLoading}
       />
     );
