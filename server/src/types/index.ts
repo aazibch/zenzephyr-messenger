@@ -10,6 +10,7 @@ export interface IUser {
   profileImage: string;
   password?: string;
   passwordChangeDate: Date;
+  blockedUsers: ObjectId[];
 }
 
 export interface AuthenticatedRequest extends Request {

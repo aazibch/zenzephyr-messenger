@@ -57,7 +57,13 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
     minlength: [8, generateValidationMessage('min', 'password', 8)],
     select: false
   },
-  passwordChangeDate: Date
+  passwordChangeDate: Date,
+  blockedUsers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ]
 });
 
 userSchema.pre('save', async function (next) {
