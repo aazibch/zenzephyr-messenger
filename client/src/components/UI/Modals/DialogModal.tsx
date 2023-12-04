@@ -6,8 +6,8 @@ import useWhenClickedOutside from '../../../hooks/useWhenClickedOutside';
 const DialogModal = ({
   heading,
   textBody,
-  dismissHandler,
   isLoading,
+  dismissHandler,
   confirmHandler
 }: {
   heading: string;
@@ -48,12 +48,12 @@ const DialogModal = ({
             {/* <!-- Modal footer --> */}
             <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
               <Button
+                styleType="primary"
                 onClick={confirmHandler}
                 className="mr-1"
-                styleType="danger"
                 disabled={isLoading}
               >
-                Delete
+                Confirm
               </Button>
               <Button onClick={dismissHandler}>Cancel</Button>
             </div>

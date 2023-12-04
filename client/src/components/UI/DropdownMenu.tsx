@@ -46,16 +46,18 @@ const DropdownMenu = ({
         <div className="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow border w-44 right-0 top-10">
           <ul className="py-2 text-sm text-gray-700">
             {items.map((item) => (
-              <li
-                key={item.content}
-                className="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              >
+              <li key={item.content}>
                 {item.link ? (
-                  <Link to={item.link} onClick={toggleMenuHandler}>
+                  <Link
+                    className="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    to={item.link}
+                    onClick={toggleMenuHandler}
+                  >
                     {item.content}
                   </Link>
                 ) : (
                   <span
+                    className="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
                     onClick={() => {
                       if (item.onClick) item.onClick();
                       toggleMenuHandler();

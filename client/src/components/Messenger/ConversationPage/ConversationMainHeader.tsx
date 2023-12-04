@@ -13,6 +13,7 @@ import DropdownMenu from '../../UI/DropdownMenu';
 
 const MessengerMainHeader = () => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [showBlockModal, setShowBlockModal] = useState<boolean>(false);
   const messagesData = useLoaderData() as MessagesObj;
   const submit = useSubmit();
   const params = useParams();
@@ -39,10 +40,22 @@ const MessengerMainHeader = () => {
     }
   };
 
+  const blockButtonClickHandler = () => {
+    setShowBlockModal(true);
+  };
+
+  const dismissBlockModalHandler = () => {
+    setShowBlockModal(false);
+  };
+
+  const blockUserHandler = () => {
+    console.log('[blockUserHandler]');
+  };
+
   const menuItems = [
     {
       content: 'Block User',
-      link: '#'
+      onClick: blockButtonClickHandler
     },
     {
       content: 'Delete Conversation',
@@ -57,6 +70,15 @@ const MessengerMainHeader = () => {
           heading="Delete Conversation"
           textBody="Are you sure you want to delete this conversation?"
           dismissHandler={dismissDeleteModalHandler}
+          confirmHandler={blockUserHandler}
+          isLoading={isLoading}
+        />
+      )}
+      {showBlockModal && (
+        <DialogModal
+          heading="Block User"
+          textBody="Are you sure you want to block the user?"
+          dismissHandler={dismissBlockModalHandler}
           confirmHandler={deleteConversationHandler}
           isLoading={isLoading}
         />
