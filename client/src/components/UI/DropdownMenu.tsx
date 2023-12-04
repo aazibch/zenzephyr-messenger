@@ -7,7 +7,7 @@ import useWhenClickedOutside from '../../hooks/useWhenClickedOutside';
 
 type DropdownItem = {
   content: string;
-  link: string;
+  link?: string;
   onClick?: () => void;
 };
 

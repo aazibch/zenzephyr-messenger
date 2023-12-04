@@ -5,11 +5,11 @@ import {
   useSubmit,
   useNavigation
 } from 'react-router-dom';
-import { BsTrash3 } from 'react-icons/bs';
+import { BsThreeDotsVertical } from 'react-icons/bs';
 
-import Button from '../../UI/Button';
 import { MessagesObj } from '../../../types';
 import DialogModal from '../../UI/Modals/DialogModal';
+import DropdownMenu from '../../UI/DropdownMenu';
 
 const MessengerMainHeader = () => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -39,6 +39,17 @@ const MessengerMainHeader = () => {
     }
   };
 
+  const menuItems = [
+    {
+      content: 'Block User',
+      link: '#'
+    },
+    {
+      content: 'Delete Conversation',
+      onClick: deleteButtonClickHandler
+    }
+  ];
+
   return (
     <div className="flex border-b border-gray-300 h-14 shrink-0 items-center px-4">
       {showDeleteModal && (
@@ -51,9 +62,12 @@ const MessengerMainHeader = () => {
         />
       )}
       <h2>{messagesData.otherParticipant.fullName}</h2>
-      <Button onClick={deleteButtonClickHandler} iconButton className="ml-auto">
-        <BsTrash3 size="1.25em" />
-      </Button>
+      <div className="ml-auto">
+        <DropdownMenu
+          buttonContent={<BsThreeDotsVertical size="1.25em" />}
+          items={menuItems}
+        />
+      </div>
     </div>
   );
 };
