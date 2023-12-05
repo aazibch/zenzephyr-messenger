@@ -52,7 +52,7 @@ export const blockUser = catchAsync(
           $in: [req.user._id, userToBlock._id]
         }
       },
-      { blockedBy: req.user._id },
+      { isBlocked: true },
       { new: true }
     );
 
@@ -82,13 +82,17 @@ export const unblockUser = catchAsync(
       return next(new AppError('User not found.', StatusCodes.NOT_FOUND));
     }
 
+    const isBlocked = userToUnblock.blockedUsers.some(
+      (elem) => elem.toString() === req.user._id.toString()
+    );
+
     const conversation = await Conversation.findOneAndUpdate(
       {
         participants: {
           $in: [req.user._id, userToUnblock._id]
         }
       },
-      { $unset: { blockedBy: '' } },
+      { isBlocked },
       { new: true }
     );
 

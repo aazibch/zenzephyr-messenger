@@ -7,6 +7,7 @@ export interface UserObj {
   username: string;
   email: string;
   profileImage: string;
+  blockedUsers: string[];
 }
 
 export interface ConversationObj {
@@ -17,7 +18,7 @@ export interface ConversationObj {
   unreadBy: string;
   otherParticipant: UserObj;
   snippet?: string;
-  blockedBy?: string;
+  isBlocked: boolean;
 }
 
 export interface TextContentProps {

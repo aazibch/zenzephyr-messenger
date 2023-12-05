@@ -7,12 +7,10 @@ import Button from '../../../UI/Button';
 import Emojis from './Emojis';
 
 interface MessageInputContainerProps {
-  blockedMessage?: string;
+  isBlocked: boolean;
 }
 
-const MessageInputContainer = ({
-  blockedMessage
-}: MessageInputContainerProps) => {
+const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -60,9 +58,9 @@ const MessageInputContainer = ({
 
   return (
     <div className="relative p-4">
-      {blockedMessage && (
+      {isBlocked && (
         <div className="absolute top-0 left-0 right-0 bottom-0 bg-black opacity-75 z-10 flex items-center justify-center text-white">
-          <p>{blockedMessage}</p>
+          <p>You can't participate in this conversation.</p>
         </div>
       )}
       <form

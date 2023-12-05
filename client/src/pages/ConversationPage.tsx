@@ -90,7 +90,6 @@ export const action = async ({
     const response = await sendHttpRequest(httpConfig);
 
     if (response.statusText === 'success') {
-      localStorage.setItem('user', JSON.stringify(response.data?.user));
       return response;
     }
 

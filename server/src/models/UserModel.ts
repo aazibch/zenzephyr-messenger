@@ -58,12 +58,15 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
     select: false
   },
   passwordChangeDate: Date,
-  blockedUsers: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    }
-  ]
+  blockedUsers: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    ],
+    default: []
+  }
 });
 
 userSchema.pre('save', async function (next) {
