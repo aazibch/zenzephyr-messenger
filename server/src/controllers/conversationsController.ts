@@ -100,10 +100,19 @@ export const createConversation = catchAsync(
     }
 
     const existingConversation = await Conversation.findOne({
-      participants: { $in: [req.user._id, req.body.recipient] }
+      participants: { $in: [req.user._id, req.body.recipient] },
+      isBlocked: false
     });
 
-    if (!existingConversation) {
+    const blocked =
+      req.user.blockedUsers.some(
+        (elem) => elem.toString() === recipient._id.toString()
+      ) ||
+      recipient.blockedUsers.some(
+        (elem) => elem.toString() === req.user._id.toString()
+      );
+
+    if (!existingConversation && !blocked) {
       const conversationBody = {
         participants: [req.user._id, req.body.recipient],
         startedBy: req.user._id,
@@ -138,14 +147,6 @@ export const createConversation = catchAsync(
         )
       );
     }
-
-    const blocked =
-      req.user.blockedUsers.some(
-        (elem) => elem.toString() === recipient._id.toString()
-      ) ||
-      recipient.blockedUsers.some(
-        (elem) => elem.toString() === req.user._id.toString()
-      );
 
     if (blocked) {
       return next(
