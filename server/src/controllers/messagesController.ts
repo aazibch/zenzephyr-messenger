@@ -61,7 +61,8 @@ export const createMessage = catchAsync(
       _id: conversationId,
       participants: {
         $in: [req.user._id]
-      }
+      },
+      isBlocked: false
     });
 
     if (!conversation)
