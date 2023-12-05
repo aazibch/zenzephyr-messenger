@@ -5,7 +5,7 @@ interface IConversation {
   __v: number;
   participants: ObjectId[];
   startedBy: ObjectId;
-  blockedBy?: ObjectId;
+  isBlocked?: boolean;
   deletedBy?: ObjectId;
   unreadBy?: ObjectId;
   messages: ObjectId[];
@@ -44,13 +44,9 @@ const conversationSchema = new mongoose.Schema<IConversation>({
     ],
     required: true
   },
-  blockedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    validate: [
-      checkIfValidParticipant,
-      'Only a participant may block another user.'
-    ]
+  isBlocked: {
+    type: mongoose.Schema.Types.Boolean,
+    default: false
   },
   deletedBy: {
     type: mongoose.Schema.Types.ObjectId,
