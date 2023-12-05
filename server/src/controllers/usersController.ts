@@ -64,6 +64,8 @@ export const blockUser = catchAsync(
       { new: true }
     );
 
+    req.user = user;
+
     res.status(StatusCodes.OK).json({
       status: 'success',
       data: {
@@ -103,6 +105,8 @@ export const unblockUser = catchAsync(
       },
       { new: true }
     );
+
+    req.user = user;
 
     res.status(StatusCodes.OK).json({
       status: 'success',
