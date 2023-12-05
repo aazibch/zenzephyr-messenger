@@ -93,6 +93,12 @@ export const createConversation = catchAsync(
       );
     }
 
+    const recipient = await User.findById(req.body.recipient);
+
+    if (!recipient) {
+      return next(new AppError('User not found.', StatusCodes.NOT_FOUND));
+    }
+
     const existingConversation = await Conversation.findOne({
       participants: { $in: [req.user._id, req.body.recipient] }
     });
@@ -127,8 +133,25 @@ export const createConversation = catchAsync(
     ) {
       return next(
         new AppError(
-          'A conversation with the recipient already exists',
+          'A conversation with the recipient already exists.',
           StatusCodes.CONFLICT
+        )
+      );
+    }
+
+    const blocked =
+      req.user.blockedUsers.some(
+        (elem) => elem.toString() === recipient._id.toString()
+      ) ||
+      recipient.blockedUsers.some(
+        (elem) => elem.toString() === req.user._id.toString()
+      );
+
+    if (blocked) {
+      return next(
+        new AppError(
+          'You cannot converse with this user.',
+          StatusCodes.FORBIDDEN
         )
       );
     }
