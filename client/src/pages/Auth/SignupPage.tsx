@@ -3,6 +3,7 @@ import AuthFormContainer from '../../components/Auth/AuthFormContainer';
 import { convertFormDataToObject, sendHttpRequest } from '../../utils';
 import { generateHttpConfig } from '../../utils';
 import { apiUrl } from '../../constants';
+import { setAuthState } from '../../utils/auth';
 
 const SignupPage = () => {
   return <AuthFormContainer mode="signup" />;
@@ -33,11 +34,7 @@ export const action = async ({ request }: { request: Request }) => {
   }
 
   if (response.statusText === 'success') {
-    localStorage.setItem(
-      'tokenExpirationDate',
-      response.data?.auth.tokenExpirationDate
-    );
-    localStorage.setItem('user', JSON.stringify(response.data?.user));
+    setAuthState(response.data?.auth.tokenExpirationDate);
     return redirect('/');
   }
 };

@@ -3,6 +3,7 @@ import { convertFormDataToObject, sendHttpRequest } from '../../utils';
 import { generateHttpConfig } from '../../utils';
 import { apiUrl } from '../../constants';
 import { json, redirect } from 'react-router-dom';
+import { setAuthState } from '../../utils/auth';
 
 const LoginPage = () => {
   return <AuthFormContainer mode="login" />;
@@ -35,11 +36,7 @@ export const action = async ({ request }: { request: Request }) => {
   }
 
   if (response.statusText === 'success') {
-    localStorage.setItem(
-      'tokenExpirationDate',
-      response.data?.auth.tokenExpirationDate
-    );
-    localStorage.setItem('user', JSON.stringify(response.data?.user));
+    setAuthState(response.data?.auth.tokenExpirationDate);
     return redirect('/');
   }
 

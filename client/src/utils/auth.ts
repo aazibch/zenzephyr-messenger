@@ -1,5 +1,15 @@
 import { json } from 'react-router-dom';
 
+export const setAuthState = (expirationDate: string) => {
+  localStorage.setItem('tokenExpirationDate', expirationDate);
+  localStorage.setItem('isAuth', 'true');
+};
+
+export const clearAuthState = () => {
+  localStorage.removeItem('isAuth');
+  localStorage.removeItem('tokenExpirationDate');
+};
+
 export const getTokenDuration = () => {
   const tokenExpirationDate = localStorage.getItem('tokenExpirationDate');
   const expirationDate = new Date(tokenExpirationDate!);
@@ -9,9 +19,9 @@ export const getTokenDuration = () => {
 };
 
 export const protect = () => {
-  const user = localStorage.getItem('user');
+  const isAuth = localStorage.getItem('isAuth');
 
-  if (!user) {
+  if (!isAuth) {
     return json({ message: 'Page not found.' }, { status: 404 });
   }
 

@@ -1,6 +1,6 @@
 import { Outlet, redirect } from 'react-router-dom';
 import AppIntro from '../components/UI/AppIntro';
-import { getTokenDuration } from '../utils/auth';
+// import { getTokenDuration } from '../utils/auth';
 
 const HomePage = () => {
   return (
@@ -16,14 +16,9 @@ const HomePage = () => {
 };
 
 export const loader = () => {
-  const user = localStorage.getItem('user');
-  const duration = getTokenDuration();
+  const isAuthenticated = localStorage.getItem('isAuth');
 
-  if (duration <= 0) {
-    redirect('/logout');
-  }
-
-  if (user) {
+  if (isAuthenticated) {
     return redirect('/messenger');
   }
 

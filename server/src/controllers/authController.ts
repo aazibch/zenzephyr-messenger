@@ -14,6 +14,7 @@ import { AuthenticatedRequest } from '../types';
 const signToken = (id: string | ObjectId) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRATION_TIME
+    // expiresIn: '5s'
   });
 };
 
@@ -29,6 +30,7 @@ const createSendToken = (
       Date.now() +
         parseInt(process.env.JWT_COOKIE_EXPIRATION) * 24 * 60 * 60 * 1000
     ),
+    // expires: new Date(Date.now() + 5000),
     httpOnly: true,
     secure: req.secure,
     sameSite: 'lax'
@@ -73,6 +75,7 @@ export const signup = catchAsync(
             Date.now() +
               parseInt(process.env.JWT_COOKIE_EXPIRATION) * 24 * 60 * 60 * 1000
           )
+          // tokenExpirationDate: new Date(Date.now() + 5000)
         }
       }
     });
@@ -125,6 +128,7 @@ export const login = catchAsync(
             Date.now() +
               parseInt(process.env.JWT_COOKIE_EXPIRATION) * 24 * 60 * 60 * 1000
           )
+          // tokenExpirationDate: new Date(Date.now() + 5000)
         }
       }
     });

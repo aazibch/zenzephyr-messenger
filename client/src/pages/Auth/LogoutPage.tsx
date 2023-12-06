@@ -1,6 +1,7 @@
 import { redirect } from 'react-router-dom';
 import { apiUrl } from '../../constants';
 import { generateHttpConfig, sendHttpRequest } from '../../utils';
+import { clearAuthState } from '../../utils/auth';
 
 export const action = async () => {
   const httpConfig = generateHttpConfig({
@@ -12,8 +13,7 @@ export const action = async () => {
   const response = await sendHttpRequest(httpConfig);
 
   if (response.statusText === 'success') {
-    localStorage.removeItem('user');
-    localStorage.removeItem('tokenExpirationDate');
+    clearAuthState();
     return redirect('/');
   }
 

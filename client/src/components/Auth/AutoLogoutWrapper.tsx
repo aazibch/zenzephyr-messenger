@@ -12,6 +12,7 @@ const AuthLogoutWrapper = ({ children }: { children: ReactNode }) => {
     }
 
     if (auth.status === 'EXPIRED') {
+      console.log('expired');
       submit(null, { action: '/logout', method: 'post' });
     }
 

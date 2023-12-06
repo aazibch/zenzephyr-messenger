@@ -1,7 +1,10 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, redirect } from 'react-router-dom';
 import Layout from '../components/UI/Layout';
 import { getTokenDuration } from '../utils/auth';
 import AutoLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
+import { generateHttpConfig, sendHttpRequest } from '../utils';
+import { apiUrl } from '../constants';
+import { clearAuthState } from '../utils/auth';
 
 const RootPage = () => {
   return (
@@ -15,18 +18,36 @@ const RootPage = () => {
 
 export default RootPage;
 
-export const loader = () => {
-  const user = localStorage.getItem('user');
-
-  if (!user) {
-    return null;
-  }
-
+export const loader = async ({ request }: { request: Request }) => {
   const tokenDuration = getTokenDuration();
+  const isAuth = localStorage.getItem('isAuth');
 
-  if (tokenDuration < 0) {
+  if (isAuth && tokenDuration < 0) {
+    clearAuthState();
     return { status: 'EXPIRED' };
   }
 
-  return { status: 'AUTHENTICATED', tokenDuration, user: JSON.parse(user) };
+  if (!isAuth) {
+    return null;
+  }
+
+  if (isAuth && request.url !== 'http://localhost:5173/messenger') {
+    return redirect('/messenger');
+  }
+
+  const httpConfig = generateHttpConfig({
+    url: `${apiUrl}/api/v1/users/me`,
+    method: 'GET',
+    allowCredentials: true
+  });
+
+  const response = await sendHttpRequest(httpConfig);
+
+  if (response.statusText === 'success') {
+    return {
+      status: 'AUTHENTICATED',
+      tokenDuration,
+      user: response.data?.user
+    };
+  }
 };
