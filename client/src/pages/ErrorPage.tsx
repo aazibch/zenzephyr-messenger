@@ -1,10 +1,21 @@
-import { ErrorResponse, useRouteError } from 'react-router-dom';
+import { ErrorResponse, useNavigate, useRouteError } from 'react-router-dom';
 import Layout from '../components/UI/Layout';
 import Logo from '../components/UI/Logo';
 import AuthLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
 
 const ErrorPage = () => {
   const error = useRouteError() as ErrorResponse;
+  const navigate = useNavigate();
+  console.log('error', error);
+
+  if (error.status === 401 && error.data === 'You are not logged in.') {
+    setTimeout(() => {
+      localStorage.removeItem('user');
+      localStorage.removeItem('tokenExpirationDate');
+      navigate('/');
+    }, 1500);
+  }
+
   let message = error.data;
 
   if (!error.data) {
