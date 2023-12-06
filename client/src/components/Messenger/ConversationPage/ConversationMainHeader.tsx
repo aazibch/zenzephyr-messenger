@@ -23,8 +23,8 @@ const MessengerMainHeader = ({ isBlockedByMe }: MessengerMainHeaderProps) => {
     (navigation.formMethod === 'delete' || navigation.formMethod === 'patch') &&
     navigation.formAction === navigation.location.pathname;
 
+  // After blocking/unblocking user, close the modal.
   useEffect(() => {
-    // After blocking/unblocking user, close the modal.
     if (
       navigation.state === 'loading' &&
       navigation.formMethod === 'patch' &&
@@ -74,6 +74,8 @@ const MessengerMainHeader = ({ isBlockedByMe }: MessengerMainHeaderProps) => {
     }
   };
 
+  console.log('isBlockedByMe', isBlockedByMe);
+
   const menuItems = [
     {
       content: isBlockedByMe ? 'Unblock User' : 'Block User',
@@ -90,10 +92,10 @@ const MessengerMainHeader = ({ isBlockedByMe }: MessengerMainHeaderProps) => {
   if (displayingModal === 'block' || displayingModal === 'unblock') {
     modalElement = (
       <DialogModal
-        heading="Block User"
-        textBody={`Are you sure you want to ${
-          displayingModal === 'block' ? 'block' : 'unblock'
-        } this user?`}
+        heading={`${
+          displayingModal.charAt(0).toUpperCase() + displayingModal.slice(1)
+        } User`}
+        textBody={`Are you sure you want to ${displayingModal} this user?`}
         dismissHandler={dismissModalHandler}
         confirmHandler={blockUnblockUserHandler}
         isLoading={isLoading}

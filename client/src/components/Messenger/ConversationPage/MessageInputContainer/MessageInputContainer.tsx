@@ -18,10 +18,9 @@ const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
   const navigation = useNavigation();
 
   const isSubmitting =
-    navigation.state === 'submitting' ||
-    (navigation.state === 'loading' &&
-      navigation.formData != null &&
-      navigation.formAction === navigation.location.pathname);
+    navigation.state === 'submitting' &&
+    navigation.formData != null &&
+    navigation.formAction === navigation.location.pathname;
 
   const submitForm = () => {
     submit(formRef.current, {

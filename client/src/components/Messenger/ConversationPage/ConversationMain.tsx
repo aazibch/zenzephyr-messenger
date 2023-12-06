@@ -25,7 +25,7 @@ const ConversationMain = () => {
     );
   }
 
-  console.log('isBlockedByMe', isBlockedByMe);
+  console.log('user.blockedUsers', user.blockedUsers);
 
   return (
     <div className="flex flex-col flex-grow">

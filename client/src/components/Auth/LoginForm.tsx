@@ -8,7 +8,7 @@ const LoginForm = () => {
   const actionData = useActionData() as HttpResponseDataObj;
 
   const isLoading =
-    (navigation.state === 'submitting' || navigation.state === 'loading') &&
+    navigation.state === 'submitting' &&
     navigation.formData != null &&
     (navigation.formAction === navigation.location?.pathname ||
       navigation.formAction === navigation.location?.pathname + '?index');

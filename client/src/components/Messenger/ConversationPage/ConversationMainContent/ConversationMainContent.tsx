@@ -21,10 +21,9 @@ const ConversationMainContent = () => {
   // Configure optimistic UI for messages
   useEffect(() => {
     if (
-      navigation.state === 'submitting' ||
-      (navigation.state === 'loading' &&
-        navigation.formData != null &&
-        navigation.formAction === navigation.location.pathname)
+      navigation.state === 'submitting' &&
+      navigation.formData != null &&
+      navigation.formAction === navigation.location.pathname
     ) {
       const { formData } = navigation;
 
