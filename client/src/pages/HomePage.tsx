@@ -1,6 +1,5 @@
 import { Outlet, redirect } from 'react-router-dom';
 import AppIntro from '../components/UI/AppIntro';
-// import { getTokenDuration } from '../utils/auth';
 
 const HomePage = () => {
   return (

@@ -47,8 +47,6 @@ const handleError = (
 ) => {
   const { originalUrl } = req;
 
-  console.log('[handleError] err', err);
-
   if (
     typeof err === 'object' &&
     !Array.isArray(err) &&

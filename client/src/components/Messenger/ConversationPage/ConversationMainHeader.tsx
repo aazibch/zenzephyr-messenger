@@ -74,8 +74,6 @@ const MessengerMainHeader = ({ isBlockedByMe }: MessengerMainHeaderProps) => {
     }
   };
 
-  console.log('isBlockedByMe', isBlockedByMe);
-
   const menuItems = [
     {
       content: isBlockedByMe ? 'Unblock User' : 'Block User',

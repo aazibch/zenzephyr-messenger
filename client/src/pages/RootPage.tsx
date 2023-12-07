@@ -3,7 +3,7 @@ import Layout from '../components/UI/Layout';
 import { getTokenDuration } from '../utils/auth';
 import AutoLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
-import { apiUrl } from '../constants';
+import { apiUrl, clientUrl } from '../constants';
 import { clearAuthState } from '../utils/auth';
 
 const RootPage = () => {
@@ -31,7 +31,7 @@ export const loader = async ({ request }: { request: Request }) => {
     return null;
   }
 
-  if (isAuth && request.url !== 'http://localhost:5173/messenger') {
+  if (isAuth && request.url === clientUrl) {
     return redirect('/messenger');
   }
 

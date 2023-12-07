@@ -69,8 +69,6 @@ export const saveAttachedImageToCloud = catchAsync(
       public_id: req.file.filename
     });
 
-    console.log('[imageUpload.ts] savedImage', savedImage);
-
     req.file.image = {
       url: savedImage.secure_url,
       width: savedImage.width,
