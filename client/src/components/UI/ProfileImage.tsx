@@ -12,9 +12,11 @@ const ProfileImage = ({
   className
 }: ProfileImageProps) => {
   let widthClass = 'w-10';
+  let heightClass = 'h-10';
 
   if (size === 'large') {
     widthClass = 'w-14';
+    heightClass = 'h-14';
   }
 
   const imgAttributes: {
@@ -25,14 +27,20 @@ const ProfileImage = ({
   } = {
     src,
     alt: 'Profile image',
-    className: `rounded-full ${widthClass} border-2 border-gray-300 ${className}`
+    className: `rounded-full ${className}`
   };
 
   if (clickHandler) {
     imgAttributes.onClick = () => clickHandler(src);
   }
 
-  return <img {...imgAttributes} />;
+  return (
+    <div
+      className={`rounded-full border-2 border-gray-300 ${widthClass} ${heightClass}`}
+    >
+      <img {...imgAttributes} />
+    </div>
+  );
 };
 
 export default ProfileImage;
