@@ -7,6 +7,7 @@ import DropdownMenu from '../../UI/DropdownMenu';
 import { useRouteLoaderData } from 'react-router-dom';
 import { AuthObj } from '../../../types';
 import ImageModal from '../../UI/Modals/ImageModal';
+import AddUserModal from '../../UI/Modals/AddUserModal';
 
 const menuItems = [
   {
@@ -33,6 +34,7 @@ const SidebarHeader = () => {
 
   return (
     <div className="border-b border-gray-300 flex items-center px-4 h-14">
+      <AddUserModal />
       {maximizedImage && (
         <ImageModal
           isProfileImage
