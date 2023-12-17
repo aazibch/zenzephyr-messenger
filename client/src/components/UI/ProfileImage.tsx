@@ -27,7 +27,7 @@ const ProfileImage = ({
   } = {
     src,
     alt: 'Profile image',
-    className: `rounded-full ${className}`
+    className: `rounded-full`
   };
 
   if (clickHandler) {
@@ -36,7 +36,7 @@ const ProfileImage = ({
 
   return (
     <div
-      className={`rounded-full border-2 border-gray-300 ${widthClass} ${heightClass}`}
+      className={`rounded-full border-2 border-gray-300 ${widthClass} ${heightClass} ${className}`}
     >
       <img {...imgAttributes} />
     </div>
