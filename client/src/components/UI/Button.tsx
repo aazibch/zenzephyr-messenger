@@ -20,8 +20,8 @@ const Button = ({
 
   if (styleType === 'default' || iconButton) {
     styleSpecificClasses = `text-gray-600 ${
-      isSelected ? 'bg-[#f7f7f7]' : 'bg-white'
-    } border-gray-300 hover:bg-[#f7f7f7] disabled:hover:bg-white`;
+      isSelected ? 'bg-[#e5e5e5]' : 'bg-white'
+    } border-gray-300 hover:bg-[#e5e5e5] disabled:hover:bg-white`;
   }
 
   if (styleType === 'primary') {

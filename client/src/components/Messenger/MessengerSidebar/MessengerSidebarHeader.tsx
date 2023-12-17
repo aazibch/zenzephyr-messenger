@@ -22,19 +22,36 @@ const menuItems = [
 
 const SidebarHeader = () => {
   const [maximizedImage, setMaximizedImage] = useState<string | null>(null);
+  const [displayingModal, setDisplayingModal] = useState<'addUser' | null>(
+    null
+  );
   const auth = useRouteLoaderData('root') as AuthObj;
 
   const profileImageClickHandler = (imageSource: string) => {
     setMaximizedImage(imageSource);
   };
 
+  const addUserHandler = () => {
+    setDisplayingModal('addUser');
+  };
+
+  const addUserCloseHandler = () => {
+    setDisplayingModal(null);
+  };
+
   const closeHandler = () => {
     setMaximizedImage(null);
   };
 
+  let modalElement;
+
+  if (displayingModal === 'addUser') {
+    modalElement = <AddUserModal dismissHandler={addUserCloseHandler} />;
+  }
+
   return (
     <div className="border-b border-gray-300 flex items-center px-4 h-14">
-      <AddUserModal />
+      {modalElement}
       {maximizedImage && (
         <ImageModal
           isProfileImage
@@ -48,7 +65,7 @@ const SidebarHeader = () => {
         src={auth.user.profileImage}
       />
       <div className="ml-auto">
-        <Button iconButton className="mr-1">
+        <Button iconButton className="mr-1" onClick={addUserHandler}>
           <BsPersonAdd size="1.25em" />
         </Button>
         <DropdownMenu

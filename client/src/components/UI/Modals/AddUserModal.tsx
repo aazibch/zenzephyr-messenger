@@ -4,9 +4,10 @@ import { FaUserCheck } from 'react-icons/fa';
 
 interface AddUserModalProps {
   userFound?: boolean;
+  dismissHandler: () => void;
 }
 
-const AddUserModal = ({ userFound }: AddUserModalProps) => {
+const AddUserModal = ({ userFound, dismissHandler }: AddUserModalProps) => {
   return (
     <>
       {/* // <!-- Main modal --> */}
@@ -20,6 +21,7 @@ const AddUserModal = ({ userFound }: AddUserModalProps) => {
               <Button
                 iconButton
                 className="text-lg s-auto justify-center items-center"
+                onClick={dismissHandler}
               >
                 <IoClose />
               </Button>
@@ -39,7 +41,7 @@ const AddUserModal = ({ userFound }: AddUserModalProps) => {
                       </div>
                     )}
                   </div>
-                  <button className="text-gray-600 bg-white border-l hover:bg-[#f7f7f7] disabled:hover:bg-white font-inter px-4 py-2 rounded-md rounded-l-none text-center disabled:opacity-50">
+                  <button className="text-gray-600 bg-white border-l hover:bg-[#e5e5e5] disabled:hover:bg-white font-inter px-4 py-2 rounded-md rounded-l-none text-center disabled:opacity-50">
                     Search
                   </button>
                 </div>
@@ -50,7 +52,7 @@ const AddUserModal = ({ userFound }: AddUserModalProps) => {
               <Button styleType="primary" className="mr-1">
                 Add
               </Button>
-              <Button>Cancel</Button>
+              <Button onClick={dismissHandler}>Cancel</Button>
             </div>
           </div>
         </div>
