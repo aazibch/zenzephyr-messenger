@@ -31,9 +31,7 @@ export const getUser = catchAsync(
     const user = await User.findById(id);
 
     if (!user) {
-      sendUserNotFoundResponse(res);
-
-      return;
+      return sendUserNotFoundResponse(res);
     }
 
     isBlocked = user.blockedUsers.find(
@@ -41,7 +39,7 @@ export const getUser = catchAsync(
     );
 
     if (isBlocked) {
-      sendUserNotFoundResponse(res);
+      return sendUserNotFoundResponse(res);
     }
 
     res.status(StatusCodes.OK).json({
