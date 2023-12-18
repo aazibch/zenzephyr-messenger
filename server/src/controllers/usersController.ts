@@ -5,15 +5,43 @@ import User from '../models/UserModel';
 import Conversation from '../models/ConversationModel';
 import AppError from '../utils/AppError';
 import { AuthenticatedRequest } from '../types';
+import { ObjectId } from 'mongoose';
+
+const sendUserNotFoundResponse = (res: Response) => {
+  res.status(StatusCodes.OK).json({
+    status: 'success',
+    data: {
+      user: null
+    }
+  });
+};
 
 export const getUser = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const { id } = req.params;
+
+    let isBlocked = req.user.blockedUsers.find(
+      (elem) => elem.toString() === id
+    );
+
+    if (isBlocked) {
+      sendUserNotFoundResponse(res);
+    }
 
     const user = await User.findById(id);
 
     if (!user) {
-      return next(new AppError('User not found.', StatusCodes.NOT_FOUND));
+      sendUserNotFoundResponse(res);
+
+      return;
+    }
+
+    isBlocked = user.blockedUsers.find(
+      (elem) => elem.toString() === req.user._id.toString()
+    );
+
+    if (isBlocked) {
+      sendUserNotFoundResponse(res);
     }
 
     res.status(StatusCodes.OK).json({
