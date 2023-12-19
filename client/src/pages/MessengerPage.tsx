@@ -34,3 +34,21 @@ export const loader = async () => {
 
   throw json(response.message, { status: response.status });
 };
+
+export const action = async ({ request }: { request: Request }) => {
+  const data = await request.json();
+
+  const httpConfig = generateHttpConfig({
+    url: `${apiUrl}/api/v1/users/${data.username}`,
+    method: 'GET',
+    allowCredentials: true
+  });
+
+  const response = await sendHttpRequest(httpConfig);
+
+  if (response.statusText === 'success') {
+    return response.data!.user;
+  }
+
+  throw json(response.message, { status: response.status });
+};

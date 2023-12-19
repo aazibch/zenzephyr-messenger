@@ -8,7 +8,8 @@ import { action as logoutAction } from './pages/Auth/LogoutPage';
 import ErrorPage from './pages/ErrorPage';
 import { protectLoader } from './utils/auth';
 import MessengerPage, {
-  loader as messengerLoader
+  loader as messengerLoader,
+  action as messengerAction
 } from './pages/MessengerPage';
 import ConversationPage, {
   loader as conversationLoader,
@@ -45,6 +46,7 @@ const router = createBrowserRouter([
         path: 'messenger',
         element: <MessengerPage />,
         loader: messengerLoader,
+        action: messengerAction,
         id: 'messenger',
         children: [
           {

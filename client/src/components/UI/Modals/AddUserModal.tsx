@@ -1,14 +1,45 @@
 import { IoClose } from 'react-icons/io5';
 import Button from '../Button';
-import { FaUserCheck } from 'react-icons/fa';
+import { FaUserCheck, FaUserSlash } from 'react-icons/fa';
 import Modal from './Modal';
+import { useRef } from 'react';
+import { UserObj } from '../../../types';
 
 interface AddUserModalProps {
-  userFound?: boolean;
+  foundUser: UserObj | null;
+  isLoading: boolean;
+  searchHandler: (username: string) => void;
   dismissHandler: () => void;
 }
 
-const AddUserModal = ({ userFound, dismissHandler }: AddUserModalProps) => {
+const AddUserModal = ({
+  foundUser,
+  isLoading,
+  dismissHandler,
+  searchHandler
+}: AddUserModalProps) => {
+  const usernameInputRef = useRef<HTMLInputElement>(null);
+
+  console.log('foundUser', foundUser);
+
+  let userStatusElement;
+
+  if (foundUser === null) {
+    userStatusElement = (
+      <div className="flex justify-center items-center px-2 bg-gray-50">
+        <FaUserSlash className="text-red-500" size="1.15em" />
+      </div>
+    );
+  }
+
+  if (foundUser) {
+    userStatusElement = (
+      <div className="flex justify-center items-center px-2 bg-gray-50">
+        <FaUserCheck className="text-yellow-400" size="1.15em" />
+      </div>
+    );
+  }
+
   return (
     <Modal.Body dismissHandler={dismissHandler}>
       <Modal.Header>
@@ -22,24 +53,30 @@ const AddUserModal = ({ userFound, dismissHandler }: AddUserModalProps) => {
         </Button>
       </Modal.Header>
       <Modal.Content>
-        <form>
-          <div className="flex border rounded-md">
-            <div className="flex grow">
-              <input className="grow bg-gray-50 text-gray-900 text-sm focus:ring-[#4649ff] focus:border-[#4649ff] outline-none block p-2" />
-              {userFound && (
-                <div className="flex justify-center items-center px-2 bg-gray-50">
-                  <FaUserCheck className="text-yellow-400" size="1.15em" />
-                </div>
-              )}
-            </div>
-            <button className="text-gray-600 bg-white border-l hover:bg-[#e5e5e5] disabled:hover:bg-white font-inter px-4 py-2 rounded-md rounded-l-none text-center disabled:opacity-50">
-              Search
-            </button>
+        <div className="flex border rounded-md">
+          <div className="flex grow">
+            <input
+              ref={usernameInputRef}
+              className="grow bg-gray-50 text-gray-900 text-sm focus:ring-[#4649ff] focus:border-[#4649ff] outline-none block p-2"
+            />
+            {userStatusElement}
           </div>
-        </form>
+          <button
+            className="text-gray-600 bg-white border-l hover:bg-[#e5e5e5] disabled:hover:bg-white font-inter px-4 py-2 rounded-md rounded-l-none text-center disabled:opacity-50"
+            onClick={() => searchHandler(usernameInputRef.current!.value)}
+            type="button"
+            disabled={isLoading}
+          >
+            Search
+          </button>
+        </div>
       </Modal.Content>
       <Modal.Footer>
-        <Button styleType="primary" className="mr-1">
+        <Button
+          styleType="primary"
+          disabled={isLoading || !foundUser}
+          className="mr-1"
+        >
           Add
         </Button>
         <Button onClick={dismissHandler}>Cancel</Button>

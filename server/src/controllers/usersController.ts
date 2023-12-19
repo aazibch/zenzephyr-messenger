@@ -18,20 +18,20 @@ const sendUserNotFoundResponse = (res: Response) => {
 
 export const getUser = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const { id } = req.params;
+    const { username } = req.params;
+
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return sendUserNotFoundResponse(res);
+    }
 
     let isBlocked = req.user.blockedUsers.find(
-      (elem) => elem.toString() === id
+      (elem) => elem.toString() === user._id.toString()
     );
 
     if (isBlocked) {
       sendUserNotFoundResponse(res);
-    }
-
-    const user = await User.findById(id);
-
-    if (!user) {
-      return sendUserNotFoundResponse(res);
     }
 
     isBlocked = user.blockedUsers.find(
