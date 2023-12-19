@@ -20,8 +20,6 @@ const AddUserModal = ({
 }: AddUserModalProps) => {
   const usernameInputRef = useRef<HTMLInputElement>(null);
 
-  console.log('foundUser', foundUser);
-
   let userStatusElement;
 
   if (foundUser === null) {
