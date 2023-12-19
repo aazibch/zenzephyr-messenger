@@ -10,13 +10,15 @@ interface AddUserModalProps {
   isLoading: boolean;
   searchHandler: (username: string) => void;
   dismissHandler: () => void;
+  addHandler: () => void;
 }
 
 const AddUserModal = ({
   foundUser,
   isLoading,
   dismissHandler,
-  searchHandler
+  searchHandler,
+  addHandler
 }: AddUserModalProps) => {
   const usernameInputRef = useRef<HTMLInputElement>(null);
 
@@ -72,8 +74,9 @@ const AddUserModal = ({
       <Modal.Footer>
         <Button
           styleType="primary"
-          disabled={isLoading || !foundUser}
           className="mr-1"
+          disabled={isLoading || !foundUser}
+          onClick={addHandler}
         >
           Add
         </Button>

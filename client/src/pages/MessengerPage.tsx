@@ -1,4 +1,4 @@
-import { Outlet, json } from 'react-router-dom';
+import { Outlet, json, redirect } from 'react-router-dom';
 import MessengerSidebar from '../components/Messenger/MessengerSidebar/MessengerSidebar';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
@@ -38,17 +38,23 @@ export const loader = async () => {
 export const action = async ({ request }: { request: Request }) => {
   const data = await request.json();
 
-  const httpConfig = generateHttpConfig({
-    url: `${apiUrl}/api/v1/users/${data.username}`,
-    method: 'GET',
-    allowCredentials: true
-  });
+  if (data.username) {
+    const httpConfig = generateHttpConfig({
+      url: `${apiUrl}/api/v1/users/${data.username}`,
+      method: 'GET',
+      allowCredentials: true
+    });
 
-  const response = await sendHttpRequest(httpConfig);
+    const response = await sendHttpRequest(httpConfig);
 
-  if (response.statusText === 'success') {
-    return response.data!.user;
+    if (response.statusText === 'success') {
+      return response.data!.user;
+    }
+
+    throw json(response.message, { status: response.status });
   }
 
-  throw json(response.message, { status: response.status });
+  if (data.userId) {
+    redirect(`/messenger/new?userId=${data.userId}`);
+  }
 };

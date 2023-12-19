@@ -20,7 +20,16 @@ export const getUser = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const { username } = req.params;
 
-    const user = await User.findOne({ username });
+    console.log('req.user', req.user.username);
+    console.log('username', username);
+
+    if (username === req.user.username) {
+      console.log('run');
+      return sendUserNotFoundResponse(res);
+    }
+
+    const user = await User.findOne({ username: username });
+    console.log('user', user);
 
     if (!user) {
       return sendUserNotFoundResponse(res);

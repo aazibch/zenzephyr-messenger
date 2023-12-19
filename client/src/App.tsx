@@ -4,6 +4,9 @@ import RootPage, { loader as rootLoader } from './pages/RootPage';
 import HomePage, { loader as homeLoader } from './pages/HomePage';
 import LoginPage, { action as loginAction } from './pages/Auth/LoginPage';
 import SignupPage, { action as signupAction } from './pages/Auth/SignupPage';
+import NewConversationPage, {
+  loader as newConversationLoader
+} from './pages/NewConversationPage';
 import { action as logoutAction } from './pages/Auth/LogoutPage';
 import ErrorPage from './pages/ErrorPage';
 import { protectLoader } from './utils/auth';
@@ -52,6 +55,12 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <NoConversationPage />
+          },
+          {
+            path: 'new',
+            id: 'new-conversation',
+            element: <NewConversationPage />,
+            loader: newConversationLoader
           },
           {
             path: ':id',

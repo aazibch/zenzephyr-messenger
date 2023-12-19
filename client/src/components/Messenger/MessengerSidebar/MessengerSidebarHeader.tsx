@@ -4,7 +4,7 @@ import { BsPersonAdd, BsThreeDotsVertical } from 'react-icons/bs';
 import ProfileImage from '../../UI/ProfileImage';
 import Button from '../../UI/Button';
 import DropdownMenu from '../../UI/DropdownMenu';
-import { useFetcher, useRouteLoaderData } from 'react-router-dom';
+import { useFetcher, useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { AuthObj } from '../../../types';
 import ImageModal from '../../UI/Modals/ImageModal';
 import AddUserModal from '../../UI/Modals/AddUserModal';
@@ -27,7 +27,8 @@ const SidebarHeader = () => {
   );
   const fetcher = useFetcher();
   const auth = useRouteLoaderData('root') as AuthObj;
-  const foundUser = fetcher.data;
+  const navigate = useNavigate();
+  let foundUser = fetcher.data;
 
   const profileImageClickHandler = (imageSource: string) => {
     setMaximizedImage(imageSource);
@@ -46,6 +47,11 @@ const SidebarHeader = () => {
         encType: 'application/json'
       }
     );
+  };
+
+  const addUserHandler = () => {
+    dismissModalHandler();
+    navigate(`/messenger/new?username=${foundUser.username}`);
   };
 
   const dismissModalHandler = () => {
@@ -75,6 +81,7 @@ const SidebarHeader = () => {
         foundUser={foundUser}
         dismissHandler={dismissModalHandler}
         searchHandler={addUserSearchHandler}
+        addHandler={addUserHandler}
       />
     );
   }
