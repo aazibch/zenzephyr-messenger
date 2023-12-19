@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useLoaderData, useSubmit, useNavigation } from 'react-router-dom';
+import {
+  useLoaderData,
+  useSubmit,
+  useNavigation,
+  useRouteLoaderData
+} from 'react-router-dom';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 
-import { MessagesObj } from '../../../types';
+import { MessagesObj, UserObj } from '../../../types';
 import DialogModal from '../../UI/Modals/DialogModal';
 import DropdownMenu from '../../UI/DropdownMenu';
 
 interface MessengerMainHeaderProps {
-  isBlockedByMe: boolean;
+  isBlockedByMe?: boolean;
 }
 
 const MessengerMainHeader = ({ isBlockedByMe }: MessengerMainHeaderProps) => {
@@ -17,6 +22,9 @@ const MessengerMainHeader = ({ isBlockedByMe }: MessengerMainHeaderProps) => {
   const messagesData = useLoaderData() as MessagesObj;
   const submit = useSubmit();
   const navigation = useNavigation();
+  const newConversationUser = useRouteLoaderData('new-conversation') as
+    | UserObj
+    | undefined;
 
   const isLoading =
     navigation.state === 'submitting' &&
@@ -113,16 +121,26 @@ const MessengerMainHeader = ({ isBlockedByMe }: MessengerMainHeaderProps) => {
     );
   }
 
+  let fullName;
+
+  if (newConversationUser) {
+    fullName = newConversationUser.fullName;
+  } else {
+    fullName = messagesData.otherParticipant.fullName;
+  }
+
   return (
     <div className="flex border-b border-gray-300 h-14 shrink-0 items-center px-4">
       {modalElement}
-      <h2>{messagesData.otherParticipant.fullName}</h2>
-      <div className="ml-auto">
-        <DropdownMenu
-          buttonContent={<BsThreeDotsVertical size="1.25em" />}
-          items={menuItems}
-        />
-      </div>
+      <h2>{fullName}</h2>
+      {!newConversationUser && (
+        <div className="ml-auto">
+          <DropdownMenu
+            buttonContent={<BsThreeDotsVertical size="1.25em" />}
+            items={menuItems}
+          />
+        </div>
+      )}
     </div>
   );
 };

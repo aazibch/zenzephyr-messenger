@@ -5,7 +5,7 @@ import User from '../models/UserModel';
 import Conversation from '../models/ConversationModel';
 import AppError from '../utils/AppError';
 import { AuthenticatedRequest } from '../types';
-import { ObjectId } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 const sendUserNotFoundResponse = (res: Response) => {
   res.status(StatusCodes.OK).json({
@@ -18,20 +18,25 @@ const sendUserNotFoundResponse = (res: Response) => {
 
 export const getUser = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const { username } = req.params;
+    const { usernameOrId } = req.params;
+    const isValidMongoId = ObjectId.isValid(usernameOrId);
+    let userConditions: Record<string, any> = {
+      $or: [{ username: usernameOrId }, { _id: usernameOrId }]
+    };
 
-    console.log('req.user', req.user.username);
-    console.log('username', username);
+    if (!isValidMongoId) {
+      userConditions = {
+        username: usernameOrId
+      };
+    }
 
-    if (username === req.user.username) {
-      console.log('run');
+    const user = await User.findOne(userConditions);
+
+    if (!user) {
       return sendUserNotFoundResponse(res);
     }
 
-    const user = await User.findOne({ username: username });
-    console.log('user', user);
-
-    if (!user) {
+    if (user._id.toString() === req.user._id.toString()) {
       return sendUserNotFoundResponse(res);
     }
 

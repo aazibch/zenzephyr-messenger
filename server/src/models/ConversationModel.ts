@@ -10,6 +10,7 @@ interface IConversation {
   unreadBy?: ObjectId;
   messages: ObjectId[];
   snippet: string;
+  updatedAt: Date;
 }
 
 const checkIfValidParticipant = function (val: ObjectId) {
@@ -32,8 +33,7 @@ const conversationSchema = new mongoose.Schema<IConversation>({
       checkIfValidNumOfParticipants,
       'There must be 2 participants in a conversation.'
     ],
-    required: true,
-    unique: true
+    required: true
   },
   startedBy: {
     type: mongoose.Schema.Types.ObjectId,
@@ -66,6 +66,10 @@ const conversationSchema = new mongoose.Schema<IConversation>({
   },
   snippet: {
     type: mongoose.Schema.Types.String
+  },
+  updatedAt: {
+    type: mongoose.Schema.Types.Date,
+    default: new Date()
   }
 });
 

@@ -7,7 +7,7 @@ import Button from '../../../UI/Button';
 import Emojis from './Emojis';
 
 interface MessageInputContainerProps {
-  isBlocked: boolean;
+  isBlocked?: boolean;
 }
 
 const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {

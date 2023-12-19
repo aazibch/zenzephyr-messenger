@@ -27,6 +27,7 @@ interface IMessage {
 
 interface MessageModel extends Model<IMessage> {
   setSnippet(doc: IMessage): void;
+  setUpdateDate(doc: IMessage): void;
 }
 
 const messageSchema = new mongoose.Schema<IMessage, MessageModel>(
@@ -93,8 +94,15 @@ messageSchema.statics.setSnippet = async function (messageDoc) {
   await Conversation.findByIdAndUpdate(messageDoc.conversation, { snippet });
 };
 
+messageSchema.statics.setUpdateDate = async function (messageDoc) {
+  await Conversation.findByIdAndUpdate(messageDoc.conversation, {
+    updatedAt: new Date()
+  });
+};
+
 messageSchema.post('save', function () {
   Message.setSnippet(this);
+  Message.setUpdateDate(this);
 });
 
 const Message = mongoose.model<IMessage, MessageModel>(

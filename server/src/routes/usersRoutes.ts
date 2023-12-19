@@ -14,7 +14,7 @@ router.post('/login', login);
 router.get('/logout', logout);
 router.get('/me', protect, getMe);
 
-router.get('/:username', protect, getUser);
+router.get('/:usernameOrId', protect, getUser);
 router.patch('/:id/block', protect, blockUser);
 router.patch('/:id/unblock', protect, unblockUser);
 

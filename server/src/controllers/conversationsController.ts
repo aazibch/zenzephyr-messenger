@@ -25,7 +25,7 @@ export const getConversations = catchAsync(
       deletedBy: {
         $ne: req.user._id
       }
-    });
+    }).sort('-updatedAt');
 
     const otherParticipantsIds: Promise<IUser>[] = [];
 
@@ -100,7 +100,7 @@ export const createConversation = catchAsync(
     }
 
     const existingConversation = await Conversation.findOne({
-      participants: { $in: [req.user._id, req.body.recipient] },
+      participants: { $all: [req.user._id, req.body.recipient] },
       isBlocked: false
     });
 

@@ -51,7 +51,7 @@ const SidebarHeader = () => {
 
   const addUserHandler = () => {
     dismissModalHandler();
-    navigate(`/messenger/new?username=${foundUser.username}`);
+    navigate(`/messenger/new?userId=${foundUser._id}`);
   };
 
   const dismissModalHandler = () => {
