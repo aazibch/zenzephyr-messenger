@@ -2,8 +2,8 @@ import { useState } from 'react';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { BsEmojiSmile } from 'react-icons/bs';
 
-import Button from '../../../UI/Button';
-import useWhenClickedOutside from '../../../../hooks/useWhenClickedOutside';
+import Button from '../../UI/Button';
+import useWhenClickedOutside from '../../../hooks/useWhenClickedOutside';
 
 const Emojis = ({
   textareaRef

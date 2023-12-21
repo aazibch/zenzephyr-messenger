@@ -1,13 +1,14 @@
 import { json, redirect } from 'react-router-dom';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
-import ConversationMainHeader from '../components/Messenger/ConversationPage/ConversationMainHeader';
-import MessageInputContainer from '../components/Messenger/ConversationPage/MessageInputContainer/MessageInputContainer';
+import ConversationMainHeader from '../components/Messenger/Conversation/ConversationMainHeader';
+import MessageInputContainer from '../components/Messenger/MessageInputContainer/MessageInputContainer';
+import NewConversationMainContent from '../components/Messenger/Conversation/NewConversationMainContent';
 const NewConversationPage = () => {
   return (
     <div className="flex flex-col justify-between flex-grow">
       <ConversationMainHeader />
-
+      <NewConversationMainContent />
       <MessageInputContainer />
     </div>
   );
@@ -58,8 +59,6 @@ export const action = async ({ request }: { request: Request }) => {
     if (image.name === '') {
       formData.delete('image');
     }
-
-    console.log('[NewConversationPage] formData', formData);
 
     const httpConfig = generateHttpConfig({
       url: `${apiUrl}/api/v1/conversations/`,

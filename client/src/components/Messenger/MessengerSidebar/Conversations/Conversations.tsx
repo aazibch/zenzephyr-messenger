@@ -25,7 +25,7 @@ const Conversations = () => {
     conversations.unshift(
       <Conversation
         key={newConversationUser._id}
-        link={`/messenger/new?username=${newConversationUser.username}`}
+        link={`/messenger/new?userId=${newConversationUser._id}`}
         profileImageUrl={newConversationUser.profileImage}
         displayName={newConversationUser.fullName}
       />

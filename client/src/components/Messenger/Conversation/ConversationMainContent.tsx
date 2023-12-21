@@ -5,8 +5,8 @@ import {
   useRouteLoaderData
 } from 'react-router-dom';
 import Message from './Message';
-import { AuthObj, MessagesObj, OptimisticMessageObj } from '../../../../types';
-import ImageModal from '../../../UI/Modals/ImageModal';
+import { AuthObj, MessagesObj, OptimisticMessageObj } from '../../../types';
+import ImageModal from '../../UI/Modals/ImageModal';
 
 const ConversationMainContent = () => {
   const [maximizedImage, setMaximizedImage] = useState<string>();
@@ -137,7 +137,6 @@ const ConversationMainContent = () => {
             isOptimistic
             byLoggedInUser
             messageContent={optimisticMessage.contentProps}
-            timestamp="1 month ago"
           />
         )}
       </div>

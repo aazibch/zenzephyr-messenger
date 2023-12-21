@@ -1,5 +1,5 @@
-import MessageInputContainer from './MessageInputContainer/MessageInputContainer';
-import ConversationMainContent from './ConversationMainContent/ConversationMainContent';
+import MessageInputContainer from '../MessageInputContainer/MessageInputContainer';
+import ConversationMainContent from './ConversationMainContent';
 import ConversationMainHeader from './ConversationMainHeader';
 import { useParams, useRouteLoaderData } from 'react-router-dom';
 import { AuthObj, ConversationObj } from '../../../types';

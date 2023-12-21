@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
-import ProfileImage from '../../../UI/ProfileImage';
-import { TextContentProps, ImageContentProps } from '../../../../types';
+import ProfileImage from '../../UI/ProfileImage';
+import { TextContentProps, ImageContentProps } from '../../../types';
 
 interface MessageProps {
   isOptimistic?: boolean;

@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { BsCardImage } from 'react-icons/bs';
 
-import Button from '../../../UI/Button';
+import Button from '../../UI/Button';
 import Emojis from './Emojis';
 
 interface MessageInputContainerProps {
