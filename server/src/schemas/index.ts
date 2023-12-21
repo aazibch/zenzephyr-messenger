@@ -95,11 +95,7 @@ export const messageSchema = Joi.object({
   text: messageText
 });
 
-export const conversationWithTextSchema = Joi.object({
+export const conversationSchema = Joi.object({
   recipient: recipientId,
   text: messageText
-});
-
-export const conversationWithImageSchema = Joi.object({
-  recipient: recipientId
 });

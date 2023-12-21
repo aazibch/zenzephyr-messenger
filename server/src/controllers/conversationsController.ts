@@ -6,10 +6,7 @@ import {
   IUser
 } from '../types';
 import AppError from '../utils/AppError';
-import {
-  conversationWithTextSchema,
-  conversationWithImageSchema
-} from '../schemas';
+import { conversationSchema } from '../schemas';
 import Conversation from '../models/ConversationModel';
 import User from '../models/UserModel';
 import catchAsync from '../middleware/catchAsync';
@@ -68,13 +65,7 @@ export const createConversation = catchAsync(
     let error;
 
     if (!req.file?.image) {
-      const result = conversationWithTextSchema.validate(req.body);
-
-      error = result.error;
-    }
-
-    if (req.file?.image) {
-      const result = conversationWithImageSchema.validate(req.body);
+      const result = conversationSchema.validate(req.body);
 
       error = result.error;
     }
