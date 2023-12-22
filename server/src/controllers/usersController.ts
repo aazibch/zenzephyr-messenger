@@ -56,6 +56,14 @@ export const getUser = catchAsync(
       return sendUserNotFoundResponse(res);
     }
 
+    const conversation = Conversation.findOne({
+      participants: { $all: [user._id, req.user._id] }
+    });
+
+    if (conversation) {
+      return sendUserNotFoundResponse(res);
+    }
+
     res.status(StatusCodes.OK).json({
       status: 'success',
       data: {
@@ -89,7 +97,7 @@ export const blockUser = catchAsync(
     const conversation = await Conversation.findOneAndUpdate(
       {
         participants: {
-          $in: [req.user._id, userToBlock._id]
+          $all: [req.user._id, userToBlock._id]
         }
       },
       { isBlocked: true },
@@ -131,7 +139,7 @@ export const unblockUser = catchAsync(
     const conversation = await Conversation.findOneAndUpdate(
       {
         participants: {
-          $in: [req.user._id, userToUnblock._id]
+          $all: [req.user._id, userToUnblock._id]
         }
       },
       { isBlocked },

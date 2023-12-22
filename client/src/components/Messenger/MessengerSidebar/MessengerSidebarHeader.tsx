@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BsPersonAdd, BsThreeDotsVertical } from 'react-icons/bs';
 
 import ProfileImage from '../../UI/ProfileImage';
 import Button from '../../UI/Button';
 import DropdownMenu from '../../UI/DropdownMenu';
-import { useFetcher, useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { useLocation, useRouteLoaderData } from 'react-router-dom';
 import { AuthObj } from '../../../types';
 import ImageModal from '../../UI/Modals/ImageModal';
 import AddUserModal from '../../UI/Modals/AddUserModal';
@@ -25,10 +25,16 @@ const SidebarHeader = () => {
   const [displayingModal, setDisplayingModal] = useState<'addUser' | null>(
     null
   );
-  const fetcher = useFetcher();
   const auth = useRouteLoaderData('root') as AuthObj;
-  const navigate = useNavigate();
-  let foundUser = fetcher.data;
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/messenger/new') {
+      if (displayingModal === 'addUser') {
+        dismissModalHandler();
+      }
+    }
+  }, [location]);
 
   const profileImageClickHandler = (imageSource: string) => {
     setMaximizedImage(imageSource);
@@ -36,22 +42,6 @@ const SidebarHeader = () => {
 
   const addUserButtonHandler = () => {
     setDisplayingModal('addUser');
-  };
-
-  const addUserSearchHandler = (username: string) => {
-    fetcher.submit(
-      { username },
-      {
-        action: '/messenger',
-        method: 'POST',
-        encType: 'application/json'
-      }
-    );
-  };
-
-  const addUserHandler = () => {
-    dismissModalHandler();
-    navigate(`/messenger/new?userId=${foundUser._id}`);
   };
 
   const dismissModalHandler = () => {
@@ -71,19 +61,8 @@ const SidebarHeader = () => {
     );
   }
 
-  const isLoading =
-    fetcher.state === 'submitting' && fetcher.formAction === '/messenger';
-
   if (displayingModal === 'addUser') {
-    modalElement = (
-      <AddUserModal
-        isLoading={isLoading}
-        foundUser={foundUser}
-        dismissHandler={dismissModalHandler}
-        searchHandler={addUserSearchHandler}
-        addHandler={addUserHandler}
-      />
-    );
+    modalElement = <AddUserModal dismissHandler={dismissModalHandler} />;
   }
 
   return (

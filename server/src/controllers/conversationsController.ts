@@ -11,7 +11,7 @@ import Conversation from '../models/ConversationModel';
 import User from '../models/UserModel';
 import catchAsync from '../middleware/catchAsync';
 import Message from '../models/MessageModel';
-import { ObjectId, Query } from 'mongoose';
+import { ObjectId } from 'mongoose';
 
 export const getConversations = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
