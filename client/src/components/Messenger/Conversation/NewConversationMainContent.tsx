@@ -24,8 +24,6 @@ const NewConversationMainContent = () => {
         const image = formData.get('image') as File;
         const text = formData.get('text') as string;
 
-        console.log('first if');
-
         // Image message
         if (image.name !== '') {
           const file = navigation.formData?.get('image') as File;
@@ -81,11 +79,6 @@ const NewConversationMainContent = () => {
       setOptimisticMessage(undefined);
     }
   }, [navigation.state]);
-
-  console.log(
-    '[NewConversationMainContent] optimisticMessage',
-    optimisticMessage
-  );
 
   return (
     <div className="p-4 flex flex-col flex-grow overflow-y-auto">

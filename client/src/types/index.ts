@@ -19,6 +19,7 @@ export interface ConversationObj {
   otherParticipant: UserObj;
   snippet?: string;
   isBlocked: boolean;
+  isOnline?: boolean;
 }
 
 export interface TextContentProps {

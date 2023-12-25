@@ -26,3 +26,13 @@ export interface AuthenticatedRequestWithFile extends AuthenticatedRequest {
     };
   };
 }
+
+// Web sockets
+export interface SocketUserDataObj {
+  userId: string;
+  socketId: string;
+}
+
+export interface ServerToClientEvents {
+  onlineUsers: (data: SocketUserDataObj[]) => void;
+}
