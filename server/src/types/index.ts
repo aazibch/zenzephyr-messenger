@@ -36,3 +36,7 @@ export interface SocketUserDataObj {
 export interface ServerToClientEvents {
   onlineUsers: (data: SocketUserDataObj[]) => void;
 }
+
+export interface ClientToServerEvents {
+  saveUser: (data: string) => void;
+}

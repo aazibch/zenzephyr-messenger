@@ -4,13 +4,13 @@ import mongoose from 'mongoose';
 import app from './app';
 import socketController from './controllers/socketController';
 import { Server } from 'socket.io';
-import { ServerToClientEvents } from './types';
+import { ClientToServerEvents, ServerToClientEvents } from './types';
 
 dotenv.config();
 
 const server = http.createServer(app);
 
-const io = new Server<ServerToClientEvents>(server, {
+const io = new Server<ServerToClientEvents, ClientToServerEvents>(server, {
   cors: {
     origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
