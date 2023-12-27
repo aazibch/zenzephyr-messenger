@@ -4,23 +4,23 @@ import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
 import { protect } from '../utils/auth';
 import { useEffect } from 'react';
-import io from 'socket.io-client';
 import { AuthObj } from '../types';
-
-const socket = io('http://localhost:8080');
+import { socket } from '../services/socket';
 
 const MessengerPage = () => {
   const auth = useRouteLoaderData('root') as AuthObj;
 
   useEffect(() => {
-    // Save logged in user on the server.
-    socket.emit('saveUser', auth.user._id);
+    socket.connect();
 
     return () => {
-      // Cleanup when component unmounts
       socket.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    socket.emit('saveUser', auth.user._id);
+  }, [auth.user._id]);
 
   return (
     <div className="flex h-full overflow-hidden">

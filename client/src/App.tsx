@@ -1,4 +1,8 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import {
+  RouterProvider,
+  createBrowserRouter
+  // useRouteLoaderData
+} from 'react-router-dom';
 
 import RootPage, { loader as rootLoader } from './pages/RootPage';
 import HomePage, { loader as homeLoader } from './pages/HomePage';
@@ -20,8 +24,12 @@ import ConversationPage, {
   action as conversationAction
 } from './pages/ConversationPage';
 import NoConversationPage from './pages/NoConversationPage';
-// import io from 'socket.io-client';
+// import { AuthObj } from './types';
 // import { useEffect } from 'react';
+// import io from 'socket.io-client';
+// import { apiUrl } from './constants';
+
+// const socket = io(apiUrl);
 
 const router = createBrowserRouter([
   {

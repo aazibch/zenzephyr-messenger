@@ -28,4 +28,4 @@ io.on('connection', socketController.onConnection(io));
 mongoose
   .connect(process.env.MONGO_CON_STRING)
   .then(() => console.log('Connected to database.'))
-  .catch(() => console.log('Unable to connect to the database.'));
+  .catch((err) => console.log('Unable to connect to the database.', err));

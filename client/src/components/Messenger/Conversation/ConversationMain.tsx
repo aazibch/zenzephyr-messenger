@@ -1,8 +1,10 @@
+import { useEffect } from 'react';
 import MessageInputContainer from '../MessageInputContainer/MessageInputContainer';
 import ConversationMainContent from './ConversationMainContent';
 import ConversationMainHeader from './ConversationMainHeader';
 import { useParams, useRouteLoaderData } from 'react-router-dom';
 import { AuthObj, ConversationObj } from '../../../types';
+import { socket } from '../../../services/socket';
 
 const ConversationMain = () => {
   const params = useParams();
@@ -24,6 +26,18 @@ const ConversationMain = () => {
       activeConversation!.otherParticipant._id.toString()
     );
   }
+
+  useEffect(() => {
+    const onChatMessage = (message: any) => {
+      console.log('[ConversationMain]["chatMessage" Listener]', message);
+    };
+
+    socket.on('chatMessage', onChatMessage);
+
+    return () => {
+      socket.off('chatMessage', onChatMessage);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col flex-grow">

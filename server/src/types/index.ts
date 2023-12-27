@@ -40,3 +40,31 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
   saveUser: (data: string) => void;
 }
+// End of Web sockets
+
+interface TextContentProps {
+  type: 'text';
+  text: {
+    content: string;
+  };
+}
+
+interface ImageContentProps {
+  type: 'image';
+  image: {
+    url: string;
+    width: number;
+    height: number;
+  };
+}
+
+export interface MessageObj {
+  _id: string;
+  __v: number;
+  conversation: string;
+  recipient: string;
+  sender: string;
+  contentProps: TextContentProps | ImageContentProps;
+  createdAt: string;
+  updatedAt: string;
+}

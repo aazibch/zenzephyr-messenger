@@ -3,9 +3,7 @@ import Conversation from './Conversation';
 import { ConversationObj, UserObj } from '../../../../types';
 import styles from './Conversations.module.css';
 import { ReactElement, useEffect, useState } from 'react';
-import io from 'socket.io-client';
-
-const socket = io('http://localhost:8080');
+import { socket } from '../../../../services/socket';
 
 interface SocketUserDataObj {
   userId: string;
@@ -48,14 +46,14 @@ const Conversations = () => {
   };
 
   useEffect(() => {
-    // Get online users from the server.
-    socket.on('onlineUsers', (onlineUsers) => {
+    const onOnlineUsers = (onlineUsers: SocketUserDataObj[]) => {
       updateOnlineState(onlineUsers);
-    });
+    };
+
+    socket.on('onlineUsers', onOnlineUsers);
 
     return () => {
-      // Cleanup when component unmounts
-      socket.disconnect();
+      socket.off('onlineUsers', onOnlineUsers);
     };
   }, []);
 

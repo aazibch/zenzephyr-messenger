@@ -50,4 +50,6 @@ export const loader = async ({ request }: { request: Request }) => {
       user: response.data?.user
     };
   }
+
+  return null;
 };

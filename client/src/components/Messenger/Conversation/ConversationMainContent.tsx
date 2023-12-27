@@ -5,7 +5,12 @@ import {
   useRouteLoaderData
 } from 'react-router-dom';
 import Message from './Message';
-import { AuthObj, MessagesObj, OptimisticMessageObj } from '../../../types';
+import {
+  AuthObj,
+  MessageObj,
+  MessagesObj,
+  OptimisticMessageObj
+} from '../../../types';
 import ImageModal from '../../UI/Modals/ImageModal';
 
 const ConversationMainContent = () => {
@@ -13,10 +18,17 @@ const ConversationMainContent = () => {
   const [optimisticMessage, setOptimisticMessage] = useState<
     OptimisticMessageObj | undefined
   >();
-  const auth = useRouteLoaderData('root') as AuthObj;
   const messagesData = useLoaderData() as MessagesObj;
+  const [messages, setMessages] = useState<MessageObj[]>(messagesData.messages);
+  const auth = useRouteLoaderData('root') as AuthObj;
   const messagesElementRef = useRef<HTMLDivElement>(null);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    if (messagesData.messages) {
+      setMessages(messagesData.messages);
+    }
+  }, [messagesData]);
 
   // Configure optimistic UI for messages
   useEffect(() => {
@@ -105,8 +117,8 @@ const ConversationMainContent = () => {
 
   let messagesContent;
 
-  if (messagesData.messages.length !== 0) {
-    messagesContent = messagesData.messages.map((elem) => {
+  if (messages.length !== 0) {
+    messagesContent = messages.map((elem) => {
       return (
         <Message
           key={elem._id}

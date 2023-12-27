@@ -2,6 +2,9 @@ import { json, Params, redirect } from 'react-router-dom';
 import ConversationMain from '../components/Messenger/Conversation/ConversationMain';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
+import io from 'socket.io-client';
+
+const socket = io(apiUrl);
 
 const ConversationPage = () => {
   return <ConversationMain />;
@@ -72,6 +75,7 @@ export const action = async ({
     const response = await sendHttpRequest(httpConfig);
 
     if (response.statusText === 'success') {
+      socket.emit('sendMessage', response.data!.message);
       return response;
     }
 
