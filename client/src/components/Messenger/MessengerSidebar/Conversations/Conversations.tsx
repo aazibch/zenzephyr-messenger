@@ -10,6 +10,8 @@ interface SocketUserDataObj {
   socketId: string;
 }
 
+let activeUsers: SocketUserDataObj[] = [];
+
 const Conversations = () => {
   const conversationsData = useLoaderData() as ConversationObj[];
   const newConversationUser = useRouteLoaderData('new-conversation') as
@@ -19,7 +21,7 @@ const Conversations = () => {
     useState<ConversationObj[]>(conversationsData);
 
   const getConversationsWithIsOnlineFalse = () => {
-    const updatedConversations = conversations.map((conversation) => {
+    const updatedConversations = conversationsData.map((conversation) => {
       return { ...conversation, isOnline: false };
     });
 
@@ -32,12 +34,16 @@ const Conversations = () => {
     let updatedConversations;
 
     updatedConversations = conversations.map((conversation) => {
-      const isOnline = usersData.some(
-        (userData) =>
-          userData.userId === conversation.otherParticipant._id.toString()
-      );
+      if (!conversation.isBlocked) {
+        const isOnline = usersData.some(
+          (userData) =>
+            userData.userId === conversation.otherParticipant._id.toString()
+        );
 
-      return { ...conversation, isOnline };
+        return { ...conversation, isOnline };
+      }
+
+      return conversation;
     });
 
     if (updatedConversations) {
@@ -47,7 +53,8 @@ const Conversations = () => {
 
   useEffect(() => {
     const onOnlineUsers = (onlineUsers: SocketUserDataObj[]) => {
-      updateOnlineState(onlineUsers);
+      activeUsers = onlineUsers;
+      updateOnlineState(activeUsers);
     };
 
     socket.on('onlineUsers', onOnlineUsers);
@@ -56,6 +63,10 @@ const Conversations = () => {
       socket.off('onlineUsers', onOnlineUsers);
     };
   }, []);
+
+  useEffect(() => {
+    updateOnlineState(activeUsers);
+  }, [conversationsData]);
 
   let conversationElements: ReactElement[] = [];
 
