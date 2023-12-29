@@ -23,7 +23,7 @@ const Conversation = ({
 }: ConversationProps) => {
   let snippetContent: ReactElement | string | undefined = snippet;
 
-  if (snippetContent === 'Image') {
+  if (snippetContent === '**[imageIcon] Image**') {
     snippetContent = (
       <span>
         <RiImageFill className="inline-block" /> Image

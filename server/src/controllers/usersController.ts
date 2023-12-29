@@ -6,6 +6,7 @@ import Conversation from '../models/ConversationModel';
 import AppError from '../utils/AppError';
 import { AuthenticatedRequest } from '../types';
 import { ObjectId } from 'mongodb';
+import mongoose from 'mongoose';
 
 const sendUserNotFoundResponse = (res: Response) => {
   res.status(StatusCodes.OK).json({
@@ -56,8 +57,9 @@ export const getUser = catchAsync(
       return sendUserNotFoundResponse(res);
     }
 
-    const conversation = Conversation.findOne({
-      participants: { $all: [user._id, req.user._id] }
+    const conversation = await Conversation.findOne({
+      participants: { $all: [user._id, req.user._id] },
+      deletedBy: { $ne: req.user._id }
     });
 
     if (conversation) {
