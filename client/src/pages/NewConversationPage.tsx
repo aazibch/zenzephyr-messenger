@@ -49,17 +49,6 @@ export const action = async ({ request }: { request: Request }) => {
 
     formData.append('recipient', userId);
 
-    const image = formData.get('image') as File;
-    const text = formData.get('text');
-
-    if (image.name !== '' && text !== '') {
-      formData.delete('text');
-    }
-
-    if (image.name === '') {
-      formData.delete('image');
-    }
-
     const httpConfig = generateHttpConfig({
       url: `${apiUrl}/api/v1/conversations/`,
       method: 'POST',

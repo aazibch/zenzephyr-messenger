@@ -34,7 +34,8 @@ const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
     }
 
     submit(formData, {
-      method: 'POST'
+      method: 'POST',
+      encType: 'multipart/form-data'
     });
   };
 
@@ -99,7 +100,6 @@ const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
           disabled={isSubmitting}
           accept="image/png, image/gif, image/jpeg"
         />
-
         <Button
           type="submit"
           className="h-10 border-none hover:bg-white hover:text-[#508778] disabled:hover:text-gray-600"
