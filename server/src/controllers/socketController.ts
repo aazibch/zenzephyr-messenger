@@ -37,14 +37,14 @@ const onConnection = (io: Server) => {
       console.log('[Socket server]["sendMessage" Listener]');
       const recipient = getUser(messageData.recipient);
 
-      console.log(
-        '[Socket server]["sendMessage" Listener] recipient',
-        recipient
-      );
+      // console.log(
+      //   '[Socket server]["sendMessage" Listener] recipient',
+      //   recipient
+      // );
 
-      io.to(recipient.socketId).emit('chatMessage', {
-        content: 'Hello person'
-      });
+      // io.to(recipient.socketId).emit('chatMessage', {
+      //   content: 'Hello person'
+      // });
     });
 
     socket.on('disconnect', () => {

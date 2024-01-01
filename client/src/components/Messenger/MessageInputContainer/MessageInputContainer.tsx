@@ -23,7 +23,17 @@ const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
     navigation.formAction === navigation.location.pathname;
 
   const submitForm = () => {
-    submit(formRef.current, {
+    const formData = new FormData();
+    const image = imageInputRef.current!.files?.[0];
+    const text = textareaRef.current!.value;
+
+    if (image) {
+      formData.append('image', image);
+    } else if (text) {
+      formData.append('text', text);
+    }
+
+    submit(formData, {
       method: 'POST'
     });
   };
