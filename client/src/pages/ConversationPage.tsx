@@ -2,9 +2,7 @@ import { json, Params, redirect } from 'react-router-dom';
 import ConversationMain from '../components/Messenger/Conversation/ConversationMain';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
-import io from 'socket.io-client';
-
-const socket = io(apiUrl);
+import { socket } from '../services/socket';
 
 const ConversationPage = () => {
   return <ConversationMain />;
@@ -53,17 +51,6 @@ export const action = async ({
 
   if (request.method === 'POST') {
     const formData = await request.formData();
-
-    const image = formData.get('image') as File;
-    const text = formData.get('text');
-
-    if (image.name !== '' && text !== '') {
-      formData.delete('text');
-    }
-
-    if (image.name === '') {
-      formData.delete('image');
-    }
 
     const httpConfig = generateHttpConfig({
       url: `${apiUrl}/api/v1/conversations/${params.id}/messages`,

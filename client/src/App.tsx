@@ -24,12 +24,6 @@ import ConversationPage, {
   action as conversationAction
 } from './pages/ConversationPage';
 import NoConversationPage from './pages/NoConversationPage';
-// import { AuthObj } from './types';
-// import { useEffect } from 'react';
-// import io from 'socket.io-client';
-// import { apiUrl } from './constants';
-
-// const socket = io(apiUrl);
 
 const router = createBrowserRouter([
   {
