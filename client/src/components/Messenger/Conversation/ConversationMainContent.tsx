@@ -40,11 +40,11 @@ const ConversationMainContent = () => {
       const { formData } = navigation;
 
       if (navigation.formMethod === 'post' && formData) {
-        const image = formData.get('image') as File;
-        const text = formData.get('text') as string;
+        const image = formData.get('image');
+        const text = formData.get('text') as string | null;
 
         // Image message
-        if (image.name !== '') {
+        if (image) {
           const file = navigation.formData?.get('image') as File;
 
           const reader = new FileReader();
@@ -80,7 +80,7 @@ const ConversationMainContent = () => {
           reader.readAsDataURL(file);
         }
         // Text message
-        else if (text !== '') {
+        else if (text !== null) {
           setOptimisticMessage({
             sender: auth.user._id,
             contentProps: {

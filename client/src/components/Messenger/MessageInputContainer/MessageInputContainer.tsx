@@ -29,7 +29,7 @@ const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
 
     if (image) {
       formData.append('image', image);
-    } else if (text) {
+    } else if (text && text !== '') {
       formData.append('text', text);
     }
 
