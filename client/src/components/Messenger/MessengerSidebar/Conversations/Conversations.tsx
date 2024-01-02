@@ -1,6 +1,6 @@
 import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
 import Conversation from './Conversation';
-import { ConversationObj, UserObj } from '../../../../types';
+import { AuthObj, ConversationObj, UserObj } from '../../../../types';
 import styles from './Conversations.module.css';
 import { ReactElement, useEffect, useState } from 'react';
 import { socket } from '../../../../services/socket';
@@ -19,6 +19,7 @@ const Conversations = () => {
     | undefined;
   const [conversations, setConversations] =
     useState<ConversationObj[]>(conversationsData);
+  const auth = useRouteLoaderData('root') as AuthObj;
 
   const getConversationsWithIsOnlineFalse = () => {
     const updatedConversations = conversationsData.map((conversation) => {
@@ -80,6 +81,7 @@ const Conversations = () => {
           displayName={elem.otherParticipant.fullName}
           snippet={elem.snippet}
           isOnline={elem.isOnline}
+          isUnread={elem.unreadBy?.toString() === auth.user._id}
         />
       );
     });

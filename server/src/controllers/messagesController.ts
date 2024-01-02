@@ -13,7 +13,19 @@ export const getMessages = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const { conversationId } = req.params;
 
-    const conversation = await Conversation.findById(conversationId);
+    let conversation = await Conversation.findById(conversationId);
+
+    if (conversation.unreadBy?.toString() === req.user._id.toString()) {
+      conversation = await Conversation.findByIdAndUpdate(
+        conversationId,
+        {
+          $unset: {
+            unreadBy: ''
+          }
+        },
+        { new: true }
+      );
+    }
 
     if (!conversation)
       return next(
