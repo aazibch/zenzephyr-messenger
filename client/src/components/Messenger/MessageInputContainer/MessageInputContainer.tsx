@@ -1,5 +1,5 @@
 import { useNavigation, useSubmit } from 'react-router-dom';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { BsCardImage } from 'react-icons/bs';
 
@@ -11,7 +11,7 @@ interface MessageInputContainerProps {
 }
 
 const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [textInput, setTextInput] = useState<string>('');
   const imageInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const submit = useSubmit();
@@ -22,15 +22,24 @@ const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
     navigation.formData != null &&
     navigation.formAction === navigation.location.pathname;
 
+  const inputChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (!isSubmitting) {
+      setTextInput(e.target.value);
+    }
+  };
+
+  const addEmojiToInput = (emoji: string) => {
+    setTextInput((prevTextInput) => prevTextInput + emoji);
+  };
+
   const submitForm = () => {
     const formData = new FormData();
     const image = imageInputRef.current!.files?.[0];
-    const text = textareaRef.current!.value;
 
     if (image) {
       formData.append('image', image);
-    } else if (text && text !== '') {
-      formData.append('text', text);
+    } else if (textInput !== '') {
+      formData.append('text', textInput);
     }
 
     submit(formData, {
@@ -43,7 +52,7 @@ const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       submitForm();
-      textareaRef.current!.value = '';
+      setTextInput('');
     }
   };
 
@@ -55,7 +64,7 @@ const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
   const formSubmitHandler = (e: React.FormEvent) => {
     e.preventDefault();
     submitForm();
-    textareaRef.current!.value = '';
+    setTextInput('');
   };
 
   let labelClassNames =
@@ -80,12 +89,13 @@ const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
         encType="multipart/form-data"
         className="flex items-center border rounded-lg p-1"
       >
-        <Emojis textareaRef={textareaRef} />
+        <Emojis addEmoji={addEmojiToInput} />
         <TextareaAutosize
+          onChange={inputChangeHandler}
           onKeyDown={keyDownHandler}
+          value={textInput}
           name="text"
           className="resize-none outline-none flex-1 mr-1 p-3"
-          ref={textareaRef}
         />
         <label className={labelClassNames} htmlFor="image-upload">
           <BsCardImage size="1.25em" />

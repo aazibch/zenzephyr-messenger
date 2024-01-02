@@ -5,18 +5,16 @@ import { BsEmojiSmile } from 'react-icons/bs';
 import Button from '../../UI/Button';
 import useWhenClickedOutside from '../../../hooks/useWhenClickedOutside';
 
-const Emojis = ({
-  textareaRef
-}: {
-  textareaRef: React.RefObject<HTMLTextAreaElement>;
-}) => {
+const Emojis = ({ addEmoji }: { addEmoji: (emoji: string) => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const emojiPickerRef = useWhenClickedOutside(() => {
     setIsOpen(false);
   });
 
   const emojiClickHandler = (emojiData: EmojiClickData) => {
-    textareaRef.current!.value = textareaRef.current!.value + emojiData.emoji;
+    // textareaRef.current!.value = textareaRef.current!.value + emojiData.emoji;
+    console.log('emojiData.emoji', typeof emojiData.emoji);
+    addEmoji(emojiData.emoji);
   };
 
   const emojiPickerButtonHandler = () => {
