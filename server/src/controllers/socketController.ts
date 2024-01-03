@@ -17,11 +17,18 @@ const saveUser = (data: SocketUserDataObj) => {
   }
 };
 
-// const saveOpenConversation = (conversationId: string) => {
-//   if (!openConversations.includes(conversationId)) {
-//     openConversations.push(conversationId);
-//   }
-// };
+const updateActiveConversation = (
+  conversationId: string | null,
+  userId: string
+) => {
+  onlineUsers = onlineUsers.filter((user) => {
+    if (user.userId === userId) {
+      return { ...user, activeConversation: conversationId };
+    }
+
+    return user;
+  });
+};
 
 // const removeOpenConversation = (conversationId: string) => {
 //   openConversations = openConversations.filter((id) => id !== conversationId);
@@ -36,7 +43,7 @@ const onConnection = (io: Server) => {
     console.log('[Socket server] A user connected.');
 
     socket.on('saveUser', (userId: string) => {
-      saveUser({ userId, socketId: socket.id });
+      saveUser({ userId, socketId: socket.id, activeConversation: null });
       console.log(
         '[Socket server] (After connecting) onlineUsers',
         onlineUsers
@@ -44,22 +51,12 @@ const onConnection = (io: Server) => {
       io.emit('onlineUsers', onlineUsers);
     });
 
-    // socket.on('saveConversation', (conversationId: string) => {
-    //   saveOpenConversation(conversationId);
-    //   console.log(
-    //     '[Socket server] (After saving) openConversations',
-    //     conversationId,
-    //     openConversations
-    //   );
-    // });
-
-    // socket.on('removeConversation', (conversationId: string) => {
-    //   removeOpenConversation(conversationId);
-    //   console.log(
-    //     '[Socket server] (After removing) openConversations',
-    //     openConversations
-    //   );
-    // });
+    socket.on(
+      'updateActiveConversation',
+      (userId: string, conversationId: string | null) => {
+        updateActiveConversation(userId, conversationId);
+      }
+    );
 
     socket.on('sendMessage', (messageData: MessageObj) => {
       console.log('[Socket server]["sendMessage" Listener]');

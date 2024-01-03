@@ -31,6 +31,7 @@ export interface AuthenticatedRequestWithFile extends AuthenticatedRequest {
 export interface SocketUserDataObj {
   userId: string;
   socketId: string;
+  activeConversation: string | null;
 }
 
 export interface ServerToClientEvents {
