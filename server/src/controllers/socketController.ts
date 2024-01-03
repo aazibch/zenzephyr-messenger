@@ -17,17 +17,31 @@ const saveUser = (data: SocketUserDataObj) => {
   }
 };
 
-const updateActiveConversation = (
-  conversationId: string | null,
-  userId: string
-) => {
-  onlineUsers = onlineUsers.filter((user) => {
-    if (user.userId === userId) {
-      return { ...user, activeConversation: conversationId };
-    }
+const updateActiveConversation = ({
+  userId,
+  socketId,
+  activeConversation
+}: SocketUserDataObj) => {
+  console.log(
+    '[updateActiveConversation] activeConversation',
+    activeConversation
+  );
 
-    return user;
-  });
+  const userPresent = onlineUsers.some((user) => user.userId === userId);
+
+  if (!userPresent) {
+    onlineUsers.push({ userId, socketId, activeConversation });
+  } else {
+    onlineUsers = onlineUsers.map((user) => {
+      if (user.userId === userId) {
+        return { ...user, activeConversation };
+      }
+
+      return user;
+    });
+  }
+
+  console.log('[updateActiveConversation] onlineUsers', onlineUsers);
 };
 
 // const removeOpenConversation = (conversationId: string) => {
@@ -53,8 +67,26 @@ const onConnection = (io: Server) => {
 
     socket.on(
       'updateActiveConversation',
-      (userId: string, conversationId: string | null) => {
-        updateActiveConversation(userId, conversationId);
+      ({
+        userId,
+        conversationId
+      }: {
+        userId: string;
+        conversationId: string | null;
+      }) => {
+        console.log(
+          '[Socket server]["updateActiveConversation" Listener] conversationId',
+          conversationId
+        );
+        updateActiveConversation({
+          userId,
+          socketId: socket.id,
+          activeConversation: conversationId
+        });
+        // console.log(
+        //   '[Socket server]["updateActiveConversation" Listener] (after updating) onlineUsers',
+        //   onlineUsers
+        // );
       }
     );
 

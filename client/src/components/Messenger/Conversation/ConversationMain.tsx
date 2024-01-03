@@ -1,10 +1,10 @@
-// import { useEffect } from 'react';
 import MessageInputContainer from '../MessageInputContainer/MessageInputContainer';
 import ConversationMainContent from './ConversationMainContent';
 import ConversationMainHeader from './ConversationMainHeader';
 import { useParams, useRouteLoaderData } from 'react-router-dom';
 import { AuthObj, ConversationObj } from '../../../types';
-// import socket from '../../../services/socket';
+import socket from '../../../services/socket';
+import { useEffect } from 'react';
 
 const ConversationMain = () => {
   const params = useParams();
@@ -27,13 +27,21 @@ const ConversationMain = () => {
     );
   }
 
-  // useEffect(() => {
-  //   socket.emit('saveConversation', activeConversation!._id);
+  useEffect(() => {
+    console.log('first', activeConversation!._id);
+    socket.emit('updateActiveConversation', {
+      userId: user._id,
+      conversationId: activeConversation!._id
+    });
 
-  //   return () => {
-  //     socket.emit('removeConversation', activeConversation!._id);
-  //   };
-  // }, [activeConversation]);
+    return () => {
+      console.log('second');
+      socket.emit('updateActiveConversation', {
+        userId: user._id,
+        conversationId: null
+      });
+    };
+  }, [activeConversation]);
 
   return (
     <div className="flex flex-col flex-grow">

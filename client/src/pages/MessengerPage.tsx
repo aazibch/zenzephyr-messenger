@@ -20,7 +20,7 @@ const MessengerPage = () => {
 
   useEffect(() => {
     socket.emit('saveUser', auth.user._id);
-  }, [auth.user._id]);
+  }, []);
 
   return (
     <div className="flex h-full overflow-hidden">
