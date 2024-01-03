@@ -2,6 +2,7 @@ import { Server, Socket } from 'socket.io';
 import { MessageObj, SocketUserDataObj } from '../types';
 
 let onlineUsers: SocketUserDataObj[] = [];
+// let openConversations: string[] = [];
 
 const getUser = (userId: string) => {
   return onlineUsers.find((user) => user.userId === userId);
@@ -15,6 +16,16 @@ const saveUser = (data: SocketUserDataObj) => {
     onlineUsers[index].socketId = data.socketId;
   }
 };
+
+// const saveOpenConversation = (conversationId: string) => {
+//   if (!openConversations.includes(conversationId)) {
+//     openConversations.push(conversationId);
+//   }
+// };
+
+// const removeOpenConversation = (conversationId: string) => {
+//   openConversations = openConversations.filter((id) => id !== conversationId);
+// };
 
 const removeUser = (socketId: string) => {
   onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
@@ -33,18 +44,30 @@ const onConnection = (io: Server) => {
       io.emit('onlineUsers', onlineUsers);
     });
 
+    // socket.on('saveConversation', (conversationId: string) => {
+    //   saveOpenConversation(conversationId);
+    //   console.log(
+    //     '[Socket server] (After saving) openConversations',
+    //     conversationId,
+    //     openConversations
+    //   );
+    // });
+
+    // socket.on('removeConversation', (conversationId: string) => {
+    //   removeOpenConversation(conversationId);
+    //   console.log(
+    //     '[Socket server] (After removing) openConversations',
+    //     openConversations
+    //   );
+    // });
+
     socket.on('sendMessage', (messageData: MessageObj) => {
       console.log('[Socket server]["sendMessage" Listener]');
       const recipient = getUser(messageData.recipient);
 
-      // console.log(
-      //   '[Socket server]["sendMessage" Listener] recipient',
-      //   recipient
-      // );
-
-      // io.to(recipient.socketId).emit('chatMessage', {
-      //   content: 'Hello person'
-      // });
+      if (recipient) {
+        io.to(recipient.socketId).emit('chatMessage', messageData);
+      }
     });
 
     socket.on('disconnect', () => {

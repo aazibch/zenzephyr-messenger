@@ -1,6 +1,8 @@
 import { io } from 'socket.io-client';
 import { apiUrl } from '../constants/index';
 
-export const socket = io(apiUrl, {
+const socket = io(apiUrl, {
   autoConnect: false
 });
+
+export default socket;

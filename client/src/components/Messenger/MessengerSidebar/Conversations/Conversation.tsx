@@ -47,6 +47,7 @@ const Conversation = ({
               <div className="rounded-full h-[0.65rem] w-[0.65rem] bg-yellow-500"></div>
             )}
           </div>
+
           {snippet && (
             <div className="text-sm text-gray-600">{snippetContent}</div>
           )}

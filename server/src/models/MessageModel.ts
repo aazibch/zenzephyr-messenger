@@ -88,7 +88,7 @@ messageSchema.statics.setSnippet = async function (messageDoc) {
   if (messageDoc.contentProps.type === 'text') {
     snippet = messageDoc.contentProps.text.content;
   } else if (messageDoc.contentProps.type === 'image') {
-    snippet = 'Image';
+    snippet = '**[imageIcon] Image**';
   }
 
   await Conversation.findByIdAndUpdate(messageDoc.conversation, { snippet });

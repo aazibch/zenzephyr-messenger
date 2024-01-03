@@ -2,7 +2,7 @@ import { json, Params, redirect } from 'react-router-dom';
 import ConversationMain from '../components/Messenger/Conversation/ConversationMain';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
-import { socket } from '../services/socket';
+import socket from '../services/socket';
 
 const ConversationPage = () => {
   return <ConversationMain />;

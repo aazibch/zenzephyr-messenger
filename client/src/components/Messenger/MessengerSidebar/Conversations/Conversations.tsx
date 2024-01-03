@@ -1,9 +1,14 @@
-import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
+import { useLoaderData, useParams, useRouteLoaderData } from 'react-router-dom';
 import Conversation from './Conversation';
-import { AuthObj, ConversationObj, UserObj } from '../../../../types';
+import {
+  AuthObj,
+  ConversationObj,
+  MessageObj,
+  UserObj
+} from '../../../../types';
 import styles from './Conversations.module.css';
 import { ReactElement, useEffect, useState } from 'react';
-import { socket } from '../../../../services/socket';
+import socket from '../../../../services/socket';
 
 interface SocketUserDataObj {
   userId: string;
@@ -20,6 +25,7 @@ const Conversations = () => {
   const [conversations, setConversations] =
     useState<ConversationObj[]>(conversationsData);
   const auth = useRouteLoaderData('root') as AuthObj;
+  const params = useParams();
 
   const getConversationsWithIsOnlineFalse = () => {
     const updatedConversations = conversationsData.map((conversation) => {
@@ -58,10 +64,53 @@ const Conversations = () => {
       updateOnlineState(activeUsers);
     };
 
+    const onChatMessage = (messageData: MessageObj) => {
+      const conversationId = messageData.conversation.toString();
+      let snippet: string;
+      let updateSnippetOnly = false;
+
+      if (messageData.contentProps.type === 'image') {
+        snippet = '**[imageIcon] Image**';
+      } else {
+        snippet = messageData.contentProps.text.content;
+      }
+
+      if (conversationId === params.id) {
+        updateSnippetOnly = true;
+      }
+
+      setConversations((prevConversations) => {
+        const updatedConversations = prevConversations.map((conversation) => {
+          if (updateSnippetOnly) {
+            if (conversation._id.toString() === conversationId) {
+              return {
+                ...conversation,
+                snippet
+              };
+            }
+          }
+
+          if (conversation._id.toString() === conversationId) {
+            return {
+              ...conversation,
+              snippet,
+              unreadBy: auth.user._id
+            };
+          }
+
+          return conversation;
+        });
+
+        return updatedConversations;
+      });
+    };
+
     socket.on('onlineUsers', onOnlineUsers);
+    socket.on('chatMessage', onChatMessage);
 
     return () => {
       socket.off('onlineUsers', onOnlineUsers);
+      socket.off('chatMessage', onChatMessage);
     };
   }, []);
 

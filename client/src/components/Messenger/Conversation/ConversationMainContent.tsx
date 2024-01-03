@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import {
   useLoaderData,
   useNavigation,
+  useParams,
   useRouteLoaderData
 } from 'react-router-dom';
 import Message from './Message';
@@ -12,6 +13,7 @@ import {
   OptimisticMessageObj
 } from '../../../types';
 import ImageModal from '../../UI/Modals/ImageModal';
+import socket from '../../../services/socket';
 
 const ConversationMainContent = () => {
   const [maximizedImage, setMaximizedImage] = useState<string>();
@@ -23,6 +25,9 @@ const ConversationMainContent = () => {
   const auth = useRouteLoaderData('root') as AuthObj;
   const messagesElementRef = useRef<HTMLDivElement>(null);
   const navigation = useNavigation();
+  const params = useParams();
+
+  console.log('params', params);
 
   useEffect(() => {
     if (messagesData.messages) {
@@ -98,6 +103,20 @@ const ConversationMainContent = () => {
       setOptimisticMessage(undefined);
     }
   }, [navigation.state]);
+
+  useEffect(() => {
+    const onChatMessage = (messageData: MessageObj) => {
+      if (messageData.conversation.toString() === params.id) {
+        setMessages((prevMessages) => [...prevMessages, messageData]);
+      }
+    };
+
+    socket.on('chatMessage', onChatMessage);
+
+    return () => {
+      socket.off('chatMessage', onChatMessage);
+    };
+  }, []);
 
   // Scroll to the bottom of the messages when a new message is sent.
   useEffect(() => {

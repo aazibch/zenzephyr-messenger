@@ -5,7 +5,7 @@ import { generateHttpConfig, sendHttpRequest } from '../utils';
 import { protect } from '../utils/auth';
 import { useEffect } from 'react';
 import { AuthObj } from '../types';
-import { socket } from '../services/socket';
+import socket from '../services/socket';
 
 const MessengerPage = () => {
   const auth = useRouteLoaderData('root') as AuthObj;
