@@ -1,5 +1,11 @@
 export type HttpMethods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
+export interface SocketUserDataObj {
+  userId: string;
+  socketId: string;
+  activeConversation: string;
+}
+
 export interface UserObj {
   _id: string;
   __v: number;

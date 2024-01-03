@@ -8,14 +8,9 @@ import {
 } from '../../../../types';
 import styles from './Conversations.module.css';
 import { ReactElement, useEffect, useState } from 'react';
-import socket from '../../../../services/socket';
-
-interface SocketUserDataObj {
-  userId: string;
-  socketId: string;
-}
-
-let activeUsers: SocketUserDataObj[] = [];
+import socket, { updateOnlineUsers } from '../../../../services/socket';
+import { SocketUserDataObj } from '../../../../types';
+import { onlineUsers } from '../../../../services/socket';
 
 const Conversations = () => {
   const conversationsData = useLoaderData() as ConversationObj[];
@@ -59,9 +54,9 @@ const Conversations = () => {
   };
 
   useEffect(() => {
-    const onOnlineUsers = (onlineUsers: SocketUserDataObj[]) => {
-      activeUsers = onlineUsers;
-      updateOnlineState(activeUsers);
+    const onOnlineUsers = (updatedOnlineUsers: SocketUserDataObj[]) => {
+      updateOnlineUsers(updatedOnlineUsers);
+      updateOnlineState(onlineUsers);
     };
 
     const onChatMessage = (messageData: MessageObj) => {
@@ -115,7 +110,7 @@ const Conversations = () => {
   }, []);
 
   useEffect(() => {
-    updateOnlineState(activeUsers);
+    updateOnlineState(onlineUsers);
   }, [conversationsData]);
 
   let conversationElements: ReactElement[] = [];
