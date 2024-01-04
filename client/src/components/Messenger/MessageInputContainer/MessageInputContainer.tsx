@@ -1,10 +1,11 @@
-import { useNavigation, useSubmit } from 'react-router-dom';
+import { useLoaderData, useNavigation, useSubmit } from 'react-router-dom';
 import { useRef, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { BsCardImage } from 'react-icons/bs';
 
 import Button from '../../UI/Button';
 import Emojis from './Emojis';
+import { MessagesObj } from '../../../types';
 
 interface MessageInputContainerProps {
   isBlocked?: boolean;
@@ -16,6 +17,7 @@ const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
   const formRef = useRef<HTMLFormElement>(null);
   const submit = useSubmit();
   const navigation = useNavigation();
+  const messagesData = useLoaderData() as MessagesObj;
 
   const isSubmitting =
     navigation.state === 'submitting' &&
@@ -35,6 +37,8 @@ const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
   const submitForm = () => {
     const formData = new FormData();
     const image = imageInputRef.current!.files?.[0];
+
+    formData.append('otherParticipant', messagesData.otherParticipant._id);
 
     if (image) {
       formData.append('image', image);

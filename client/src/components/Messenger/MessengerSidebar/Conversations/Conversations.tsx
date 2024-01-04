@@ -8,9 +8,11 @@ import {
 } from '../../../../types';
 import styles from './Conversations.module.css';
 import { ReactElement, useEffect, useState } from 'react';
-import socket, { updateOnlineUsers } from '../../../../services/socket';
+import socket, {
+  updateOnlineUsers,
+  onlineUsers
+} from '../../../../services/socket';
 import { SocketUserDataObj } from '../../../../types';
-import { onlineUsers } from '../../../../services/socket';
 
 const Conversations = () => {
   const conversationsData = useLoaderData() as ConversationObj[];
