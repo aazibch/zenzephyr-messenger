@@ -5,7 +5,7 @@ import { AuthenticatedRequest, AuthenticatedRequestWithFile } from '../types';
 import AppError from '../utils/AppError';
 import { StatusCodes } from 'http-status-codes';
 import Conversation from '../models/ConversationModel';
-import { messageSchema } from '../schemas';
+import { imageMessageSchema, textMessageSchema } from '../schemas';
 import { ObjectId } from 'mongoose';
 import User from '../models/UserModel';
 
@@ -67,7 +67,7 @@ export const createMessage = catchAsync(
     next: NextFunction
   ) => {
     const { conversationId } = req.params;
-    const schema = messageSchema;
+    let schema = textMessageSchema;
 
     const conversation = await Conversation.findOne({
       _id: conversationId,
@@ -86,13 +86,22 @@ export const createMessage = catchAsync(
       (element) => element.toString() !== req.user._id.toString()
     );
 
-    if (!req.file?.image) {
-      const { error } = schema.validate(req.body);
+    if (req.body.unread) {
+      await Conversation.findByIdAndUpdate(conversation._id, {
+        unreadBy: recipient
+      });
+    }
 
-      if (error)
-        return next(
-          new AppError(error.details[0].message, StatusCodes.BAD_REQUEST)
-        );
+    if (req.file?.image) {
+      schema = imageMessageSchema;
+    }
+
+    const { error } = schema.validate(req.body);
+
+    if (error) {
+      return next(
+        new AppError(error.details[0].message, StatusCodes.BAD_REQUEST)
+      );
     }
 
     let contentProps;

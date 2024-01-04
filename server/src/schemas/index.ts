@@ -91,8 +91,13 @@ const recipientId = Joi.string()
     'any.required': generateValidationMessage('required', 'recipient')
   });
 
-export const messageSchema = Joi.object({
-  text: messageText
+export const textMessageSchema = Joi.object({
+  text: messageText,
+  unread: Joi.boolean()
+});
+
+export const imageMessageSchema = Joi.object({
+  unread: Joi.boolean()
 });
 
 export const conversationSchema = Joi.object({
