@@ -28,14 +28,12 @@ const ConversationMain = () => {
   }
 
   useEffect(() => {
-    console.log('first', activeConversation!._id);
     socket.emit('updateActiveConversation', {
       userId: user._id,
       conversationId: activeConversation!._id
     });
 
     return () => {
-      console.log('second');
       socket.emit('updateActiveConversation', {
         userId: user._id,
         conversationId: null

@@ -27,8 +27,6 @@ const ConversationMainContent = () => {
   const navigation = useNavigation();
   const params = useParams();
 
-  console.log('params', params);
-
   useEffect(() => {
     if (messagesData.messages) {
       setMessages(messagesData.messages);

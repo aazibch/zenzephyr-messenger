@@ -12,8 +12,6 @@ const Emojis = ({ addEmoji }: { addEmoji: (emoji: string) => void }) => {
   });
 
   const emojiClickHandler = (emojiData: EmojiClickData) => {
-    // textareaRef.current!.value = textareaRef.current!.value + emojiData.emoji;
-    console.log('emojiData.emoji', typeof emojiData.emoji);
     addEmoji(emojiData.emoji);
   };
 
