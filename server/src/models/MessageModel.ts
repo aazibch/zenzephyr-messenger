@@ -26,8 +26,8 @@ interface IMessage {
 }
 
 interface MessageModel extends Model<IMessage> {
-  setSnippet(doc: IMessage): void;
-  setUpdateDate(doc: IMessage): void;
+  setSnippet: (doc: IMessage) => void;
+  setUpdateDate: (doc: IMessage) => void;
 }
 
 const messageSchema = new mongoose.Schema<IMessage, MessageModel>(

@@ -5,8 +5,11 @@ import { IUser } from '../types';
 import { generateValidationMessage } from '../utils/generateValidationMessage';
 
 interface IUserMethods {
-  isPasswordCorrect(inputPass: string, encryptedPass: string): Promise<boolean>;
-  changedPasswordAfterToken(tokenIssuanceTimestamp: number): boolean;
+  isPasswordCorrect: (
+    inputPass: string,
+    encryptedPass: string
+  ) => Promise<boolean>;
+  changedPasswordAfterToken: (tokenIssuanceTimestamp: number) => boolean;
 }
 
 type UserModel = mongoose.Model<IUser, {}, IUserMethods>;
