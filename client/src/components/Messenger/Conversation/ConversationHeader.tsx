@@ -11,11 +11,11 @@ import { MessagesObj, UserObj } from '../../../types';
 import DialogModal from '../../UI/Modals/DialogModal';
 import DropdownMenu from '../../UI/DropdownMenu';
 
-interface MessengerMainHeaderProps {
+interface ConversationHeaderProps {
   isBlockedByMe?: boolean;
 }
 
-const MessengerMainHeader = ({ isBlockedByMe }: MessengerMainHeaderProps) => {
+const ConversationHeader = ({ isBlockedByMe }: ConversationHeaderProps) => {
   const [displayingModal, setDisplayingModal] = useState<
     'delete' | 'block' | 'unblock' | null
   >(null);
@@ -145,4 +145,4 @@ const MessengerMainHeader = ({ isBlockedByMe }: MessengerMainHeaderProps) => {
   );
 };
 
-export default MessengerMainHeader;
+export default ConversationHeader;

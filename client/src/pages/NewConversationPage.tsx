@@ -1,7 +1,7 @@
 import { json, redirect } from 'react-router-dom';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
-import ConversationMainHeader from '../components/Messenger/Conversation/ConversationMainHeader';
+import ConversationMainHeader from '../components/Messenger/Conversation/ConversationHeader';
 import MessageInputContainer from '../components/Messenger/MessageInputContainer/MessageInputContainer';
 import NewConversationMainContent from '../components/Messenger/Conversation/NewConversationMainContent';
 const NewConversationPage = () => {

@@ -1,5 +1,5 @@
 import { json, Params, redirect } from 'react-router-dom';
-import ConversationMain from '../components/Messenger/Conversation/ConversationMain';
+import ConversationMain from '../components/Messenger/Conversation/ConversationContainer';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
 import socket, { onlineUsers } from '../services/socket';

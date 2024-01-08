@@ -1,12 +1,12 @@
 import MessageInputContainer from '../MessageInputContainer/MessageInputContainer';
-import ConversationMainContent from './ConversationMainContent';
-import ConversationMainHeader from './ConversationMainHeader';
+import ConversationContent from './ConversationContent';
+import ConversationHeader from './ConversationHeader';
 import { useParams, useRouteLoaderData } from 'react-router-dom';
 import { AuthObj, ConversationObj } from '../../../types';
 import socket from '../../../services/socket';
 import { useEffect } from 'react';
 
-const ConversationMain = () => {
+const ConversationContainer = () => {
   const params = useParams();
   const conversationsData = useRouteLoaderData(
     'messenger'
@@ -43,11 +43,11 @@ const ConversationMain = () => {
 
   return (
     <div className="flex flex-col flex-grow">
-      <ConversationMainHeader isBlockedByMe={isBlockedByMe} />
-      <ConversationMainContent />
+      <ConversationHeader isBlockedByMe={isBlockedByMe} />
+      <ConversationContent />
       <MessageInputContainer isBlocked={activeConversation!.isBlocked} />
     </div>
   );
 };
 
-export default ConversationMain;
+export default ConversationContainer;

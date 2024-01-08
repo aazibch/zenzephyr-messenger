@@ -15,7 +15,7 @@ import {
 import ImageModal from '../../UI/Modals/ImageModal';
 import socket from '../../../services/socket';
 
-const ConversationMainContent = () => {
+const ConversationContent = () => {
   const [maximizedImage, setMaximizedImage] = useState<string>();
   const [optimisticMessage, setOptimisticMessage] = useState<
     OptimisticMessageObj | undefined
@@ -173,4 +173,4 @@ const ConversationMainContent = () => {
   );
 };
 
-export default ConversationMainContent;
+export default ConversationContent;
