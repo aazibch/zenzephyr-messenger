@@ -1,4 +1,4 @@
-import MessageInputContainer from '../MessageInputContainer/MessageInputContainer';
+import MessageInput from '../MessageInput/MessageInput';
 import ConversationContent from './ConversationContent';
 import ConversationHeader from './ConversationHeader';
 import { useParams, useRouteLoaderData } from 'react-router-dom';
@@ -45,7 +45,7 @@ const ConversationContainer = () => {
     <div className="flex flex-col flex-grow">
       <ConversationHeader isBlockedByMe={isBlockedByMe} />
       <ConversationContent />
-      <MessageInputContainer isBlocked={activeConversation!.isBlocked} />
+      <MessageInput isBlocked={activeConversation!.isBlocked} />
     </div>
   );
 };

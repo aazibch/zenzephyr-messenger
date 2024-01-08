@@ -5,7 +5,7 @@ import { BsEmojiSmile } from 'react-icons/bs';
 import Button from '../../UI/Button';
 import useWhenClickedOutside from '../../../hooks/useWhenClickedOutside';
 
-const Emojis = ({ addEmoji }: { addEmoji: (emoji: string) => void }) => {
+const Emojis = ({ addEmoji }: { addEmoji: (value: string) => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const emojiPickerRef = useWhenClickedOutside(() => {
     setIsOpen(false);

@@ -5,7 +5,7 @@ import { HttpResponseDataObj } from '../../types';
 
 const SignupForm = () => {
   const navigation = useNavigation();
-  const actionData = useActionData() as HttpResponseDataObj;
+  const actionData = useActionData() as HttpResponseDataObj | undefined;
 
   const isLoading =
     navigation.state === 'submitting' &&

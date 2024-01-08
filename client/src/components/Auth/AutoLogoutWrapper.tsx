@@ -1,8 +1,8 @@
 import { useSubmit, useRouteLoaderData } from 'react-router-dom';
-import { ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 import { AuthObj } from '../../types';
 
-const AuthLogoutWrapper = ({ children }: { children: ReactNode }) => {
+const AuthLogoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const auth = useRouteLoaderData('root') as AuthObj;
   const submit = useSubmit();
 

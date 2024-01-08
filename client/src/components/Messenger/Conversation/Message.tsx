@@ -1,4 +1,3 @@
-import { ReactElement } from 'react';
 import ProfileImage from '../../UI/ProfileImage';
 import { TextContentProps, ImageContentProps } from '../../../types';
 
@@ -55,7 +54,7 @@ const Message = ({
     messageClassNames = 'bg-[#508778] text-white rounded-lg p-3 max-w-md';
   }
 
-  let messageContentElement: string | ReactElement = '';
+  let messageContentElement: string | React.ReactElement = '';
 
   if (messageContent.type === 'text') {
     messageContentElement = messageContent.text.content;

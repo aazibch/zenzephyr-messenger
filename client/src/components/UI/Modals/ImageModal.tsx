@@ -2,15 +2,17 @@ import { useRef } from 'react';
 import { IoClose } from 'react-icons/io5';
 import useWhenClickedOutside from '../../../hooks/useWhenClickedOutside';
 
+interface ImageModalProps {
+  src: string;
+  isProfileImage?: boolean;
+  closeHandler: () => void;
+}
+
 const ImageModal = ({
   src,
   isProfileImage = false,
   closeHandler
-}: {
-  src: string;
-  closeHandler: () => void;
-  isProfileImage?: boolean;
-}) => {
+}: ImageModalProps) => {
   const imageRef = useRef<HTMLImageElement>(null);
   let imageClassNames = 'max-w-[800px] max-h-[600px] object-cover';
   const imageContainerRef = useWhenClickedOutside(closeHandler);

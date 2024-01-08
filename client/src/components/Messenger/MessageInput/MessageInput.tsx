@@ -7,11 +7,11 @@ import Button from '../../UI/Button';
 import Emojis from './Emojis';
 import { MessagesObj } from '../../../types';
 
-interface MessageInputContainerProps {
+interface MessageInputProps {
   isBlocked?: boolean;
 }
 
-const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
+const MessageInput = ({ isBlocked }: MessageInputProps) => {
   const [textInput, setTextInput] = useState<string>('');
   const imageInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -126,4 +126,4 @@ const MessageInputContainer = ({ isBlocked }: MessageInputContainerProps) => {
   );
 };
 
-export default MessageInputContainer;
+export default MessageInput;

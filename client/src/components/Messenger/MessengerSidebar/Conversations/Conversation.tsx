@@ -1,7 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import ProfileImage from '../../../UI/ProfileImage';
 import { RiImageFill } from 'react-icons/ri';
-import { ReactElement } from 'react';
 import styles from './Conversations.module.css';
 
 interface ConversationProps {
@@ -21,7 +20,7 @@ const Conversation = ({
   isUnread,
   link
 }: ConversationProps) => {
-  let snippetContent: ReactElement | string | undefined = snippet;
+  let snippetContent: React.ReactElement | string | undefined = snippet;
 
   if (snippetContent === '**[imageIcon] Image**') {
     snippetContent = (

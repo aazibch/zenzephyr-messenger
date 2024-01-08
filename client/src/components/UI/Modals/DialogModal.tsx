@@ -1,7 +1,14 @@
 import { IoClose } from 'react-icons/io5';
 import Button from '../Button';
 import Modal from './Modal';
-// import Backdrop from './Backdrop';
+
+interface DialogModalProps {
+  heading: string;
+  textBody: string;
+  isLoading: boolean;
+  dismissHandler: () => void;
+  confirmHandler: () => void;
+}
 
 const DialogModal = ({
   heading,
@@ -9,13 +16,7 @@ const DialogModal = ({
   isLoading,
   dismissHandler,
   confirmHandler
-}: {
-  heading: string;
-  textBody: string;
-  isLoading: boolean;
-  dismissHandler: () => void;
-  confirmHandler: () => void;
-}) => {
+}: DialogModalProps) => {
   return (
     <Modal.Body dismissHandler={dismissHandler}>
       <Modal.Header>

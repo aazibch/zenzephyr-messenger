@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import Button from './Button';
@@ -12,7 +12,7 @@ type DropdownItem = {
 };
 
 interface DropdownMenuProps {
-  buttonContent: ReactNode;
+  buttonContent: React.ReactNode;
   items: DropdownItem[];
   disableClick?: boolean;
 }

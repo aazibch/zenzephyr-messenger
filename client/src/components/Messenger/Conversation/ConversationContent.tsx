@@ -22,7 +22,7 @@ const ConversationContent = () => {
   >();
   const messagesData = useLoaderData() as MessagesObj;
   const [messages, setMessages] = useState<MessageObj[]>(messagesData.messages);
-  const auth = useRouteLoaderData('root') as AuthObj;
+  const user = (useRouteLoaderData('root') as AuthObj).user;
   const messagesElementRef = useRef<HTMLDivElement>(null);
   const navigation = useNavigation();
   const params = useParams();
@@ -64,7 +64,7 @@ const ConversationContent = () => {
               const img = new Image();
               img.onload = () => {
                 setOptimisticMessage({
-                  sender: auth.user._id,
+                  sender: user._id,
                   contentProps: {
                     type: 'image',
                     image: {
@@ -85,7 +85,7 @@ const ConversationContent = () => {
         // Text message
         else if (text !== null) {
           setOptimisticMessage({
-            sender: auth.user._id,
+            sender: user._id,
             contentProps: {
               type: 'text',
               text: {
@@ -139,7 +139,7 @@ const ConversationContent = () => {
       return (
         <Message
           key={elem._id}
-          byLoggedInUser={elem.sender.toString() === auth.user._id}
+          byLoggedInUser={elem.sender.toString() === user._id}
           messageContent={elem.contentProps}
           timestamp={elem.createdAt}
           attachedImageClickHandler={attachedImageClickHandler}

@@ -3,7 +3,7 @@ import { useNavigation, useRouteLoaderData } from 'react-router-dom';
 import { AuthObj, OptimisticMessageObj } from '../../../types';
 import Message from './Message';
 
-const NewConversationMainContent = () => {
+const NewConversationContent = () => {
   const [optimisticMessage, setOptimisticMessage] = useState<
     OptimisticMessageObj | undefined
   >();
@@ -93,4 +93,4 @@ const NewConversationMainContent = () => {
   );
 };
 
-export default NewConversationMainContent;
+export default NewConversationContent;

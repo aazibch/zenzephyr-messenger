@@ -7,7 +7,7 @@ import {
   UserObj
 } from '../../../../types';
 import styles from './Conversations.module.css';
-import { ReactElement, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import socket, {
   updateOnlineUsers,
   onlineUsers
@@ -21,7 +21,7 @@ const Conversations = () => {
     | undefined;
   const [conversations, setConversations] =
     useState<ConversationObj[]>(conversationsData);
-  const auth = useRouteLoaderData('root') as AuthObj;
+  const user = (useRouteLoaderData('root') as AuthObj).user;
   const params = useParams();
 
   const getConversationsWithIsOnlineFalse = () => {
@@ -91,7 +91,7 @@ const Conversations = () => {
             return {
               ...conversation,
               snippet,
-              unreadBy: auth.user._id
+              unreadBy: user._id
             };
           }
 
@@ -115,7 +115,7 @@ const Conversations = () => {
     updateOnlineState(onlineUsers);
   }, [conversationsData]);
 
-  let conversationElements: ReactElement[] = [];
+  let conversationElements: React.ReactElement[] = [];
 
   if (conversations.length > 0) {
     conversationElements = conversations.map((elem) => {
@@ -127,7 +127,7 @@ const Conversations = () => {
           displayName={elem.otherParticipant.fullName}
           snippet={elem.snippet}
           isOnline={elem.isOnline}
-          isUnread={elem.unreadBy?.toString() === auth.user._id}
+          isUnread={elem.unreadBy?.toString() === user._id}
         />
       );
     });

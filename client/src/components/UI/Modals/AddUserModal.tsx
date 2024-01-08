@@ -7,12 +7,7 @@ import { UserObj } from '../../../types';
 import { useFetcher, useNavigate } from 'react-router-dom';
 
 interface AddUserModalProps {
-  // foundUser: UserObj | null | undefined;
-  // isLoading: boolean;
-  // searchHandler: (username: string) => void;
   dismissHandler: () => void;
-  // addHandler: () => void;
-  // changeHandler: () => void;
 }
 
 const AddUserModal = ({ dismissHandler }: AddUserModalProps) => {

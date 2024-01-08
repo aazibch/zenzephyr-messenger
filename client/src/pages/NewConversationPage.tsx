@@ -2,14 +2,15 @@ import { json, redirect } from 'react-router-dom';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
 import ConversationMainHeader from '../components/Messenger/Conversation/ConversationHeader';
-import MessageInputContainer from '../components/Messenger/MessageInputContainer/MessageInputContainer';
-import NewConversationMainContent from '../components/Messenger/Conversation/NewConversationMainContent';
+import MessageInput from '../components/Messenger/MessageInput/MessageInput';
+import NewConversationContent from '../components/Messenger/Conversation/NewConversationContent';
+
 const NewConversationPage = () => {
   return (
     <div className="flex flex-col justify-between flex-grow">
       <ConversationMainHeader />
-      <NewConversationMainContent />
-      <MessageInputContainer />
+      <NewConversationContent />
+      <MessageInput />
     </div>
   );
 };
