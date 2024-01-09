@@ -79,8 +79,8 @@ export interface FormDataObj {
 }
 
 export interface MessengerContextObj {
-  user?: UserObj | null;
-  login: (user: UserObj) => void;
+  onlineUsers: SocketUserDataObj[];
+  updateOnlineUsers: (onlineUsers: SocketUserDataObj[]) => void;
 }
 
 export interface AuthObj {

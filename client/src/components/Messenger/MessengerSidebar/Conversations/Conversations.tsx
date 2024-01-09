@@ -7,12 +7,9 @@ import {
   UserObj
 } from '../../../../types';
 import styles from './Conversations.module.css';
-import { useEffect, useState } from 'react';
-import socket, {
-  updateOnlineUsers,
-  onlineUsers
-} from '../../../../services/socket';
-import { SocketUserDataObj } from '../../../../types';
+import { useEffect, useState, useContext } from 'react';
+import socket from '../../../../services/socket';
+import MessengerContext from '../../../../store/messenger-context';
 
 const Conversations = () => {
   const conversationsData = useLoaderData() as ConversationObj[];
@@ -23,6 +20,8 @@ const Conversations = () => {
     useState<ConversationObj[]>(conversationsData);
   const user = (useRouteLoaderData('root') as AuthObj).user;
   const params = useParams();
+  const messengerCtx = useContext(MessengerContext);
+  const { onlineUsers } = messengerCtx;
 
   const getConversationsWithIsOnlineFalse = () => {
     const updatedConversations = conversationsData.map((conversation) => {
@@ -32,14 +31,12 @@ const Conversations = () => {
     return updatedConversations;
   };
 
-  const updateOnlineState = (usersData: SocketUserDataObj[]) => {
+  const updateConversationsWithOnlineState = () => {
     const conversations = getConversationsWithIsOnlineFalse();
 
-    let updatedConversations;
-
-    updatedConversations = conversations.map((conversation) => {
+    const updatedConversations = conversations.map((conversation) => {
       if (!conversation.isBlocked) {
-        const isOnline = usersData.some(
+        const isOnline = onlineUsers.some(
           (userData) =>
             userData.databaseId === conversation.otherParticipant._id
         );
@@ -50,22 +47,11 @@ const Conversations = () => {
       return conversation;
     });
 
-    if (updatedConversations) {
-      setConversations(updatedConversations);
-    }
+    setConversations(updatedConversations);
   };
 
   useEffect(() => {
-    console.log('Effect Function');
-
-    const onOnlineUsers = (updatedOnlineUsers: SocketUserDataObj[]) => {
-      console.log('onlineUsers', updatedOnlineUsers);
-      updateOnlineUsers(updatedOnlineUsers);
-      updateOnlineState(onlineUsers);
-    };
-
     const onChatMessage = (messageData: MessageObj) => {
-      console.log('chatMessage');
       const conversationId = messageData.conversation.toString();
       let snippet: string;
       let updateSnippetOnly = false;
@@ -106,18 +92,16 @@ const Conversations = () => {
       });
     };
 
-    socket.on('onlineUsers', onOnlineUsers);
     socket.on('chatMessage', onChatMessage);
 
     return () => {
-      socket.off('onlineUsers', onOnlineUsers);
       socket.off('chatMessage', onChatMessage);
     };
   }, []);
 
   useEffect(() => {
-    updateOnlineState(onlineUsers);
-  }, [conversationsData]);
+    updateConversationsWithOnlineState();
+  }, [conversationsData, onlineUsers]);
 
   let conversationElements: React.ReactElement[] = [];
 

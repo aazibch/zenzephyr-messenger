@@ -2,9 +2,10 @@ import MessageInput from '../MessageInput/MessageInput';
 import ConversationContent from './ConversationContent';
 import ConversationHeader from './ConversationHeader';
 import { useParams, useRouteLoaderData } from 'react-router-dom';
-import { AuthObj, ConversationObj } from '../../../types';
+import { AuthObj, ConversationObj, SocketUserDataObj } from '../../../types';
 import socket from '../../../services/socket';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
+import MessengerContext from '../../../store/messenger-context';
 
 const ConversationContainer = () => {
   const params = useParams();
@@ -12,7 +13,7 @@ const ConversationContainer = () => {
     'messenger'
   ) as ConversationObj[];
   const user = (useRouteLoaderData('root') as AuthObj).user;
-
+  const messengerCtx = useContext(MessengerContext);
   const activeConversation = conversationsData.find(
     (elem) => elem._id === params.id
   );
@@ -27,19 +28,29 @@ const ConversationContainer = () => {
     );
   }
 
+  const activeConversationId = activeConversation?._id;
+  const { onlineUsers } = messengerCtx;
   useEffect(() => {
-    socket.emit('updateActiveConversation', {
-      databaseId: user._id,
-      conversationId: activeConversation!._id
-    });
+    const socketUser: SocketUserDataObj | undefined = onlineUsers.find(
+      (socketUser) => socketUser.databaseId === user._id
+    );
 
+    if (socketUser && socketUser.activeConversation !== activeConversationId) {
+      socket.emit('updateActiveConversation', {
+        databaseId: user._id,
+        conversationId: activeConversationId
+      });
+    }
+  }, [activeConversationId, onlineUsers]);
+
+  useEffect(() => {
     return () => {
       socket.emit('updateActiveConversation', {
         databaseId: user._id,
         conversationId: null
       });
     };
-  }, [activeConversation]);
+  }, []);
 
   return (
     <div className="flex flex-col flex-grow">

@@ -21,6 +21,7 @@ const ConversationContent = () => {
     OptimisticMessageObj | undefined
   >();
   const messagesData = useLoaderData() as MessagesObj;
+  const { messages: messagesFromLoader } = messagesData;
   const [messages, setMessages] = useState<MessageObj[]>(messagesData.messages);
   const user = (useRouteLoaderData('root') as AuthObj).user;
   const messagesElementRef = useRef<HTMLDivElement>(null);
@@ -28,18 +29,21 @@ const ConversationContent = () => {
   const params = useParams();
 
   useEffect(() => {
-    if (messagesData.messages) {
-      setMessages(messagesData.messages);
+    if (messagesFromLoader) {
+      setMessages(messagesFromLoader);
     }
-  }, [messagesData]);
+  }, [messagesFromLoader]);
+
+  const isSubmitting =
+    navigation.state === 'submitting' &&
+    navigation.formData != null &&
+    navigation.formAction === navigation.location.pathname;
+
+  const { state } = navigation;
 
   // Configure optimistic UI for messages
   useEffect(() => {
-    if (
-      navigation.state === 'submitting' &&
-      navigation.formData != null &&
-      navigation.formAction === navigation.location.pathname
-    ) {
+    if (isSubmitting) {
       const { formData } = navigation;
 
       if (navigation.formMethod === 'post' && formData) {
@@ -97,10 +101,10 @@ const ConversationContent = () => {
       }
     }
 
-    if (navigation.state === 'idle') {
+    if (state === 'idle') {
       setOptimisticMessage(undefined);
     }
-  }, [navigation.state]);
+  }, [isSubmitting, state]);
 
   useEffect(() => {
     const onChatMessage = (messageData: MessageObj) => {

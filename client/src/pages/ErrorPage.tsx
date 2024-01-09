@@ -8,6 +8,8 @@ const ErrorPage = () => {
   const error = useRouteError() as ErrorResponse;
   const navigate = useNavigate();
 
+  console.log('error', error);
+
   if (error.status === 401 && error.data === 'You are not logged in.') {
     setTimeout(() => {
       clearAuthState();

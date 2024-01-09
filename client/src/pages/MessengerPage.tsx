@@ -1,27 +1,10 @@
-import { Outlet, json, redirect, useRouteLoaderData } from 'react-router-dom';
+import { Outlet, json, redirect } from 'react-router-dom';
 import MessengerSidebar from '../components/Messenger/MessengerSidebar/MessengerSidebar';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
 import { protect } from '../utils/auth';
-import { useEffect } from 'react';
-import { AuthObj } from '../types';
-import socket from '../services/socket';
 
 const MessengerPage = () => {
-  const auth = useRouteLoaderData('root') as AuthObj;
-
-  useEffect(() => {
-    socket.connect();
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    socket.emit('saveUser', auth.user._id);
-  }, []);
-
   return (
     <div className="flex h-full overflow-hidden">
       <MessengerSidebar />

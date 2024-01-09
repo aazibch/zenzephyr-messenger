@@ -3,14 +3,25 @@ import { MessageObj, SocketUserDataObj } from '../types';
 
 const onlineUsers: SocketUserDataObj[] = [];
 
-const saveUser = (data: SocketUserDataObj) => {
+// const saveUser = (data: SocketUserDataObj) => {
+//   if (!onlineUsers.some((user) => user.databaseId === data.databaseId)) {
+//     onlineUsers.push(data);
+//   } else {
+//     const index = onlineUsers.findIndex(
+//       (elem) => elem.databaseId === data.databaseId
+//     );
+//     onlineUsers[index].socketId = data.socketId;
+//   }
+// };
+
+const updateUser = (data: SocketUserDataObj) => {
   if (!onlineUsers.some((user) => user.databaseId === data.databaseId)) {
     onlineUsers.push(data);
   } else {
     const index = onlineUsers.findIndex(
       (elem) => elem.databaseId === data.databaseId
     );
-    onlineUsers[index].socketId = data.socketId;
+    onlineUsers[index] = data;
   }
 };
 
@@ -26,34 +37,36 @@ const getUser = (databaseId: string) => {
   return onlineUsers.find((user) => user.databaseId === databaseId);
 };
 
-const updateActiveConversation = ({
-  databaseId,
-  socketId,
-  activeConversation
-}: SocketUserDataObj) => {
-  const userPresent = onlineUsers.some(
-    (user) => user.databaseId === databaseId
-  );
+// const updateActiveConversation = ({
+//   databaseId,
+//   socketId,
+//   activeConversation
+// }: SocketUserDataObj) => {
+//   const userPresent = onlineUsers.some(
+//     (user) => user.databaseId === databaseId
+//   );
 
-  if (!userPresent) {
-    onlineUsers.push({ databaseId, socketId, activeConversation });
-  } else {
-    const index = onlineUsers.findIndex(
-      (user) => user.databaseId === databaseId
-    );
+//   if (!userPresent) {
+//     onlineUsers.push({ databaseId, socketId, activeConversation });
+//   } else {
+//     const index = onlineUsers.findIndex(
+//       (user) => user.databaseId === databaseId
+//     );
 
-    if (index > -1) {
-      onlineUsers[index].activeConversation = activeConversation;
-    }
-  }
-};
+//     if (index > -1) {
+//       onlineUsers[index].activeConversation = activeConversation;
+//     }
+//   }
+// };
 
 const onConnection = (io: Server) => {
   return (socket: Socket) => {
+    console.log('[Socket server] A user connected.');
+
     socket.on('saveUser', (databaseId: string) => {
-      saveUser({ databaseId, socketId: socket.id, activeConversation: null });
+      updateUser({ databaseId, socketId: socket.id, activeConversation: null });
       io.emit('onlineUsers', onlineUsers);
-      console.log('[Socket server] A user connected.', onlineUsers);
+      console.log('["saveUser" event]', onlineUsers);
     });
 
     socket.on(
@@ -65,12 +78,13 @@ const onConnection = (io: Server) => {
         databaseId: string;
         conversationId: string | null;
       }) => {
-        updateActiveConversation({
+        updateUser({
           databaseId,
           socketId: socket.id,
           activeConversation: conversationId
         });
         io.emit('onlineUsers', onlineUsers);
+        console.log('["updateActiveConversation" event]', onlineUsers);
       }
     );
 
@@ -86,7 +100,7 @@ const onConnection = (io: Server) => {
       removeUser(socket.id);
       io.emit('onlineUsers', onlineUsers);
       console.log('[Socket server] A user disconnected.');
-      console.log('[Socket server] A user connected.', onlineUsers);
+      console.log('["disconnect"]', onlineUsers);
     });
   };
 };
