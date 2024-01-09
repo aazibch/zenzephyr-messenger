@@ -104,7 +104,7 @@ const ConversationContent = () => {
 
   useEffect(() => {
     const onChatMessage = (messageData: MessageObj) => {
-      if (messageData.conversation.toString() === params.id) {
+      if (messageData.conversation === params.id) {
         setMessages((prevMessages) => [...prevMessages, messageData]);
       }
     };

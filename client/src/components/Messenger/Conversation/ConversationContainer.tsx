@@ -14,7 +14,7 @@ const ConversationContainer = () => {
   const user = (useRouteLoaderData('root') as AuthObj).user;
 
   const activeConversation = conversationsData.find(
-    (elem) => elem._id.toString() === params.id
+    (elem) => elem._id === params.id
   );
 
   let isBlockedByMe;

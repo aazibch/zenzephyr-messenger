@@ -1,112 +1,91 @@
 import { Server, Socket } from 'socket.io';
 import { MessageObj, SocketUserDataObj } from '../types';
 
-let onlineUsers: SocketUserDataObj[] = [];
-// let openConversations: string[] = [];
-
-const getUser = (userId: string) => {
-  return onlineUsers.find((user) => user.userId === userId);
-};
+const onlineUsers: SocketUserDataObj[] = [];
 
 const saveUser = (data: SocketUserDataObj) => {
-  if (!onlineUsers.some((user) => user.userId === data.userId)) {
+  if (!onlineUsers.some((user) => user.databaseId === data.databaseId)) {
     onlineUsers.push(data);
   } else {
-    const index = onlineUsers.findIndex((elem) => elem.userId === data.userId);
+    const index = onlineUsers.findIndex(
+      (elem) => elem.databaseId === data.databaseId
+    );
     onlineUsers[index].socketId = data.socketId;
   }
 };
 
+const removeUser = (socketId: string) => {
+  const index = onlineUsers.findIndex((user) => user.socketId === socketId);
+
+  if (index > -1) {
+    onlineUsers.splice(index, 1);
+  }
+};
+
+const getUser = (databaseId: string) => {
+  return onlineUsers.find((user) => user.databaseId === databaseId);
+};
+
 const updateActiveConversation = ({
-  userId,
+  databaseId,
   socketId,
   activeConversation
 }: SocketUserDataObj) => {
-  console.log(
-    '[updateActiveConversation] activeConversation',
-    activeConversation
+  const userPresent = onlineUsers.some(
+    (user) => user.databaseId === databaseId
   );
 
-  const userPresent = onlineUsers.some((user) => user.userId === userId);
-
   if (!userPresent) {
-    onlineUsers.push({ userId, socketId, activeConversation });
+    onlineUsers.push({ databaseId, socketId, activeConversation });
   } else {
-    onlineUsers = onlineUsers.map((user) => {
-      if (user.userId === userId) {
-        return { ...user, activeConversation };
-      }
+    const index = onlineUsers.findIndex(
+      (user) => user.databaseId === databaseId
+    );
 
-      return user;
-    });
+    if (index > -1) {
+      onlineUsers[index].activeConversation = activeConversation;
+    }
   }
-
-  console.log('[updateActiveConversation] onlineUsers', onlineUsers);
-};
-
-// const removeOpenConversation = (conversationId: string) => {
-//   openConversations = openConversations.filter((id) => id !== conversationId);
-// };
-
-const removeUser = (socketId: string) => {
-  onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
 };
 
 const onConnection = (io: Server) => {
   return (socket: Socket) => {
-    console.log('[Socket server] A user connected.');
-
-    socket.on('saveUser', (userId: string) => {
-      saveUser({ userId, socketId: socket.id, activeConversation: null });
-      console.log(
-        '[Socket server] (After connecting) onlineUsers',
-        onlineUsers
-      );
+    socket.on('saveUser', (databaseId: string) => {
+      saveUser({ databaseId, socketId: socket.id, activeConversation: null });
       io.emit('onlineUsers', onlineUsers);
+      console.log('[Socket server] A user connected.');
     });
 
     socket.on(
       'updateActiveConversation',
       ({
-        userId,
+        databaseId,
         conversationId
       }: {
-        userId: string;
+        databaseId: string;
         conversationId: string | null;
       }) => {
-        console.log(
-          '[Socket server]["updateActiveConversation" Listener] conversationId',
-          conversationId
-        );
         updateActiveConversation({
-          userId,
+          databaseId,
           socketId: socket.id,
           activeConversation: conversationId
         });
-        // console.log(
-        //   '[Socket server]["updateActiveConversation" Listener] (after updating) onlineUsers',
-        //   onlineUsers
-        // );
+        io.emit('onlineUsers', onlineUsers);
       }
     );
 
-    socket.on('sendMessage', (messageData: MessageObj) => {
-      console.log('[Socket server]["sendMessage" Listener]');
-      const recipient = getUser(messageData.recipient);
+    socket.on('sendMessage', (message: MessageObj) => {
+      const recipient = getUser(message.recipient);
 
-      if (recipient) {
-        io.to(recipient.socketId).emit('chatMessage', messageData);
+      if (recipient && recipient.activeConversation === message.conversation) {
+        io.to(recipient.socketId).emit('chatMessage', message);
       }
     });
 
     socket.on('disconnect', () => {
-      console.log('[Socket server] A user disconnected.');
       removeUser(socket.id);
-      console.log(
-        '[Socket server] (After disconnecting) onlineUsers',
-        onlineUsers
-      );
       io.emit('onlineUsers', onlineUsers);
+      console.log('[Socket server] A user disconnected.');
     });
   };
 };

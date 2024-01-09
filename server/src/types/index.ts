@@ -29,7 +29,7 @@ export interface AuthenticatedRequestWithFile extends AuthenticatedRequest {
 
 // Web sockets
 export interface SocketUserDataObj {
-  userId: string;
+  databaseId: string;
   socketId: string;
   activeConversation: string | null;
 }

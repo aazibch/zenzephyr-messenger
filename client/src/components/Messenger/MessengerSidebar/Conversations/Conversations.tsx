@@ -41,7 +41,7 @@ const Conversations = () => {
       if (!conversation.isBlocked) {
         const isOnline = usersData.some(
           (userData) =>
-            userData.userId === conversation.otherParticipant._id.toString()
+            userData.databaseId === conversation.otherParticipant._id
         );
 
         return { ...conversation, isOnline };
@@ -79,7 +79,7 @@ const Conversations = () => {
       setConversations((prevConversations) => {
         const updatedConversations = prevConversations.map((conversation) => {
           if (updateSnippetOnly) {
-            if (conversation._id.toString() === conversationId) {
+            if (conversation._id === conversationId) {
               return {
                 ...conversation,
                 snippet
@@ -127,7 +127,7 @@ const Conversations = () => {
           displayName={elem.otherParticipant.fullName}
           snippet={elem.snippet}
           isOnline={elem.isOnline}
-          isUnread={elem.unreadBy?.toString() === user._id}
+          isUnread={elem.unreadBy === user._id}
         />
       );
     });
