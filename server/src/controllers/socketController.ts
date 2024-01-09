@@ -53,7 +53,7 @@ const onConnection = (io: Server) => {
     socket.on('saveUser', (databaseId: string) => {
       saveUser({ databaseId, socketId: socket.id, activeConversation: null });
       io.emit('onlineUsers', onlineUsers);
-      console.log('[Socket server] A user connected.');
+      console.log('[Socket server] A user connected.', onlineUsers);
     });
 
     socket.on(
@@ -86,6 +86,7 @@ const onConnection = (io: Server) => {
       removeUser(socket.id);
       io.emit('onlineUsers', onlineUsers);
       console.log('[Socket server] A user disconnected.');
+      console.log('[Socket server] A user connected.', onlineUsers);
     });
   };
 };

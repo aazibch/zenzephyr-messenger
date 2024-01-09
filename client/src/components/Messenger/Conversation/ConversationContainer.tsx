@@ -29,13 +29,13 @@ const ConversationContainer = () => {
 
   useEffect(() => {
     socket.emit('updateActiveConversation', {
-      userId: user._id,
+      databaseId: user._id,
       conversationId: activeConversation!._id
     });
 
     return () => {
       socket.emit('updateActiveConversation', {
-        userId: user._id,
+        databaseId: user._id,
         conversationId: null
       });
     };

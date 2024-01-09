@@ -56,12 +56,16 @@ const Conversations = () => {
   };
 
   useEffect(() => {
+    console.log('Effect Function');
+
     const onOnlineUsers = (updatedOnlineUsers: SocketUserDataObj[]) => {
+      console.log('onlineUsers', updatedOnlineUsers);
       updateOnlineUsers(updatedOnlineUsers);
       updateOnlineState(onlineUsers);
     };
 
     const onChatMessage = (messageData: MessageObj) => {
+      console.log('chatMessage');
       const conversationId = messageData.conversation.toString();
       let snippet: string;
       let updateSnippetOnly = false;

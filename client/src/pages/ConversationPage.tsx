@@ -56,7 +56,7 @@ export const action = async ({
     formData.delete('otherParticipant');
 
     const onlineRecipient = onlineUsers.find(
-      (user) => user.userId === recipientId
+      (user) => user.databaseId === recipientId
     );
 
     if (!onlineRecipient || onlineRecipient.activeConversation !== params.id) {
