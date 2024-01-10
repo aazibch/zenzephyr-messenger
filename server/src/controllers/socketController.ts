@@ -91,7 +91,7 @@ const onConnection = (io: Server) => {
     socket.on('sendMessage', (message: MessageObj) => {
       const recipient = getUser(message.recipient);
 
-      if (recipient && recipient.activeConversation === message.conversation) {
+      if (recipient) {
         io.to(recipient.socketId).emit('chatMessage', message);
       }
     });
