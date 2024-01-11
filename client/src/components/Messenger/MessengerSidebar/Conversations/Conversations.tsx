@@ -107,8 +107,6 @@ const Conversations = () => {
           updatedConversations.unshift(itemToModify);
         }
 
-        console.log('[Conversations.tsx] modified item', itemToModify);
-
         return updatedConversations;
       });
     };
@@ -134,9 +132,6 @@ const Conversations = () => {
 
   if (conversations.length > 0) {
     conversationElements = conversations.map((elem) => {
-      console.log('elem.unreadBy', elem.unreadBy);
-      console.log('user._id', user._id);
-
       return (
         <Conversation
           key={elem._id}
