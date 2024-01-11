@@ -13,6 +13,19 @@ export interface IUser {
   blockedUsers: ObjectId[];
 }
 
+export interface IConversation {
+  _id: string | ObjectId;
+  __v: number;
+  participants: ObjectId[];
+  startedBy: ObjectId;
+  isBlocked?: boolean;
+  deletedBy?: ObjectId;
+  unreadBy?: ObjectId;
+  messages: ObjectId[];
+  snippet: string;
+  updatedAt: Date;
+}
+
 export interface AuthenticatedRequest extends Request {
   user?: IUser;
 }

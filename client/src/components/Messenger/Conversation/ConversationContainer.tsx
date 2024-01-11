@@ -58,6 +58,29 @@ const ConversationContainer = () => {
   }, []);
 
   useEffect(() => {
+    const onBlockedOrUnblockedConversation = (
+      conversation: ConversationObj
+    ) => {
+      console.log('onBlockedOrUnblockedConversation', conversation);
+      if (revalidator.state === 'idle') {
+        revalidator.revalidate();
+      }
+    };
+
+    socket.on(
+      'blockedOrUnblockedConversation',
+      onBlockedOrUnblockedConversation
+    );
+
+    return () => {
+      socket.off(
+        'blockedOrUnblockedConversation',
+        onBlockedOrUnblockedConversation
+      );
+    };
+  }, []);
+
+  useEffect(() => {
     if (revalidator.state === 'idle') {
       revalidator.revalidate();
     }

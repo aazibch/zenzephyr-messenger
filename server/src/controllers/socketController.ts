@@ -1,7 +1,12 @@
 import { Server, Socket } from 'socket.io';
-import { MessageObj, SocketUserDataObj } from '../types';
+import { IConversation, MessageObj, SocketUserDataObj } from '../types';
 
 const onlineUsers: SocketUserDataObj[] = [];
+
+interface BlockedUnblockedConversation {
+  conversation: IConversation;
+  recipientId: string;
+}
 
 // const saveUser = (data: SocketUserDataObj) => {
 //   if (!onlineUsers.some((user) => user.databaseId === data.databaseId)) {
@@ -95,6 +100,24 @@ const onConnection = (io: Server) => {
         io.to(recipient.socketId).emit('chatMessage', message);
       }
     });
+
+    socket.on(
+      'blockOrUnblock',
+      (conversationData: BlockedUnblockedConversation) => {
+        const recipient = getUser(conversationData.recipientId);
+
+        console.log('conversationData', conversationData);
+
+        console.log('blockOrUnblock', recipient);
+
+        if (recipient) {
+          io.to(recipient.socketId).emit(
+            'blockedOrUnblockedConversation',
+            conversationData.conversation
+          );
+        }
+      }
+    );
 
     socket.on('disconnect', () => {
       removeUser(socket.id);

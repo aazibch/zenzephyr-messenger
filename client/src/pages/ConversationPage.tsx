@@ -1,11 +1,11 @@
 import { json, Params, redirect } from 'react-router-dom';
-import ConversationMain from '../components/Messenger/Conversation/ConversationContainer';
+import ConversationContainer from '../components/Messenger/Conversation/ConversationContainer';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
 import socket from '../services/socket';
 
 const ConversationPage = () => {
-  return <ConversationMain />;
+  return <ConversationContainer />;
 };
 
 export default ConversationPage;
@@ -81,6 +81,11 @@ export const action = async ({
     const response = await sendHttpRequest(httpConfig);
 
     if (response.statusText === 'success') {
+      console.log('[ConversationPage] action blockOrUnblock', response.data);
+      socket.emit('blockOrUnblock', {
+        conversation: response.data!.conversation,
+        recipientId: data.id
+      });
       return response;
     }
 

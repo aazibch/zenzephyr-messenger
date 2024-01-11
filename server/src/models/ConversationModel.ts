@@ -1,17 +1,5 @@
 import mongoose, { ObjectId } from 'mongoose';
-
-interface IConversation {
-  _id: string | ObjectId;
-  __v: number;
-  participants: ObjectId[];
-  startedBy: ObjectId;
-  isBlocked?: boolean;
-  deletedBy?: ObjectId;
-  unreadBy?: ObjectId;
-  messages: ObjectId[];
-  snippet: string;
-  updatedAt: Date;
-}
+import { IConversation } from '../types';
 
 const checkIfValidParticipant = function (val: ObjectId) {
   return this.participants.includes(val);
