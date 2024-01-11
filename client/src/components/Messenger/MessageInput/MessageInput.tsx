@@ -1,11 +1,17 @@
-import { useLoaderData, useNavigation, useSubmit } from 'react-router-dom';
-import { useRef, useState } from 'react';
+import {
+  useLoaderData,
+  useNavigation,
+  useParams,
+  useSubmit
+} from 'react-router-dom';
+import { useContext, useRef, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { BsCardImage } from 'react-icons/bs';
 
 import Button from '../../UI/Button';
 import Emojis from './Emojis';
 import { MessagesObj } from '../../../types';
+import MessengerContext from '../../../store/messenger-context';
 
 interface MessageInputProps {
   isBlocked?: boolean;
@@ -18,6 +24,8 @@ const MessageInput = ({ isBlocked }: MessageInputProps) => {
   const submit = useSubmit();
   const navigation = useNavigation();
   const messagesData = useLoaderData() as MessagesObj;
+  const { onlineUsers } = useContext(MessengerContext);
+  const params = useParams();
 
   const isSubmitting =
     navigation.state === 'submitting' &&
@@ -37,8 +45,14 @@ const MessageInput = ({ isBlocked }: MessageInputProps) => {
   const submitForm = () => {
     const formData = new FormData();
     const image = imageInputRef.current!.files?.[0];
+    const recipientId = messagesData.otherParticipant._id;
+    const onlineRecipient = onlineUsers.find(
+      (user) => user.databaseId === recipientId
+    );
 
-    formData.append('otherParticipant', messagesData.otherParticipant._id);
+    if (!onlineRecipient || onlineRecipient.activeConversation !== params.id) {
+      formData.append('unread', 'true');
+    }
 
     if (image) {
       formData.append('image', image);

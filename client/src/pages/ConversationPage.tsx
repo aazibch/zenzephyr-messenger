@@ -2,7 +2,7 @@ import { json, Params, redirect } from 'react-router-dom';
 import ConversationMain from '../components/Messenger/Conversation/ConversationContainer';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
-import socket, { onlineUsers } from '../services/socket';
+import socket from '../services/socket';
 
 const ConversationPage = () => {
   return <ConversationMain />;
@@ -51,17 +51,6 @@ export const action = async ({
 
   if (request.method === 'POST') {
     const formData = await request.formData();
-    const recipientId = formData.get('otherParticipant');
-
-    formData.delete('otherParticipant');
-
-    const onlineRecipient = onlineUsers.find(
-      (user) => user.databaseId === recipientId
-    );
-
-    if (!onlineRecipient || onlineRecipient.activeConversation !== params.id) {
-      formData.append('unread', 'true');
-    }
 
     const httpConfig = generateHttpConfig({
       url: `${apiUrl}/api/v1/conversations/${params.id}/messages`,
