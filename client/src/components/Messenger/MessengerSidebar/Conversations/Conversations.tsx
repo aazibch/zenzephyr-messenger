@@ -1,4 +1,10 @@
-import { useLoaderData, useParams, useRouteLoaderData } from 'react-router-dom';
+import {
+  useLoaderData,
+  useParams,
+  useRouteLoaderData,
+  useRevalidator
+} from 'react-router-dom';
+import { useEffect, useState, useContext } from 'react';
 import Conversation from './Conversation';
 import {
   AuthObj,
@@ -7,7 +13,6 @@ import {
   UserObj
 } from '../../../../types';
 import styles from './Conversations.module.css';
-import { useEffect, useState, useContext } from 'react';
 import socket from '../../../../services/socket';
 import MessengerContext from '../../../../store/messenger-context';
 
@@ -22,6 +27,7 @@ const Conversations = () => {
   const params = useParams();
   const messengerCtx = useContext(MessengerContext);
   const { onlineUsers } = messengerCtx;
+  const revalidator = useRevalidator();
 
   const getConversationsWithIsOnlineFalse = () => {
     const updatedConversations = conversationsData.map((conversation) => {
@@ -50,6 +56,12 @@ const Conversations = () => {
     setConversations(updatedConversations);
   };
 
+  // useEffect(() => {
+  //   if (revalidator.state === 'idle') {
+  //     revalidator.revalidate();
+  //   }
+  // }, [params.id]);
+
   useEffect(() => {
     const onChatMessage = (messageData: MessageObj) => {
       const conversationId = messageData.conversation.toString();
@@ -67,26 +79,26 @@ const Conversations = () => {
       }
 
       setConversations((prevConversations) => {
-        const updatedConversations = prevConversations.map((conversation) => {
+        let updatedConversations = [...prevConversations];
+
+        let itemToModify = updatedConversations.find(
+          (item) => item._id === conversationId
+        );
+
+        updatedConversations = updatedConversations.filter(
+          (item) => item._id !== conversationId
+        );
+
+        if (itemToModify) {
           if (updateSnippetOnly) {
-            if (conversation._id === conversationId) {
-              return {
-                ...conversation,
-                snippet
-              };
-            }
+            itemToModify.snippet = snippet;
+          } else {
+            itemToModify.snippet = snippet;
+            itemToModify.unreadBy = user._id;
           }
 
-          if (conversation._id.toString() === conversationId) {
-            return {
-              ...conversation,
-              snippet,
-              unreadBy: user._id
-            };
-          }
-
-          return conversation;
-        });
+          updatedConversations.unshift(itemToModify);
+        }
 
         return updatedConversations;
       });
@@ -103,6 +115,12 @@ const Conversations = () => {
     updateConversationsWithOnlineState();
   }, [conversationsData, onlineUsers]);
 
+  const conversationClickHandler = () => {
+    if (revalidator.state === 'idle') {
+      revalidator.revalidate();
+    }
+  };
+
   let conversationElements: React.ReactElement[] = [];
 
   if (conversations.length > 0) {
@@ -116,6 +134,7 @@ const Conversations = () => {
           snippet={elem.snippet}
           isOnline={elem.isOnline}
           isUnread={elem.unreadBy === user._id}
+          onClickHandler={conversationClickHandler}
         />
       );
     });

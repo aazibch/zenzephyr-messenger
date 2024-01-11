@@ -10,6 +10,7 @@ interface ConversationProps {
   isOnline?: boolean;
   isUnread?: boolean;
   link: string;
+  onClickHandler?: () => void;
 }
 
 const Conversation = ({
@@ -18,7 +19,8 @@ const Conversation = ({
   snippet,
   isOnline,
   isUnread,
-  link
+  link,
+  onClickHandler
 }: ConversationProps) => {
   let snippetContent: React.ReactElement | string | undefined = snippet;
 
@@ -32,6 +34,7 @@ const Conversation = ({
 
   return (
     <NavLink
+      onClick={onClickHandler}
       to={link}
       className={({ isActive }) => {
         return isActive ? styles.active : undefined;
