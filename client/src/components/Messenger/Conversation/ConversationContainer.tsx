@@ -1,7 +1,11 @@
 import MessageInput from '../MessageInput/MessageInput';
 import ConversationContent from './ConversationContent';
 import ConversationHeader from './ConversationHeader';
-import { useParams, useRouteLoaderData } from 'react-router-dom';
+import {
+  useParams,
+  useRevalidator,
+  useRouteLoaderData
+} from 'react-router-dom';
 import { AuthObj, ConversationObj, SocketUserDataObj } from '../../../types';
 import socket from '../../../services/socket';
 import { useContext, useEffect } from 'react';
@@ -17,6 +21,7 @@ const ConversationContainer = () => {
   const activeConversation = conversationsData.find(
     (elem) => elem._id === params.id
   );
+  const revalidator = useRevalidator();
 
   let isBlockedByMe;
 
@@ -28,7 +33,7 @@ const ConversationContainer = () => {
     );
   }
 
-  const activeConversationId = activeConversation?._id;
+  const activeConversationId = params.id;
   const { onlineUsers } = messengerCtx;
   useEffect(() => {
     const socketUser: SocketUserDataObj | undefined = onlineUsers.find(
@@ -51,6 +56,12 @@ const ConversationContainer = () => {
       });
     };
   }, []);
+
+  useEffect(() => {
+    if (revalidator.state === 'idle') {
+      revalidator.revalidate();
+    }
+  }, [activeConversationId]);
 
   return (
     <div className="flex flex-col flex-grow">

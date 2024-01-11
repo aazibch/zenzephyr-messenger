@@ -28,6 +28,13 @@ const ConversationContent = () => {
   const navigation = useNavigation();
   const params = useParams();
 
+  const paramsRef = useRef(params.id);
+
+  useEffect(() => {
+    // Update the ref when params.id changes
+    paramsRef.current = params.id;
+  }, [params.id]);
+
   useEffect(() => {
     if (messagesFromLoader) {
       setMessages(messagesFromLoader);
@@ -108,7 +115,7 @@ const ConversationContent = () => {
 
   useEffect(() => {
     const onChatMessage = (messageData: MessageObj) => {
-      if (messageData.conversation === params.id) {
+      if (messageData.conversation === paramsRef.current) {
         setMessages((prevMessages) => [...prevMessages, messageData]);
       }
     };
