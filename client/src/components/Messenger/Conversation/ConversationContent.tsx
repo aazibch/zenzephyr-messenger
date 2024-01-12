@@ -48,9 +48,10 @@ const ConversationContent = ({
     socket.on('typingStatus', onTypingStatus);
 
     return () => {
+      setIsRecipientTyping(false);
       socket.off('typingStatus', onTypingStatus);
     };
-  }, []);
+  }, [paramsRef.current]);
 
   useEffect(() => {
     // Update the ref when params.id changes

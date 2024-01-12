@@ -71,7 +71,7 @@ const onConnection = (io: Server) => {
     socket.on('saveUser', (databaseId: string) => {
       updateUser({ databaseId, socketId: socket.id, activeConversation: null });
       io.emit('onlineUsers', onlineUsers);
-      console.log('["saveUser" event]', onlineUsers);
+      // console.log('["saveUser" event]', onlineUsers);
     });
 
     socket.on(
@@ -83,6 +83,14 @@ const onConnection = (io: Server) => {
         isTyping: boolean;
       }) => {
         const recipient = getUser(data.recipient);
+
+        console.log(
+          '["typing" event] recipient.activeConversation',
+          recipient?.activeConversation
+        );
+        console.log('["typing" event] data.conversation', data.conversation);
+        console.log('["typing" event] data.isTyping', data.isTyping);
+        console.log('["typing" event] onlineUsers', onlineUsers);
 
         if (recipient && recipient.activeConversation === data.conversation) {
           io.to(recipient.socketId).emit('typingStatus', data.isTyping);
@@ -105,7 +113,7 @@ const onConnection = (io: Server) => {
           activeConversation: conversationId
         });
         io.emit('onlineUsers', onlineUsers);
-        console.log('["updateActiveConversation" event]', onlineUsers);
+        // console.log('["updateActiveConversation" event]', onlineUsers);
       }
     );
 
@@ -122,9 +130,9 @@ const onConnection = (io: Server) => {
       (conversationData: BlockedUnblockedConversation) => {
         const recipient = getUser(conversationData.recipientId);
 
-        console.log('conversationData', conversationData);
+        // console.log('conversationData', conversationData);
 
-        console.log('blockOrUnblock', recipient);
+        // console.log('blockOrUnblock', recipient);
 
         if (recipient) {
           io.to(recipient.socketId).emit(

@@ -46,7 +46,9 @@ const MessageInput = ({
   };
 
   useEffect(() => {
+    console.log('[MessageInput.tsx] effect function textInput', textInput);
     if (textInput.length > 0) {
+      console.log('textInput', textInput);
       socket.emit('typing', {
         sender: user._id,
         recipient: recipientId,
@@ -54,6 +56,7 @@ const MessageInput = ({
         isTyping: true
       });
     } else {
+      console.log('textInput', textInput);
       socket.emit('typing', {
         sender: user._id,
         recipient: recipientId,
@@ -61,7 +64,16 @@ const MessageInput = ({
         isTyping: false
       });
     }
-  }, [textInput, params.id, recipientId, user._id]);
+
+    // return () => {
+    //   socket.emit('typing', {
+    //     sender: user._id,
+    //     recipient: recipientId,
+    //     conversation: params.id,
+    //     isTyping: false
+    //   });
+    // };
+  }, [textInput, params.id, recipientId, user._id, onlineUsers]);
 
   const addEmojiToInput = (emoji: string) => {
     setTextInput((prevTextInput) => prevTextInput + emoji);
