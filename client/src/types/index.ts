@@ -56,6 +56,7 @@ export interface MessageObj {
 }
 
 export interface OptimisticMessageObj {
+  _id: string;
   sender: string;
   contentProps: TextContentProps | ImageContentProps;
 }

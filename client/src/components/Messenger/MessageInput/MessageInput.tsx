@@ -8,6 +8,7 @@ import {
 import { useContext, useEffect, useRef, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { BsCardImage } from 'react-icons/bs';
+import { v4 as uuidv4 } from 'uuid';
 
 import Button from '../../UI/Button';
 import Emojis from './Emojis';
@@ -97,6 +98,7 @@ const MessageInput = ({
           const img = new Image();
           img.onload = () => {
             saveOptimisticMessage({
+              _id: uuidv4(),
               sender: user._id,
               contentProps: {
                 type: 'image',
@@ -116,6 +118,7 @@ const MessageInput = ({
       reader.readAsDataURL(file);
     } else if (typeof messageContent === 'string') {
       saveOptimisticMessage({
+        _id: uuidv4(),
         sender: user._id,
         contentProps: {
           type: 'text',
