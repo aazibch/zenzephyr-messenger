@@ -9,11 +9,11 @@ import Conversation from './Conversation';
 import {
   AuthObj,
   ConversationObj,
-  MessageObj,
+  // MessageObj,
   UserObj
 } from '../../../../types';
 import styles from './Conversations.module.css';
-import socket from '../../../../services/socket';
+// import socket from '../../../../services/socket';
 import MessengerContext from '../../../../store/messenger-context';
 
 const Conversations = () => {
@@ -64,59 +64,59 @@ const Conversations = () => {
     setConversations(updatedConversations);
   };
 
-  useEffect(() => {
-    const onChatMessage = (messageData: MessageObj) => {
-      const conversationId = messageData.conversation.toString();
-      let snippet: string;
-      let updateSnippetOnly = false;
+  // useEffect(() => {
+  //   const onChatMessage = (messageData: MessageObj) => {
+  //     const conversationId = messageData.conversation.toString();
+  //     let snippet: string;
+  //     let updateSnippetOnly = false;
 
-      if (messageData.contentProps.type === 'image') {
-        snippet = '**[imageIcon] Image**';
-      } else {
-        snippet = messageData.contentProps.text.content;
-      }
+  //     if (messageData.contentProps.type === 'image') {
+  //       snippet = '**[imageIcon] Image**';
+  //     } else {
+  //       snippet = messageData.contentProps.text.content;
+  //     }
 
-      if (conversationId === paramsRef.current) {
-        updateSnippetOnly = true;
-      }
+  //     if (conversationId === paramsRef.current) {
+  //       updateSnippetOnly = true;
+  //     }
 
-      setConversations((prevConversations) => {
-        let updatedConversations = [...prevConversations];
+  //     setConversations((prevConversations) => {
+  //       let updatedConversations = [...prevConversations];
 
-        const itemToModifyIndex = updatedConversations.findIndex(
-          (item) => item._id === conversationId
-        );
-        let itemToModify: ConversationObj | undefined;
+  //       const itemToModifyIndex = updatedConversations.findIndex(
+  //         (item) => item._id === conversationId
+  //       );
+  //       let itemToModify: ConversationObj | undefined;
 
-        if (itemToModifyIndex !== -1) {
-          itemToModify = { ...updatedConversations[itemToModifyIndex] };
-        }
+  //       if (itemToModifyIndex !== -1) {
+  //         itemToModify = { ...updatedConversations[itemToModifyIndex] };
+  //       }
 
-        updatedConversations = updatedConversations.filter(
-          (item) => item._id !== conversationId
-        );
+  //       updatedConversations = updatedConversations.filter(
+  //         (item) => item._id !== conversationId
+  //       );
 
-        if (itemToModify) {
-          if (updateSnippetOnly) {
-            itemToModify.snippet = snippet;
-          } else {
-            itemToModify.snippet = snippet;
-            itemToModify.unreadBy = user._id;
-          }
+  //       if (itemToModify) {
+  //         if (updateSnippetOnly) {
+  //           itemToModify.snippet = snippet;
+  //         } else {
+  //           itemToModify.snippet = snippet;
+  //           itemToModify.unreadBy = user._id;
+  //         }
 
-          updatedConversations.unshift(itemToModify);
-        }
+  //         updatedConversations.unshift(itemToModify);
+  //       }
 
-        return updatedConversations;
-      });
-    };
+  //       return updatedConversations;
+  //     });
+  //   };
 
-    socket.on('chatMessage', onChatMessage);
+  //   socket.on('chatMessage', onChatMessage);
 
-    return () => {
-      socket.off('chatMessage', onChatMessage);
-    };
-  }, []);
+  //   return () => {
+  //     socket.off('chatMessage', onChatMessage);
+  //   };
+  // }, []);
 
   useEffect(() => {
     updateConversationsWithOnlineState();

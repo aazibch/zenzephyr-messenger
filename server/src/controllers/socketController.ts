@@ -75,6 +75,22 @@ const onConnection = (io: Server) => {
     });
 
     socket.on(
+      'typing',
+      (data: {
+        sender: string;
+        recipient: string;
+        conversation: string;
+        isTyping: boolean;
+      }) => {
+        const recipient = getUser(data.recipient);
+
+        if (recipient && recipient.activeConversation === data.conversation) {
+          io.to(recipient.socketId).emit('typingStatus', data.isTyping);
+        }
+      }
+    );
+
+    socket.on(
       'updateActiveConversation',
       ({
         databaseId,

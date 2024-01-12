@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import {
   useLoaderData,
-  useNavigation,
+  // useNavigation,
   useParams,
+  useRevalidator,
   useRouteLoaderData
 } from 'react-router-dom';
 import Message from './Message';
@@ -11,24 +12,45 @@ import {
   MessageObj,
   MessagesObj,
   OptimisticMessageObj
+  // OptimisticMessageObj
 } from '../../../types';
 import ImageModal from '../../UI/Modals/ImageModal';
 import socket from '../../../services/socket';
+import TypingIndicator from './TypingIndicator';
 
-const ConversationContent = () => {
+interface ConversationContentProps {
+  optimisticMessages: OptimisticMessageObj[];
+}
+
+const ConversationContent = ({
+  optimisticMessages
+}: ConversationContentProps) => {
   const [maximizedImage, setMaximizedImage] = useState<string>();
-  const [optimisticMessage, setOptimisticMessage] = useState<
-    OptimisticMessageObj | undefined
-  >();
+  // const [optimisticMessage, setOptimisticMessage] = useState<
+  //   OptimisticMessageObj | undefined
+  // >();
   const messagesData = useLoaderData() as MessagesObj;
   const { messages: messagesFromLoader } = messagesData;
   const [messages, setMessages] = useState<MessageObj[]>(messagesData.messages);
+  const [isRecipientTyping, setIsRecipientTyping] = useState<boolean>(false);
   const user = (useRouteLoaderData('root') as AuthObj).user;
   const messagesElementRef = useRef<HTMLDivElement>(null);
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const params = useParams();
-
+  const revalidator = useRevalidator();
   const paramsRef = useRef(params.id);
+
+  useEffect(() => {
+    const onTypingStatus = (typingStatus: boolean) => {
+      setIsRecipientTyping(typingStatus);
+    };
+
+    socket.on('typingStatus', onTypingStatus);
+
+    return () => {
+      socket.off('typingStatus', onTypingStatus);
+    };
+  }, []);
 
   useEffect(() => {
     // Update the ref when params.id changes
@@ -41,82 +63,86 @@ const ConversationContent = () => {
     }
   }, [messagesFromLoader]);
 
-  const isSubmitting =
-    navigation.state === 'submitting' &&
-    navigation.formData != null &&
-    navigation.formAction === navigation.location.pathname;
+  // const isSubmitting =
+  //   navigation.state === 'submitting' &&
+  //   navigation.formData != null &&
+  //   navigation.formAction === navigation.location.pathname;
 
-  const { state } = navigation;
+  // const { state } = navigation;
 
-  // Configure optimistic UI for messages
+  // // Configure optimistic UI for messages
+  // useEffect(() => {
+  //   if (isSubmitting) {
+  //     const { formData } = navigation;
+
+  //     if (navigation.formMethod === 'post' && formData) {
+  //       const image = formData.get('image');
+  //       const text = formData.get('text') as string | null;
+
+  //       // Image message
+  //       if (image) {
+  //         const file = navigation.formData?.get('image') as File;
+
+  //         const reader = new FileReader();
+
+  //         reader.onload = (e: ProgressEvent<FileReader>) => {
+  //           if (
+  //             e.target &&
+  //             e.target.result &&
+  //             typeof e.target.result === 'string'
+  //           ) {
+  //             const imageUrl: string = e.target.result;
+
+  //             // Create an Image element to get image dimensions
+  //             const img = new Image();
+  //             img.onload = () => {
+  //               setOptimisticMessage({
+  //                 sender: user._id,
+  //                 contentProps: {
+  //                   type: 'image',
+  //                   image: {
+  //                     url: imageUrl,
+  //                     width: img.width,
+  //                     height: img.height
+  //                   }
+  //                 }
+  //               });
+  //             };
+
+  //             img.src = imageUrl;
+  //           }
+  //         };
+
+  //         reader.readAsDataURL(file);
+  //       }
+  //       // Text message
+  //       else if (text !== null) {
+  //         setOptimisticMessage({
+  //           sender: user._id,
+  //           contentProps: {
+  //             type: 'text',
+  //             text: {
+  //               content: text
+  //             }
+  //           }
+  //         });
+  //       }
+  //     }
+  //   }
+
+  //   if (state === 'idle') {
+  //     setOptimisticMessage(undefined);
+  //   }
+  // }, [isSubmitting, state]);
+
   useEffect(() => {
-    if (isSubmitting) {
-      const { formData } = navigation;
+    const onChatMessage = () => {
+      // if (messageData.conversation === paramsRef.current) {
+      //   setMessages((prevMessages) => [...prevMessages, messageData]);
+      // }
 
-      if (navigation.formMethod === 'post' && formData) {
-        const image = formData.get('image');
-        const text = formData.get('text') as string | null;
-
-        // Image message
-        if (image) {
-          const file = navigation.formData?.get('image') as File;
-
-          const reader = new FileReader();
-
-          reader.onload = (e: ProgressEvent<FileReader>) => {
-            if (
-              e.target &&
-              e.target.result &&
-              typeof e.target.result === 'string'
-            ) {
-              const imageUrl: string = e.target.result;
-
-              // Create an Image element to get image dimensions
-              const img = new Image();
-              img.onload = () => {
-                setOptimisticMessage({
-                  sender: user._id,
-                  contentProps: {
-                    type: 'image',
-                    image: {
-                      url: imageUrl,
-                      width: img.width,
-                      height: img.height
-                    }
-                  }
-                });
-              };
-
-              img.src = imageUrl;
-            }
-          };
-
-          reader.readAsDataURL(file);
-        }
-        // Text message
-        else if (text !== null) {
-          setOptimisticMessage({
-            sender: user._id,
-            contentProps: {
-              type: 'text',
-              text: {
-                content: text
-              }
-            }
-          });
-        }
-      }
-    }
-
-    if (state === 'idle') {
-      setOptimisticMessage(undefined);
-    }
-  }, [isSubmitting, state]);
-
-  useEffect(() => {
-    const onChatMessage = (messageData: MessageObj) => {
-      if (messageData.conversation === paramsRef.current) {
-        setMessages((prevMessages) => [...prevMessages, messageData]);
+      if (revalidator.state === 'idle') {
+        revalidator.revalidate();
       }
     };
 
@@ -159,6 +185,12 @@ const ConversationContent = () => {
     });
   }
 
+  const optimisticMessagesElements = optimisticMessages.map((elem) => {
+    return (
+      <Message isOptimistic byLoggedInUser messageContent={elem.contentProps} />
+    );
+  });
+
   return (
     <>
       {maximizedImage && (
@@ -172,13 +204,15 @@ const ConversationContent = () => {
         className="p-4 flex flex-col flex-grow overflow-y-auto"
       >
         {messagesContent}
-        {optimisticMessage && (
+        {/* {optimisticMessage && (
           <Message
             isOptimistic
             byLoggedInUser
             messageContent={optimisticMessage.contentProps}
           />
-        )}
+        )} */}
+        {optimisticMessagesElements}
+        {isRecipientTyping && <TypingIndicator />}
       </div>
     </>
   );

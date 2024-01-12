@@ -2,22 +2,30 @@ import {
   useLoaderData,
   useNavigation,
   useParams,
+  useRouteLoaderData,
   useSubmit
 } from 'react-router-dom';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { BsCardImage } from 'react-icons/bs';
 
 import Button from '../../UI/Button';
 import Emojis from './Emojis';
-import { MessagesObj } from '../../../types';
+import { AuthObj, MessagesObj, OptimisticMessageObj } from '../../../types';
 import MessengerContext from '../../../store/messenger-context';
+import socket from '../../../services/socket';
 
 interface MessageInputProps {
   isBlocked?: boolean;
+  recipientId: string;
+  saveOptimisticMessage: (optimisticMessage: OptimisticMessageObj) => void;
 }
 
-const MessageInput = ({ isBlocked }: MessageInputProps) => {
+const MessageInput = ({
+  saveOptimisticMessage,
+  recipientId,
+  isBlocked
+}: MessageInputProps) => {
   const [textInput, setTextInput] = useState<string>('');
   const imageInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -26,6 +34,7 @@ const MessageInput = ({ isBlocked }: MessageInputProps) => {
   const messagesData = useLoaderData() as MessagesObj;
   const { onlineUsers } = useContext(MessengerContext);
   const params = useParams();
+  const user = (useRouteLoaderData('root') as AuthObj).user;
 
   const isSubmitting =
     navigation.state === 'submitting' &&
@@ -33,13 +42,77 @@ const MessageInput = ({ isBlocked }: MessageInputProps) => {
     navigation.formAction === navigation.location.pathname;
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (!isSubmitting) {
-      setTextInput(e.target.value);
-    }
+    setTextInput(e.target.value);
   };
+
+  useEffect(() => {
+    if (textInput.length > 0) {
+      socket.emit('typing', {
+        sender: user._id,
+        recipient: recipientId,
+        conversation: params.id,
+        isTyping: true
+      });
+    } else {
+      socket.emit('typing', {
+        sender: user._id,
+        recipient: recipientId,
+        conversation: params.id,
+        isTyping: false
+      });
+    }
+  }, [textInput, params.id, recipientId, user._id]);
 
   const addEmojiToInput = (emoji: string) => {
     setTextInput((prevTextInput) => prevTextInput + emoji);
+  };
+
+  const prepareOptimisticMessage = (messageContent: File | string) => {
+    if (messageContent instanceof File) {
+      const file = messageContent;
+
+      const reader = new FileReader();
+
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        if (
+          e.target &&
+          e.target.result &&
+          typeof e.target.result === 'string'
+        ) {
+          const imageUrl: string = e.target.result;
+
+          // Create an Image element to get image dimensions
+          const img = new Image();
+          img.onload = () => {
+            saveOptimisticMessage({
+              sender: user._id,
+              contentProps: {
+                type: 'image',
+                image: {
+                  url: imageUrl,
+                  width: img.width,
+                  height: img.height
+                }
+              }
+            });
+          };
+
+          img.src = imageUrl;
+        }
+      };
+
+      reader.readAsDataURL(file);
+    } else if (typeof messageContent === 'string') {
+      saveOptimisticMessage({
+        sender: user._id,
+        contentProps: {
+          type: 'text',
+          text: {
+            content: messageContent
+          }
+        }
+      });
+    }
   };
 
   const submitForm = () => {
@@ -56,8 +129,10 @@ const MessageInput = ({ isBlocked }: MessageInputProps) => {
 
     if (image) {
       formData.append('image', image);
+      prepareOptimisticMessage(image);
     } else if (textInput !== '') {
       formData.append('text', textInput);
+      prepareOptimisticMessage(textInput);
     }
 
     submit(formData, {
@@ -125,13 +200,11 @@ const MessageInput = ({ isBlocked }: MessageInputProps) => {
           className="hidden"
           type="file"
           name="image"
-          disabled={isSubmitting}
           accept="image/png, image/gif, image/jpeg"
         />
         <Button
           type="submit"
           className="h-10 border-none hover:bg-white hover:text-[#508778] disabled:hover:text-gray-600"
-          disabled={isSubmitting}
         >
           Send
         </Button>

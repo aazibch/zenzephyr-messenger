@@ -34,7 +34,7 @@ const SidebarHeader = () => {
         dismissModalHandler();
       }
     }
-  }, [location]);
+  }, [location, displayingModal]);
 
   const profileImageClickHandler = (imageSource: string) => {
     setMaximizedImage(imageSource);

@@ -2,13 +2,21 @@ import MessageInput from '../MessageInput/MessageInput';
 import ConversationContent from './ConversationContent';
 import ConversationHeader from './ConversationHeader';
 import {
+  // useLocation,
+  useNavigation,
   useParams,
   useRevalidator,
   useRouteLoaderData
 } from 'react-router-dom';
-import { AuthObj, ConversationObj, SocketUserDataObj } from '../../../types';
+import {
+  AuthObj,
+  ConversationObj,
+  // MessageObj,
+  OptimisticMessageObj,
+  SocketUserDataObj
+} from '../../../types';
 import socket from '../../../services/socket';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import MessengerContext from '../../../store/messenger-context';
 
 const ConversationContainer = () => {
@@ -16,12 +24,16 @@ const ConversationContainer = () => {
   const conversationsData = useRouteLoaderData(
     'messenger'
   ) as ConversationObj[];
+  const [optimisticMessages, setOptimisticMessages] = useState<
+    OptimisticMessageObj[]
+  >([]);
   const user = (useRouteLoaderData('root') as AuthObj).user;
   const messengerCtx = useContext(MessengerContext);
   const activeConversation = conversationsData.find(
     (elem) => elem._id === params.id
   );
   const revalidator = useRevalidator();
+  const navigation = useNavigation();
 
   let isBlockedByMe;
 
@@ -58,10 +70,7 @@ const ConversationContainer = () => {
   }, []);
 
   useEffect(() => {
-    const onBlockedOrUnblockedConversation = (
-      conversation: ConversationObj
-    ) => {
-      console.log('onBlockedOrUnblockedConversation', conversation);
+    const onBlockedOrUnblockedConversation = () => {
       if (revalidator.state === 'idle') {
         revalidator.revalidate();
       }
@@ -86,11 +95,32 @@ const ConversationContainer = () => {
     }
   }, [activeConversationId]);
 
+  const saveOptimisticMessage = (optimisticMessage: OptimisticMessageObj) => {
+    setOptimisticMessages((prevOptimisticMessages) => [
+      ...prevOptimisticMessages,
+      optimisticMessage
+    ]);
+  };
+
+  const isIdle =
+    navigation.state === 'idle' && activeConversationId === params.id;
+
+  location.pathname.startsWith('/messenger/');
+  useEffect(() => {
+    if (isIdle) {
+      setOptimisticMessages([]);
+    }
+  }, [isIdle]);
+
   return (
     <div className="flex flex-col flex-grow">
       <ConversationHeader isBlockedByMe={isBlockedByMe} />
-      <ConversationContent />
-      <MessageInput isBlocked={activeConversation!.isBlocked} />
+      <ConversationContent optimisticMessages={optimisticMessages} />
+      <MessageInput
+        recipientId={activeConversation!.otherParticipant._id}
+        saveOptimisticMessage={saveOptimisticMessage}
+        isBlocked={activeConversation!.isBlocked}
+      />
     </div>
   );
 };
