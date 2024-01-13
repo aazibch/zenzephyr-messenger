@@ -69,6 +69,15 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>({
       }
     ],
     default: []
+  },
+  connections: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    ],
+    default: []
   }
 });
 

@@ -11,6 +11,7 @@ export interface IUser {
   password?: string;
   passwordChangeDate: Date;
   blockedUsers: ObjectId[];
+  connections: ObjectId[];
 }
 
 export interface IConversation {

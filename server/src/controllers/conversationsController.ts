@@ -84,7 +84,7 @@ export const createConversation = catchAsync(
       );
     }
 
-    const recipient = await User.findById(req.body.recipient);
+    let recipient = await User.findById(req.body.recipient);
 
     if (!recipient) {
       return next(new AppError('User not found.', StatusCodes.NOT_FOUND));
@@ -177,6 +177,32 @@ export const createConversation = catchAsync(
 
     const message = await Message.create(messageBody);
 
+    const recipientConnectionsContainId = recipient.connections.some(
+      (id) => id.toString() === req.user._id.toString()
+    );
+
+    if (!recipientConnectionsContainId) {
+      recipient = await User.findByIdAndUpdate(
+        req.body.recipient,
+        {
+          $push: { connections: req.user._id }
+        },
+        { new: true }
+      );
+    }
+
+    const userConnectionsContainId = req.user.connections.some(
+      (id) => id.toString() === recipient._id.toString()
+    );
+
+    if (!userConnectionsContainId) {
+      const loggedInUser = await User.findByIdAndUpdate(req.user._id, {
+        $push: { connections: req.body.recipient }
+      });
+
+      req.user = loggedInUser;
+    }
+
     res.status(StatusCodes.CREATED).json({
       status: 'success',
       data: {
@@ -201,7 +227,14 @@ export const deleteConversation = catchAsync(
         new AppError('Conversation not found.', StatusCodes.NOT_FOUND)
       );
 
-    if (conversation.deletedBy && conversation.deletedBy !== req.user._id) {
+    const recipientId = conversation.participants.find(
+      (val) => val.toString() !== req.user._id.toString()
+    );
+
+    if (
+      conversation.deletedBy &&
+      conversation.deletedBy.toString() !== req.user._id.toString()
+    ) {
       await Conversation.findByIdAndDelete(conversation._id);
       await Message.deleteMany({ conversation: conversation._id });
     } else {
@@ -211,7 +244,7 @@ export const deleteConversation = catchAsync(
 
       await Message.deleteMany({
         conversation: conversation._id,
-        deletedBy: conversation.participants.find((val) => val !== req.user._id)
+        deletedBy: recipientId
       });
 
       await Message.updateMany(
@@ -221,6 +254,16 @@ export const deleteConversation = catchAsync(
         }
       );
     }
+
+    const loggedInUser = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $pull: { connections: recipientId }
+      },
+      { new: true }
+    );
+
+    req.user = loggedInUser;
 
     res.status(StatusCodes.NO_CONTENT).send();
   }

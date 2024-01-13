@@ -90,7 +90,13 @@ export const getMe = catchAsync(
 
 export const blockUser = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const userToBlock = await User.findById(req.params.id);
+    const userToBlock = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $pull: { connections: req.user._id }
+      },
+      { new: true }
+    );
 
     if (!userToBlock) {
       return next(new AppError('User not found.', StatusCodes.NOT_FOUND));
@@ -109,7 +115,8 @@ export const blockUser = catchAsync(
     const user = await User.findByIdAndUpdate(
       req.user._id,
       {
-        $push: { blockedUsers: userToBlock._id }
+        $push: { blockedUsers: userToBlock._id },
+        $pull: { connections: userToBlock._id }
       },
       { new: true }
     );
@@ -128,7 +135,7 @@ export const blockUser = catchAsync(
 
 export const unblockUser = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const userToUnblock = await User.findById(req.params.id);
+    let userToUnblock = await User.findById(req.params.id);
 
     if (!userToUnblock) {
       return next(new AppError('User not found.', StatusCodes.NOT_FOUND));
@@ -148,20 +155,70 @@ export const unblockUser = catchAsync(
       { new: true }
     );
 
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      {
-        $pull: { blockedUsers: userToUnblock._id }
-      },
-      { new: true }
-    );
+    const userToUnblockUpdates: Record<string, any> = {};
 
-    req.user = user;
+    const loggedInUserUpdates: Record<string, any> = {
+      $pull: { blockedUsers: userToUnblock._id }
+    };
+
+    if (!isBlocked) {
+      const userToUnblockConnectionsContainId = userToUnblock.connections.some(
+        (id) => id.toString() === req.user._id.toString()
+      );
+
+      const loggedInUserConnectionsContainId = req.user.connections.some(
+        (id) => id.toString() === userToUnblock._id.toString()
+      );
+
+      if (conversation && !conversation.deletedBy) {
+        if (!userToUnblockConnectionsContainId) {
+          userToUnblockUpdates.$push = {
+            connections: req.user._id
+          };
+        }
+
+        if (!loggedInUserConnectionsContainId) {
+          loggedInUserUpdates.$push = {
+            connections: userToUnblock._id
+          };
+        }
+      } else if (
+        conversation.deletedBy.toString() === req.user._id.toString()
+      ) {
+        if (!userToUnblockConnectionsContainId) {
+          userToUnblockUpdates.$push = {
+            connections: req.user._id
+          };
+        }
+      } else if (
+        conversation.deletedBy.toString() === userToUnblock._id.toString()
+      ) {
+        if (!loggedInUserConnectionsContainId) {
+          loggedInUserUpdates.$push = {
+            connections: userToUnblock._id
+          };
+        }
+      }
+
+      userToUnblock = await User.findByIdAndUpdate(
+        userToUnblock._id,
+        userToUnblockUpdates,
+        { new: true }
+      );
+
+      const user = await User.findByIdAndUpdate(
+        req.user._id,
+        loggedInUserUpdates,
+        { new: true }
+      );
+
+      req.user = user;
+    }
 
     res.status(StatusCodes.OK).json({
       status: 'success',
       data: {
-        user,
+        user: req.user,
         conversation
       }
     });
