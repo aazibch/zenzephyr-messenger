@@ -57,9 +57,7 @@ const getUser = (databaseId: string) => {
   return onlineUsers.find((user) => user.databaseId === databaseId);
 };
 
-const sendOnlineConnections = (io: Server, databaseId: string) => {
-  const user = getUser(databaseId);
-  const { connections } = user;
+const getOnlineConnections = (connections: string[]) => {
   const onlineConnections: SocketUserDataObj[] = [];
 
   connections.forEach((connectionId) => {
@@ -71,6 +69,14 @@ const sendOnlineConnections = (io: Server, databaseId: string) => {
     }
   });
 
+  return onlineConnections;
+};
+
+const sendOnlineConnectionsToUser = (io: Server, databaseId: string) => {
+  const user = getUser(databaseId);
+  const onlineConnections: SocketUserDataObj[] = getOnlineConnections(
+    user.connections
+  );
   io.to(user.socketId).emit('onlineUsers', onlineConnections);
 };
 
@@ -118,12 +124,8 @@ const onConnection = (io: Server) => {
           });
         }
 
-        console.log('["updateUser"] onlineUsers', onlineUsers);
-        const onlineConnections = sendOnlineConnections(io, databaseId);
-        console.log('["updateUser"] onlineConnections', onlineConnections);
-        io.to(socket.id).emit('onlineUsers', onlineConnections);
+        sendOnlineConnectionsToUser(io, databaseId);
         sendOnlineConnectionsToConnections(databaseId, io);
-        // console.log('["saveUser"] onlineUsers', onlineUsers);
       }
     );
 
