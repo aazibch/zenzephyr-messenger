@@ -57,25 +57,21 @@ const getUser = (databaseId: string) => {
   return onlineUsers.find((user) => user.databaseId === databaseId);
 };
 
-const getOnlineConnections = (connectionIds: string[]) => {
+const sendOnlineConnections = (io: Server, databaseId: string) => {
+  const user = getUser(databaseId);
+  const { connections } = user;
   const onlineConnections: SocketUserDataObj[] = [];
 
-  // console.log('[getOnlineConnections] connectionIds', connectionIds);
-
-  connectionIds.forEach((connectionId) => {
+  connections.forEach((connectionId) => {
     const connection = onlineUsers.find(
       (user) => user.databaseId === connectionId.toString()
     );
     if (connection) {
       onlineConnections.push(connection);
     }
-
-    // console.log('[getOnlineConnections] onlineConnections', onlineConnections);
   });
 
-  console.log('onlineConnections', onlineConnections);
-
-  return onlineConnections;
+  io.to(user.socketId).emit('onlineUsers', onlineConnections);
 };
 
 const sendOnlineConnectionsToConnections = (databaseId: string, io: Server) => {
@@ -91,19 +87,6 @@ const sendOnlineConnectionsToConnections = (databaseId: string, io: Server) => {
       io.to(user.socketId).emit('onlineUsers', onlineConnections);
     }
   });
-
-  // if (user.databaseId.endsWith('519')) {
-  //   console.log(
-  //     '[sendOnlineConnectionsToConnections] onlineConnections',
-  //     onlineConnections
-  //   );
-  //   console.log(
-  //     '[sendOnlineConnectionsToConnections] onlineUsers',
-  //     onlineUsers
-  //   );
-  // }
-
-  // io.to(user.socketId).emit('onlineUsers', onlineConnections);
 };
 
 const onConnection = (io: Server) => {
@@ -136,7 +119,7 @@ const onConnection = (io: Server) => {
         }
 
         console.log('["updateUser"] onlineUsers', onlineUsers);
-        const onlineConnections = getOnlineConnections(connections);
+        const onlineConnections = sendOnlineConnections(io, databaseId);
         console.log('["updateUser"] onlineConnections', onlineConnections);
         io.to(socket.id).emit('onlineUsers', onlineConnections);
         sendOnlineConnectionsToConnections(databaseId, io);
