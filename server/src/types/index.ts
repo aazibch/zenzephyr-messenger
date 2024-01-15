@@ -46,7 +46,7 @@ export interface SocketUserDataObj {
   databaseId: string;
   socketId: string;
   activeConversation: string | null;
-  connections: ObjectId[];
+  connections: ObjectId[] | string[];
 }
 
 export interface ServerToClientEvents {
