@@ -34,6 +34,12 @@ const RootPage = () => {
   }, [userId]);
 
   useEffect(() => {
+    if (auth?.user) {
+      socket.emit('updateUser', auth.user);
+    }
+  }, [auth]);
+
+  useEffect(() => {
     const onOnlineUsers = (updatedOnlineUsers: SocketUserDataObj[]) => {
       messengerCtx.updateOnlineUsers(updatedOnlineUsers);
     };

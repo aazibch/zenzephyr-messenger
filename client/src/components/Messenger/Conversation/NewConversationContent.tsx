@@ -1,84 +1,90 @@
-import { useState, useEffect } from 'react';
-import { useNavigation, useRouteLoaderData } from 'react-router-dom';
-import { AuthObj, OptimisticMessageObj } from '../../../types';
+// import { useState, useEffect } from 'react';
+// import { useNavigation, useRouteLoaderData } from 'react-router-dom';
+import { OptimisticMessageObj } from '../../../types';
 import Message from './Message';
 
-const NewConversationContent = () => {
-  const [optimisticMessage, setOptimisticMessage] = useState<
-    OptimisticMessageObj | undefined
-  >();
-  const auth = useRouteLoaderData('root') as AuthObj;
-  const navigation = useNavigation();
+interface NewConversationContentProps {
+  optimisticMessage: OptimisticMessageObj | undefined;
+}
 
-  const isSubmitting =
-    navigation.state === 'submitting' &&
-    navigation.formData != null &&
-    navigation.formAction ===
-      navigation.location.pathname + navigation.location.search;
+const NewConversationContent = ({
+  optimisticMessage
+}: NewConversationContentProps) => {
+  // const [optimisticMessage, setOptimisticMessage] = useState<
+  //   OptimisticMessageObj
+  // >();
+  // const auth = useRouteLoaderData('root') as AuthObj;
+  // const navigation = useNavigation();
 
-  useEffect(() => {
-    if (isSubmitting) {
-      const { formData } = navigation;
+  // const isSubmitting =
+  //   navigation.state === 'submitting' &&
+  //   navigation.formData != null &&
+  //   navigation.formAction ===
+  //     navigation.location.pathname + navigation.location.search;
 
-      if (navigation.formMethod === 'post' && formData) {
-        const image = formData.get('image');
-        const text = formData.get('text') as string | null;
+  // useEffect(() => {
+  //   if (isSubmitting) {
+  //     const { formData } = navigation;
 
-        // Image message
-        if (image) {
-          const file = navigation.formData?.get('image') as File;
+  //     if (navigation.formMethod === 'post' && formData) {
+  //       const image = formData.get('image');
+  //       const text = formData.get('text') as string | null;
 
-          const reader = new FileReader();
+  //       // Image message
+  //       if (image) {
+  //         const file = navigation.formData?.get('image') as File;
 
-          reader.onload = (e: ProgressEvent<FileReader>) => {
-            if (
-              e.target &&
-              e.target.result &&
-              typeof e.target.result === 'string'
-            ) {
-              const imageUrl: string = e.target.result;
+  //         const reader = new FileReader();
 
-              // Create an Image element to get image dimensions
-              const img = new Image();
-              img.onload = () => {
-                setOptimisticMessage({
-                  sender: auth.user._id,
-                  contentProps: {
-                    type: 'image',
-                    image: {
-                      url: imageUrl,
-                      width: img.width,
-                      height: img.height
-                    }
-                  }
-                });
-              };
+  //         reader.onload = (e: ProgressEvent<FileReader>) => {
+  //           if (
+  //             e.target &&
+  //             e.target.result &&
+  //             typeof e.target.result === 'string'
+  //           ) {
+  //             const imageUrl: string = e.target.result;
 
-              img.src = imageUrl;
-            }
-          };
+  //             // Create an Image element to get image dimensions
+  //             const img = new Image();
+  //             img.onload = () => {
+  //               setOptimisticMessage({
+  //                 sender: auth.user._id,
+  //                 contentProps: {
+  //                   type: 'image',
+  //                   image: {
+  //                     url: imageUrl,
+  //                     width: img.width,
+  //                     height: img.height
+  //                   }
+  //                 }
+  //               });
+  //             };
 
-          reader.readAsDataURL(file);
-        }
-        // Text message
-        else if (text !== null) {
-          setOptimisticMessage({
-            sender: auth.user._id,
-            contentProps: {
-              type: 'text',
-              text: {
-                content: text
-              }
-            }
-          });
-        }
-      }
-    }
+  //             img.src = imageUrl;
+  //           }
+  //         };
 
-    if (navigation.state === 'idle') {
-      setOptimisticMessage(undefined);
-    }
-  }, [navigation.state]);
+  //         reader.readAsDataURL(file);
+  //       }
+  //       // Text message
+  //       else if (text !== null) {
+  //         setOptimisticMessage({
+  //           sender: auth.user._id,
+  //           contentProps: {
+  //             type: 'text',
+  //             text: {
+  //               content: text
+  //             }
+  //           }
+  //         });
+  //       }
+  //     }
+  //   }
+
+  //   if (navigation.state === 'idle') {
+  //     setOptimisticMessage(undefined);
+  //   }
+  // }, [navigation.state]);
 
   return (
     <div className="p-4 flex flex-col flex-grow overflow-y-auto">

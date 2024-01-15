@@ -4,13 +4,21 @@ import { generateHttpConfig, sendHttpRequest } from '../utils';
 import ConversationMainHeader from '../components/Messenger/Conversation/ConversationHeader';
 import MessageInput from '../components/Messenger/MessageInput/MessageInput';
 import NewConversationContent from '../components/Messenger/Conversation/NewConversationContent';
+import { useState } from 'react';
+import { OptimisticMessageObj } from '../types';
 
 const NewConversationPage = () => {
+  const [optimisticMessage, setOptimisticMessage] =
+    useState<OptimisticMessageObj>();
+
+  const saveOptimisticMessage = (optimisticMessage: OptimisticMessageObj) => {
+    setOptimisticMessage(optimisticMessage);
+  };
   return (
     <div className="flex flex-col justify-between flex-grow">
       <ConversationMainHeader />
-      <NewConversationContent />
-      <MessageInput />
+      <NewConversationContent optimisticMessage={optimisticMessage} />
+      <MessageInput saveOptimisticMessage={saveOptimisticMessage} />
     </div>
   );
 };

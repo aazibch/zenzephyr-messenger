@@ -1,8 +1,10 @@
 import {
   useLoaderData,
+  useLocation,
   useNavigation,
   useParams,
   useRouteLoaderData,
+  useSearchParams,
   useSubmit
 } from 'react-router-dom';
 import { useContext, useEffect, useRef, useState } from 'react';
@@ -18,13 +20,11 @@ import socket from '../../../services/socket';
 
 interface MessageInputProps {
   isBlocked?: boolean;
-  recipientId: string;
   saveOptimisticMessage: (optimisticMessage: OptimisticMessageObj) => void;
 }
 
 const MessageInput = ({
   saveOptimisticMessage,
-  recipientId,
   isBlocked
 }: MessageInputProps) => {
   const [textInput, setTextInput] = useState<string>('');
@@ -35,7 +35,14 @@ const MessageInput = ({
   const messagesData = useLoaderData() as MessagesObj;
   const { onlineUsers } = useContext(MessengerContext);
   const params = useParams();
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
   const user = (useRouteLoaderData('root') as AuthObj).user;
+
+  console.log('location', location);
+
+  const recipientId =
+    messagesData?.otherParticipant?._id || searchParams.get('userId');
 
   const isSubmitting =
     navigation.state === 'submitting' &&
@@ -133,13 +140,17 @@ const MessageInput = ({
   const submitForm = () => {
     const formData = new FormData();
     const image = imageInputRef.current!.files?.[0];
-    const recipientId = messagesData.otherParticipant._id;
     const onlineRecipient = onlineUsers.find(
       (user) => user.databaseId === recipientId
     );
 
-    if (!onlineRecipient || onlineRecipient.activeConversation !== params.id) {
-      formData.append('unread', 'true');
+    if (location.pathname === '/messenger') {
+      if (
+        !onlineRecipient ||
+        onlineRecipient.activeConversation !== params.id
+      ) {
+        formData.append('unread', 'true');
+      }
     }
 
     if (image) {

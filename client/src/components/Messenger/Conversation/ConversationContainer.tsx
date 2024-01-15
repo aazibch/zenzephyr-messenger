@@ -117,7 +117,6 @@ const ConversationContainer = () => {
       <ConversationHeader isBlockedByMe={isBlockedByMe} />
       <ConversationContent optimisticMessages={optimisticMessages} />
       <MessageInput
-        recipientId={activeConversation!.otherParticipant._id}
         saveOptimisticMessage={saveOptimisticMessage}
         isBlocked={activeConversation!.isBlocked}
       />
