@@ -27,15 +27,20 @@ const RootPage = () => {
     };
   }, [userId]);
 
-  useEffect(() => {
-    if (userId) {
-      socket.emit('saveUser', userId);
-    }
-  }, [userId]);
+  // useEffect(() => {
+  //   if (userId) {
+  //     socket.emit('updateUser', userId);
+  //   }
+  // }, [userId]);
 
   useEffect(() => {
     if (auth?.user) {
-      socket.emit('updateUser', auth.user);
+      socket.emit(
+        'updateUser',
+        auth.user._id,
+        undefined,
+        auth.user.connections
+      );
     }
   }, [auth]);
 

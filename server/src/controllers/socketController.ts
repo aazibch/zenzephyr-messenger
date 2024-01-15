@@ -22,22 +22,15 @@ const saveUser = (data: SocketUserDataObj) => {
 };
 
 interface UpdateUserArguments {
-  databaseId?: string;
   socketId?: string;
   activeConversation?: string | null;
-  connections?: ObjectId[] | string[];
+  connections?: string[];
 }
 
-const updateUser = (data: UpdateUserArguments) => {
-  const index = onlineUsers.findIndex(
-    (elem) => elem.databaseId === data.databaseId
-  );
+const updateUser = (databaseId: string, data: UpdateUserArguments) => {
+  const index = onlineUsers.findIndex((elem) => elem.databaseId === databaseId);
 
-  const { databaseId, socketId, activeConversation, connections } = data;
-
-  if (onlineUsers[index] && databaseId) {
-    onlineUsers[index]['databaseId'] = databaseId;
-  }
+  const { socketId, activeConversation, connections } = data;
 
   if (onlineUsers[index] && socketId) {
     onlineUsers[index]['socketId'] = socketId;
@@ -64,13 +57,12 @@ const getUser = (databaseId: string) => {
   return onlineUsers.find((user) => user.databaseId === databaseId);
 };
 
-const getOnlineConnections = (io: Server, connectionIds: ObjectId[]) => {
+const getOnlineConnections = (connectionIds: string[]) => {
   const onlineConnections: SocketUserDataObj[] = [];
 
-  console.log('[getOnlineConnections] connectionIds', connectionIds);
+  // console.log('[getOnlineConnections] connectionIds', connectionIds);
 
   connectionIds.forEach((connectionId) => {
-    console.log('[getOnlineConnections] onlineUsers', onlineUsers);
     const connection = onlineUsers.find(
       (user) => user.databaseId === connectionId.toString()
     );
@@ -78,10 +70,40 @@ const getOnlineConnections = (io: Server, connectionIds: ObjectId[]) => {
       onlineConnections.push(connection);
     }
 
-    console.log('[getOnlineConnections] onlineConnections', onlineConnections);
+    // console.log('[getOnlineConnections] onlineConnections', onlineConnections);
   });
 
+  console.log('onlineConnections', onlineConnections);
+
   return onlineConnections;
+};
+
+const sendOnlineConnectionsToConnections = (databaseId: string, io: Server) => {
+  const user = getUser(databaseId);
+  const onlineConnections = getOnlineConnections(user.connections);
+
+  onlineConnections.forEach((connection) => {
+    const user = getUser(connection.databaseId);
+
+    if (user) {
+      const onlineConnections = getOnlineConnections(user.connections);
+
+      io.to(user.socketId).emit('onlineUsers', onlineConnections);
+    }
+  });
+
+  // if (user.databaseId.endsWith('519')) {
+  //   console.log(
+  //     '[sendOnlineConnectionsToConnections] onlineConnections',
+  //     onlineConnections
+  //   );
+  //   console.log(
+  //     '[sendOnlineConnectionsToConnections] onlineUsers',
+  //     onlineUsers
+  //   );
+  // }
+
+  // io.to(user.socketId).emit('onlineUsers', onlineConnections);
 };
 
 const onConnection = (io: Server) => {
@@ -89,39 +111,38 @@ const onConnection = (io: Server) => {
     let userDatabaseId: string;
     console.log('[Socket server] A user connected.');
 
-    // socket.on(
-    //   'saveUser',
-    //   async (
-    //     databseId: string,
-    //     activeConversation: string,
-    //     connections: string[]
-    //   ) => {
-    //     const user = getUser(databaseId);
-    //     userDatabaseId = user._id.toString();
+    socket.on(
+      'updateUser',
+      async (
+        databaseId: string,
+        activeConversation: string,
+        connections: string[]
+      ) => {
+        const user = getUser(databaseId);
 
-    //     if (user) {
-    //       saveUser({
-    //         databaseId,
-    //         socketId: socket.id,
-    //         activeConversation: null,
-    //         connections: user.connections
-    //       });
-    //     }
+        if (!user) {
+          saveUser({
+            databaseId,
+            socketId: socket.id,
+            activeConversation: activeConversation,
+            connections: connections
+          });
+        } else {
+          updateUser(databaseId, {
+            socketId: socket.id,
+            activeConversation: activeConversation,
+            connections: connections
+          });
+        }
 
-    //     // console.log('user.connections', user.connections);
-
-    //     const onlineConnections = getOnlineConnections(io, user.connections);
-    //     // console.log(
-    //     //   '["saveUser"] onlineConnections',
-    //     //   databaseId,
-    //     //   onlineConnections
-    //     // );
-    //     io.to(socket.id).emit('onlineUsers', onlineConnections);
-    //     // io.emit('onlineUsers', onlineUsers);
-    //     // console.log('["saveUser" event]', onlineUsers);
-    //     // console.log('onlineUsers', onlineUsers);
-    //   }
-    // );
+        console.log('["updateUser"] onlineUsers', onlineUsers);
+        const onlineConnections = getOnlineConnections(connections);
+        console.log('["updateUser"] onlineConnections', onlineConnections);
+        io.to(socket.id).emit('onlineUsers', onlineConnections);
+        sendOnlineConnectionsToConnections(databaseId, io);
+        // console.log('["saveUser"] onlineUsers', onlineUsers);
+      }
+    );
 
     // socket.on(
     //   'typing',
@@ -211,12 +232,14 @@ const onConnection = (io: Server) => {
         const user = getUser(userDatabaseId);
 
         if (user) {
-          updateUser({ socketId: socket.id, connections: userConnections });
+          updateUser(user.databaseId, {
+            socketId: socket.id,
+            connections: userConnections
+          });
         }
 
         if (recipient) {
-          updateUser({
-            databaseId: recipientDatabaseId,
+          updateUser(recipientDatabaseId, {
             connections: recipientConnections
           });
           // io.to(recipient.socketId).emit(
@@ -224,7 +247,7 @@ const onConnection = (io: Server) => {
           //   conversationData.conversation
           // );
         }
-        // console.log('onlineUsers', onlineUsers);
+        console.log('["blockOrUnblock"] onlineUsers', onlineUsers);
       }
     );
 

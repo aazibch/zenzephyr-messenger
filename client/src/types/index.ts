@@ -14,6 +14,7 @@ export interface UserObj {
   email: string;
   profileImage: string;
   blockedUsers: string[];
+  connections: string[];
 }
 
 export interface ConversationObj {
