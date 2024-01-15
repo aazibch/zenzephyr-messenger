@@ -126,7 +126,8 @@ export const blockUser = catchAsync(
     res.status(StatusCodes.OK).json({
       status: 'success',
       data: {
-        user,
+        user: user,
+        blockedUser: userToBlock,
         conversation
       }
     });
@@ -219,6 +220,7 @@ export const unblockUser = catchAsync(
       status: 'success',
       data: {
         user: req.user,
+        unblockedUser: userToUnblock,
         conversation
       }
     });
