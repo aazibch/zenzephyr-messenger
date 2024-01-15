@@ -53,8 +53,10 @@ const removeUser = (socketId: string) => {
   }
 };
 
-const getUser = (databaseId: string) => {
-  return onlineUsers.find((user) => user.databaseId === databaseId);
+const getUser = (id: string) => {
+  return onlineUsers.find(
+    (user) => user.databaseId === id || user.socketId === id
+  );
 };
 
 const getOnlineConnections = (connections: string[]) => {
@@ -72,18 +74,18 @@ const getOnlineConnections = (connections: string[]) => {
   return onlineConnections;
 };
 
-const sendOnlineConnectionsToUser = (io: Server, databaseId: string) => {
-  const user = getUser(databaseId);
-  const onlineConnections: SocketUserDataObj[] = getOnlineConnections(
-    user.connections
-  );
-  io.to(user.socketId).emit('onlineUsers', onlineConnections);
-};
+// const sendOnlineConnectionsToUser = (io: Server, databaseId: string) => {
+//   const user = getUser(databaseId);
+//   const onlineConnections: SocketUserDataObj[] = getOnlineConnections(
+//     user.connections
+//   );
+//   io.to(user.socketId).emit('onlineUsers', onlineConnections);
+// };
 
-const sendOnlineConnectionsToConnections = (databaseId: string, io: Server) => {
-  const user = getUser(databaseId);
-  const onlineConnections = getOnlineConnections(user.connections);
-
+const sendOnlineConnectionsToConnections = (
+  onlineConnections: SocketUserDataObj[],
+  io: Server
+) => {
   onlineConnections.forEach((connection) => {
     const user = getUser(connection.databaseId);
 
@@ -124,8 +126,9 @@ const onConnection = (io: Server) => {
           });
         }
 
-        sendOnlineConnectionsToUser(io, databaseId);
-        sendOnlineConnectionsToConnections(databaseId, io);
+        const onlineConnections = getOnlineConnections(connections);
+        io.to(socket.id).emit('onlineUsers', onlineConnections);
+        sendOnlineConnectionsToConnections(onlineConnections, io);
       }
     );
 
@@ -237,10 +240,16 @@ const onConnection = (io: Server) => {
     );
 
     socket.on('disconnect', () => {
-      removeUser(socket.id);
-      // io.emit('onlineUsers', onlineUsers);
+      const userRef = getUser(socket.id);
+
+      if (userRef) {
+        const user = { ...userRef, connections: [...userRef.connections] };
+        removeUser(socket.id);
+        const onlineConnections = getOnlineConnections(user.connections);
+        sendOnlineConnectionsToConnections(onlineConnections, io);
+      }
+
       console.log('[Socket server] A user disconnected.');
-      // console.log('["disconnect"]', onlineUsers);
     });
   };
 };
