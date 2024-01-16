@@ -20,6 +20,7 @@ import ConversationPage, {
   action as conversationAction
 } from './pages/ConversationPage';
 import NoConversationPage from './pages/NoConversationPage';
+import SettingsPage from './pages/SettingsPage';
 
 const router = createBrowserRouter([
   {
@@ -71,6 +72,11 @@ const router = createBrowserRouter([
             action: conversationAction
           }
         ]
+      },
+      {
+        path: 'settings',
+        loader: protectLoader,
+        element: <SettingsPage />
       },
       {
         path: 'test',
