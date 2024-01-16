@@ -127,6 +127,7 @@ const onConnection = (io: Server) => {
         const onlineConnections = getOnlineConnections(connections);
         sendOnlineConnectionsToConnections(onlineConnections, io);
         const updatedUser = getUser(databaseId);
+        console.log('updatedUser', updatedUser);
         onlineConnections.unshift(updatedUser);
         io.to(socket.id).emit('onlineUsers', onlineConnections);
       }
@@ -161,6 +162,9 @@ const onConnection = (io: Server) => {
         connections: string[];
       }) => {
         const user = getUser(databaseId);
+
+        console.log('user', user, databaseId, conversationId);
+        console.log('onlineUsers', onlineUsers);
 
         if (user) {
           updateUser(user.databaseId, {

@@ -1,67 +1,70 @@
-import { Outlet, redirect, useLoaderData } from 'react-router-dom';
+import { Outlet, redirect } from 'react-router-dom';
 import Layout from '../components/UI/Layout';
 import { getTokenDuration } from '../utils/auth';
 import AutoLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
 import { apiUrl, clientUrl } from '../constants';
 import { clearAuthState } from '../utils/auth';
-import { AuthObj, SocketUserDataObj } from '../types';
-import { useContext, useEffect } from 'react';
-import socket from '../services/socket';
-import MessengerContext from '../store/messenger-context';
+// import { AuthObj, SocketUserDataObj } from '../types';
+// import { useContext, useEffect } from 'react';
+// import socket from '../services/socket';
+// import MessengerContext from '../store/messenger-context';
+import SocketsWrapper from '../components/WebSockets/SocketsWrapper';
 
 const RootPage = () => {
-  const auth = useLoaderData() as AuthObj | undefined;
-  const messengerCtx = useContext(MessengerContext);
-  const userId = auth?.user._id;
-
-  useEffect(() => {
-    if (userId) {
-      socket.connect();
-    }
-
-    return () => {
-      if (userId) {
-        socket.disconnect();
-      }
-    };
-  }, [userId]);
+  // const auth = useLoaderData() as AuthObj | undefined;
+  // const messengerCtx = useContext(MessengerContext);
+  // const userId = auth?.user._id;
 
   // useEffect(() => {
   //   if (userId) {
-  //     socket.emit('updateUser', userId);
+  //     socket.connect();
   //   }
+
+  //   return () => {
+  //     if (userId) {
+  //       socket.disconnect();
+  //     }
+  //   };
   // }, [userId]);
 
-  useEffect(() => {
-    if (auth?.user) {
-      socket.emit(
-        'updateUser',
-        auth.user._id,
-        undefined,
-        auth.user.connections
-      );
-    }
-  }, [auth]);
+  // // useEffect(() => {
+  // //   if (userId) {
+  // //     socket.emit('updateUser', userId);
+  // //   }
+  // // }, [userId]);
 
-  useEffect(() => {
-    const onOnlineUsers = (updatedOnlineUsers: SocketUserDataObj[]) => {
-      messengerCtx.updateOnlineUsers(updatedOnlineUsers);
-    };
+  // useEffect(() => {
+  //   if (auth?.user) {
+  //     socket.emit(
+  //       'updateUser',
+  //       auth.user._id,
+  //       undefined,
+  //       auth.user.connections
+  //     );
+  //   }
+  // }, [auth]);
 
-    socket.on('onlineUsers', onOnlineUsers);
+  // useEffect(() => {
+  //   const onOnlineUsers = (updatedOnlineUsers: SocketUserDataObj[]) => {
+  //     messengerCtx.updateOnlineUsers(updatedOnlineUsers);
+  //   };
 
-    return () => {
-      socket.off('onlineUsers', onOnlineUsers);
-    };
-  }, []);
+  //   socket.on('onlineUsers', onOnlineUsers);
+
+  //   return () => {
+  //     socket.off('onlineUsers', onOnlineUsers);
+  //   };
+  // }, []);
 
   return (
-    <AutoLogoutWrapper>
-      <Layout>
-        <Outlet />
-      </Layout>
-    </AutoLogoutWrapper>
+    <SocketsWrapper>
+      <AutoLogoutWrapper>
+        <Layout>
+          <Outlet />
+        </Layout>
+      </AutoLogoutWrapper>
+    </SocketsWrapper>
   );
 };
 

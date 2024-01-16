@@ -47,6 +47,7 @@ const ConversationContainer = () => {
 
   const activeConversationId = params.id;
   const { onlineUsers } = messengerCtx;
+  console.log('onlineUsers', onlineUsers);
   useEffect(() => {
     const socketUser: SocketUserDataObj | undefined = onlineUsers.find(
       (socketUser) => socketUser.databaseId === user._id
@@ -63,11 +64,17 @@ const ConversationContainer = () => {
 
   useEffect(() => {
     return () => {
-      socket.emit('updateActiveConversation', {
-        databaseId: user._id,
-        conversationId: null,
-        connections: user.connections
-      });
+      const socketUser: SocketUserDataObj | undefined = onlineUsers.find(
+        (socketUser) => socketUser.databaseId === user._id
+      );
+
+      if (socketUser) {
+        socket.emit('updateActiveConversation', {
+          databaseId: user._id,
+          conversationId: null,
+          connections: user.connections
+        });
+      }
     };
   }, []);
 

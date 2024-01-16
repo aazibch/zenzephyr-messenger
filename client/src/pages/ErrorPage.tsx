@@ -3,6 +3,7 @@ import Layout from '../components/UI/Layout';
 import Logo from '../components/UI/Logo';
 import AuthLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
 import { clearAuthState } from '../utils/auth';
+import SocketsWrapper from '../components/WebSockets/SocketsWrapper';
 
 const ErrorPage = () => {
   const error = useRouteError() as ErrorResponse;
@@ -28,18 +29,21 @@ const ErrorPage = () => {
   }
 
   return (
-    <AuthLogoutWrapper>
-      <Layout>
-        <div className="flex items-center justify-center max-w-2xl h-full mx-auto">
-          <div>
-            <Logo className="mb-1" />
-            <p className="text-lg">
-              <span className="font-medium text-red-500">Error:</span> {message}
-            </p>
+    <SocketsWrapper>
+      <AuthLogoutWrapper>
+        <Layout>
+          <div className="flex items-center justify-center max-w-2xl h-full mx-auto">
+            <div>
+              <Logo className="mb-1" />
+              <p className="text-lg">
+                <span className="font-medium text-red-500">Error:</span>{' '}
+                {message}
+              </p>
+            </div>
           </div>
-        </div>
-      </Layout>
-    </AuthLogoutWrapper>
+        </Layout>
+      </AuthLogoutWrapper>
+    </SocketsWrapper>
   );
 };
 
