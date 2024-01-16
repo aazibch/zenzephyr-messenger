@@ -33,9 +33,12 @@ const ConversationContent = ({
   const { messages: messagesFromLoader } = messagesData;
   const [messages, setMessages] = useState<MessageObj[]>(messagesData.messages);
   const [isRecipientTyping, setIsRecipientTyping] = useState<boolean>(false);
+  const [isInitiallyScrolled, setIsInitiallyScrolled] =
+    useState<boolean>(false);
+  const [wasScrolledToBottom, setWasScrolledToBottom] =
+    useState<boolean>(false);
   const user = (useRouteLoaderData('root') as AuthObj).user;
   const messagesElementRef = useRef<HTMLDivElement>(null);
-  // const navigation = useNavigation();
   const params = useParams();
   const revalidator = useRevalidator();
   const paramsRef = useRef(params.id);
@@ -155,12 +158,47 @@ const ConversationContent = ({
   }, []);
 
   // Scroll to the bottom of the messages when a new message is sent.
+  // TODO: Come back!
   useEffect(() => {
+    const scrollToBottom = () => {
+      messagesElementRef.current!.scrollTop =
+        messagesElementRef.current!.scrollHeight;
+    };
+
     if (messagesElementRef.current) {
-      messagesElementRef.current.scrollTop =
-        messagesElementRef.current?.scrollHeight;
+      if (!isInitiallyScrolled) {
+        // const isBottom =
+        // messagesElementRef.current.scrollHeight -
+        //   messagesElementRef.current.scrollTop ===
+        // messagesElementRef.current.clientHeight;
+
+        scrollToBottom();
+        setWasScrolledToBottom(true);
+        setIsInitiallyScrolled(true);
+        // if (!isInitiallyScrolled || isBottom) {
+        //   scrollToBottom();
+        //   setWasScrolledToBottom(true);
+
+        //   if (!isInitiallyScrolled) {
+        //     setIsInitiallyScrolled(true);
+        //   }
+        // }
+      } else if (wasScrolledToBottom) {
+        scrollToBottom();
+      }
     }
-  }, [messagesData]);
+
+    // if (!isProgrammaticallyScrolled) {
+    //   scrollToBottom();
+    //   setIsProgrammaticallyScrolled(true);
+    // }
+  }, [
+    messagesElementRef.current,
+    messagesData,
+    optimisticMessages,
+    isInitiallyScrolled,
+    wasScrolledToBottom
+  ]);
 
   const attachedImageClickHandler = (imageSource: string) => {
     setMaximizedImage(imageSource);
@@ -168,6 +206,17 @@ const ConversationContent = ({
 
   const imageModalCloseHandler = () => {
     setMaximizedImage(undefined);
+  };
+
+  const scrollHandler = () => {
+    if (isInitiallyScrolled) {
+      const isBottom =
+        messagesElementRef.current!.scrollHeight -
+          messagesElementRef.current!.scrollTop ===
+        messagesElementRef.current!.clientHeight;
+
+      setWasScrolledToBottom(isBottom);
+    }
   };
 
   let messagesContent;
@@ -206,6 +255,7 @@ const ConversationContent = ({
         />
       )}
       <div
+        onScroll={scrollHandler}
         ref={messagesElementRef}
         className="p-4 flex flex-col flex-grow overflow-y-auto"
       >
