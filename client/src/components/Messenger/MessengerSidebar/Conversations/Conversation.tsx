@@ -41,7 +41,11 @@ const Conversation = ({
       }}
     >
       <div className="flex p-4 border-b items-center">
-        <ProfileImage size="large" src={profileImageUrl} className="mr-3" />
+        <ProfileImage
+          size="large"
+          src={profileImageUrl}
+          className="mr-3 shrink-0"
+        />
         <div>
           <div className="flex items-center">
             <h3 className="font-medium mr-2">{displayName}</h3>
@@ -51,7 +55,9 @@ const Conversation = ({
           </div>
 
           {snippet && (
-            <div className="text-sm text-gray-600">{snippetContent}</div>
+            <div className="text-sm text-gray-600 max-w-[18rem] truncate">
+              {snippetContent}
+            </div>
           )}
         </div>
         {isUnread && (
