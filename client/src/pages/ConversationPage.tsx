@@ -93,7 +93,7 @@ export const action = async ({
         );
       }
 
-      return response;
+      return response.data;
     }
 
     throw json(response.message, { status: response.status });

@@ -8,12 +8,31 @@ import { AuthenticatedRequest } from '../types';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 
-const sendUserNotFoundResponse = (res: Response) => {
+const sendUserNotFoundResponse = (
+  res: Response,
+  recipientUserStatus?: string,
+  id?: string
+) => {
+  const data: {
+    recipientUser: null | { _id: string };
+    recipientUserStatus?: string;
+  } = {
+    recipientUser: null
+  };
+
+  if (recipientUserStatus) {
+    data.recipientUserStatus = recipientUserStatus;
+  }
+
+  if (recipientUserStatus === 'blockedByYou') {
+    data.recipientUser = {
+      _id: id
+    };
+  }
+
   res.status(StatusCodes.OK).json({
     status: 'success',
-    data: {
-      user: null
-    }
+    data
   });
 };
 
@@ -41,12 +60,21 @@ export const getUser = catchAsync(
       return sendUserNotFoundResponse(res);
     }
 
+    const conversation = await Conversation.findOne({
+      participants: { $all: [user._id, req.user._id] },
+      deletedBy: { $ne: req.user._id }
+    });
+
+    if (conversation) {
+      return sendUserNotFoundResponse(res, 'existingConversation');
+    }
+
     let isBlocked = req.user.blockedUsers.find(
       (elem) => elem.toString() === user._id.toString()
     );
 
     if (isBlocked) {
-      sendUserNotFoundResponse(res);
+      sendUserNotFoundResponse(res, 'blockedByYou', user._id.toString());
     }
 
     isBlocked = user.blockedUsers.find(
@@ -54,22 +82,13 @@ export const getUser = catchAsync(
     );
 
     if (isBlocked) {
-      return sendUserNotFoundResponse(res);
-    }
-
-    const conversation = await Conversation.findOne({
-      participants: { $all: [user._id, req.user._id] },
-      deletedBy: { $ne: req.user._id }
-    });
-
-    if (conversation) {
-      return sendUserNotFoundResponse(res);
+      return sendUserNotFoundResponse(res, 'blockedByOther');
     }
 
     res.status(StatusCodes.OK).json({
       status: 'success',
       data: {
-        user
+        recipientUser: user
       }
     });
   }

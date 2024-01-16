@@ -38,8 +38,8 @@ export const loader = async ({ request }: { request: Request }) => {
 
   const response = await sendHttpRequest(httpConfig);
 
-  if (response.statusText === 'success' && response.data!.user) {
-    return response.data!.user;
+  if (response.statusText === 'success' && response.data!.recipientUser) {
+    return response.data!.recipientUser;
   }
 
   if (response.statusText === 'success' && !response.data!.user) {

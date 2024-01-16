@@ -48,7 +48,7 @@ export const action = async ({ request }: { request: Request }) => {
     const response = await sendHttpRequest(httpConfig);
 
     if (response.statusText === 'success') {
-      return response.data!.user;
+      return response.data;
     }
 
     throw json(response.message, { status: response.status });
