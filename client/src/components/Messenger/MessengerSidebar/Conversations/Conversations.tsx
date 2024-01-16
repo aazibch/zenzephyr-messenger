@@ -30,8 +30,6 @@ const Conversations = () => {
 
   const { onlineUsers } = messengerCtx;
 
-  console.log('[Conversations.tsx] onlineUsers', onlineUsers);
-
   const paramsRef = useRef(params.id);
 
   useEffect(() => {

@@ -81,7 +81,6 @@ export const action = async ({
     const response = await sendHttpRequest(httpConfig);
 
     if (response.statusText === 'success') {
-      console.log('[ConversationPage] action blockOrUnblock', response.data);
       const { data } = response;
 
       if (data) {

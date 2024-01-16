@@ -175,10 +175,6 @@ const onConnection = (io: Server) => {
         const updatedUser = getUser(databaseId);
         onlineConnections.unshift(updatedUser);
         io.to(socket.id).emit('onlineUsers', onlineConnections);
-        console.log(
-          '["updateActiveConversation" listener] onlineUsers',
-          onlineUsers
-        );
       }
     );
 

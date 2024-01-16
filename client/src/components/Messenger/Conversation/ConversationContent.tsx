@@ -188,7 +188,12 @@ const ConversationContent = ({
 
   const optimisticMessagesElements = optimisticMessages.map((elem) => {
     return (
-      <Message isOptimistic byLoggedInUser messageContent={elem.contentProps} />
+      <Message
+        key={elem._id}
+        isOptimistic
+        byLoggedInUser
+        messageContent={elem.contentProps}
+      />
     );
   });
 
