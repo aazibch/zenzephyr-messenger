@@ -107,6 +107,7 @@ const onConnection = (io: Server) => {
         activeConversation: string,
         connections: string[]
       ) => {
+        console.log('[before] onlineUsers', onlineUsers);
         const user = getUser(databaseId);
 
         if (!user) {
@@ -127,9 +128,11 @@ const onConnection = (io: Server) => {
         const onlineConnections = getOnlineConnections(connections);
         sendOnlineConnectionsToConnections(onlineConnections, io);
         const updatedUser = getUser(databaseId);
-        console.log('updatedUser', updatedUser);
+        // console.log('updatedUser', updatedUser);
         onlineConnections.unshift(updatedUser);
         io.to(socket.id).emit('onlineUsers', onlineConnections);
+        // console.log('onlineUsers', onlineUsers);
+        console.log('[after] onlineUsers', onlineUsers);
       }
     );
 
@@ -149,38 +152,38 @@ const onConnection = (io: Server) => {
       }
     );
 
-    // Updates active conversation AND connections.
-    socket.on(
-      'updateActiveConversation',
-      async ({
-        databaseId,
-        conversationId,
-        connections
-      }: {
-        databaseId: string;
-        conversationId: string | null;
-        connections: string[];
-      }) => {
-        const user = getUser(databaseId);
+    // // Updates active conversation AND connections.
+    // socket.on(
+    //   'updateActiveConversation',
+    //   async ({
+    //     databaseId,
+    //     conversationId,
+    //     connections
+    //   }: {
+    //     databaseId: string;
+    //     conversationId: string | null;
+    //     connections: string[];
+    //   }) => {
+    //     const user = getUser(databaseId);
 
-        console.log('user', user, databaseId, conversationId);
-        console.log('onlineUsers', onlineUsers);
+    //     console.log('user', user, databaseId, conversationId);
+    //     console.log('onlineUsers', onlineUsers);
 
-        if (user) {
-          updateUser(user.databaseId, {
-            socketId: socket.id,
-            activeConversation: conversationId,
-            connections
-          });
-        }
+    //     if (user) {
+    //       updateUser(user.databaseId, {
+    //         socketId: socket.id,
+    //         activeConversation: conversationId,
+    //         connections
+    //       });
+    //     }
 
-        const onlineConnections = getOnlineConnections(connections);
-        sendOnlineConnectionsToConnections(onlineConnections, io);
-        const updatedUser = getUser(databaseId);
-        onlineConnections.unshift(updatedUser);
-        io.to(socket.id).emit('onlineUsers', onlineConnections);
-      }
-    );
+    //     const onlineConnections = getOnlineConnections(connections);
+    //     sendOnlineConnectionsToConnections(onlineConnections, io);
+    //     const updatedUser = getUser(databaseId);
+    //     onlineConnections.unshift(updatedUser);
+    //     io.to(socket.id).emit('onlineUsers', onlineConnections);
+    //   }
+    // );
 
     socket.on('sendMessage', (message: MessageObj) => {
       const recipient = getUser(message.recipient);

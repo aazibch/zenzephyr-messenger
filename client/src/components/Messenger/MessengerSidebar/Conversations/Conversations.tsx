@@ -1,7 +1,7 @@
 import {
   useLoaderData,
   useParams,
-  useRevalidator,
+  // useRevalidator,
   useRouteLoaderData
 } from 'react-router-dom';
 import { useEffect, useState, useContext, useRef } from 'react';
@@ -26,7 +26,7 @@ const Conversations = () => {
   const user = (useRouteLoaderData('root') as AuthObj).user;
   const params = useParams();
   const messengerCtx = useContext(MessengerContext);
-  const revalidator = useRevalidator();
+  // const revalidator = useRevalidator();
 
   const { onlineUsers } = messengerCtx;
 
@@ -123,9 +123,9 @@ const Conversations = () => {
   }, [conversationsData, onlineUsers]);
 
   const conversationClickHandler = () => {
-    if (revalidator.state === 'idle') {
-      revalidator.revalidate();
-    }
+    // if (revalidator.state === 'idle') {
+    //   revalidator.revalidate();
+    // }
   };
 
   let conversationElements: React.ReactElement[] = [];

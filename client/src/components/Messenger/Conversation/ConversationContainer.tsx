@@ -47,18 +47,20 @@ const ConversationContainer = () => {
 
   const activeConversationId = params.id;
   const { onlineUsers } = messengerCtx;
-  console.log('onlineUsers', onlineUsers);
   useEffect(() => {
     const socketUser: SocketUserDataObj | undefined = onlineUsers.find(
       (socketUser) => socketUser.databaseId === user._id
     );
 
+    console.log('socketUser', socketUser);
+
     if (socketUser && socketUser.activeConversation !== activeConversationId) {
-      socket.emit('updateActiveConversation', {
-        databaseId: user._id,
-        conversationId: activeConversationId,
-        connections: user.connections
-      });
+      socket.emit(
+        'updateUser',
+        user._id,
+        activeConversationId,
+        user.connections
+      );
     }
   }, [activeConversationId, onlineUsers]);
 
@@ -69,11 +71,7 @@ const ConversationContainer = () => {
       );
 
       if (socketUser) {
-        socket.emit('updateActiveConversation', {
-          databaseId: user._id,
-          conversationId: null,
-          connections: user.connections
-        });
+        socket.emit('updateUser', user._id, null, user.connections);
       }
     };
   }, []);
