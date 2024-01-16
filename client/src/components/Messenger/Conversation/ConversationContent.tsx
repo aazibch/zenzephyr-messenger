@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import {
   useLoaderData,
   // useNavigation,
@@ -67,84 +67,8 @@ const ConversationContent = ({
     }
   }, [messagesFromLoader]);
 
-  // const isSubmitting =
-  //   navigation.state === 'submitting' &&
-  //   navigation.formData != null &&
-  //   navigation.formAction === navigation.location.pathname;
-
-  // const { state } = navigation;
-
-  // // Configure optimistic UI for messages
-  // useEffect(() => {
-  //   if (isSubmitting) {
-  //     const { formData } = navigation;
-
-  //     if (navigation.formMethod === 'post' && formData) {
-  //       const image = formData.get('image');
-  //       const text = formData.get('text') as string | null;
-
-  //       // Image message
-  //       if (image) {
-  //         const file = navigation.formData?.get('image') as File;
-
-  //         const reader = new FileReader();
-
-  //         reader.onload = (e: ProgressEvent<FileReader>) => {
-  //           if (
-  //             e.target &&
-  //             e.target.result &&
-  //             typeof e.target.result === 'string'
-  //           ) {
-  //             const imageUrl: string = e.target.result;
-
-  //             // Create an Image element to get image dimensions
-  //             const img = new Image();
-  //             img.onload = () => {
-  //               setOptimisticMessage({
-  //                 sender: user._id,
-  //                 contentProps: {
-  //                   type: 'image',
-  //                   image: {
-  //                     url: imageUrl,
-  //                     width: img.width,
-  //                     height: img.height
-  //                   }
-  //                 }
-  //               });
-  //             };
-
-  //             img.src = imageUrl;
-  //           }
-  //         };
-
-  //         reader.readAsDataURL(file);
-  //       }
-  //       // Text message
-  //       else if (text !== null) {
-  //         setOptimisticMessage({
-  //           sender: user._id,
-  //           contentProps: {
-  //             type: 'text',
-  //             text: {
-  //               content: text
-  //             }
-  //           }
-  //         });
-  //       }
-  //     }
-  //   }
-
-  //   if (state === 'idle') {
-  //     setOptimisticMessage(undefined);
-  //   }
-  // }, [isSubmitting, state]);
-
   useEffect(() => {
     const onChatMessage = () => {
-      // if (messageData.conversation === paramsRef.current) {
-      //   setMessages((prevMessages) => [...prevMessages, messageData]);
-      // }
-
       if (revalidator.state === 'idle') {
         revalidator.revalidate();
       }
@@ -157,46 +81,40 @@ const ConversationContent = ({
     };
   }, []);
 
+  const scrollToBottom = useCallback(() => {
+    messagesElementRef.current!.scrollTop =
+      messagesElementRef.current!.scrollHeight;
+  }, [messagesElementRef.current]);
+
   // Scroll to the bottom of the messages when a new message is sent.
   // TODO: Come back!
   useEffect(() => {
-    const scrollToBottom = () => {
-      messagesElementRef.current!.scrollTop =
-        messagesElementRef.current!.scrollHeight;
-    };
-
     if (messagesElementRef.current) {
       if (!isInitiallyScrolled) {
-        // const isBottom =
-        // messagesElementRef.current.scrollHeight -
-        //   messagesElementRef.current.scrollTop ===
-        // messagesElementRef.current.clientHeight;
-
         scrollToBottom();
         setWasScrolledToBottom(true);
         setIsInitiallyScrolled(true);
-        // if (!isInitiallyScrolled || isBottom) {
-        //   scrollToBottom();
-        //   setWasScrolledToBottom(true);
-
-        //   if (!isInitiallyScrolled) {
-        //     setIsInitiallyScrolled(true);
-        //   }
-        // }
       } else if (wasScrolledToBottom) {
         scrollToBottom();
       }
     }
-
-    // if (!isProgrammaticallyScrolled) {
-    //   scrollToBottom();
-    //   setIsProgrammaticallyScrolled(true);
-    // }
   }, [
     messagesElementRef.current,
+    scrollToBottom,
     messagesData,
     optimisticMessages,
     isInitiallyScrolled,
+    wasScrolledToBottom
+  ]);
+
+  useEffect(() => {
+    if (isInitiallyScrolled && isRecipientTyping && wasScrolledToBottom) {
+      scrollToBottom();
+    }
+  }, [
+    scrollToBottom,
+    isInitiallyScrolled,
+    isRecipientTyping,
     wasScrolledToBottom
   ]);
 
@@ -260,13 +178,6 @@ const ConversationContent = ({
         className="p-4 flex flex-col flex-grow overflow-y-auto"
       >
         {messagesContent}
-        {/* {optimisticMessage && (
-          <Message
-            isOptimistic
-            byLoggedInUser
-            messageContent={optimisticMessage.contentProps}
-          />
-        )} */}
         {optimisticMessagesElements}
         {isRecipientTyping && <TypingIndicator />}
       </div>
