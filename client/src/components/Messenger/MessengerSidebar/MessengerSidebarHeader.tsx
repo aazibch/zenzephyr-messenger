@@ -4,21 +4,15 @@ import { BsPersonAdd, BsThreeDotsVertical } from 'react-icons/bs';
 import ProfileImage from '../../UI/ProfileImage';
 import Button from '../../UI/Button';
 import DropdownMenu from '../../UI/DropdownMenu';
-import { useLocation, useRouteLoaderData } from 'react-router-dom';
+import {
+  // useFetcher,
+  useLocation,
+  useRouteLoaderData,
+  useSubmit
+} from 'react-router-dom';
 import { AuthObj } from '../../../types';
 import ImageModal from '../../UI/Modals/ImageModal';
 import AddUserModal from '../../UI/Modals/AddUserModal';
-
-const menuItems = [
-  {
-    content: 'Settings',
-    link: '/settings'
-  },
-  {
-    content: 'Logout',
-    link: '/logout'
-  }
-];
 
 const SidebarHeader = () => {
   const [maximizedImage, setMaximizedImage] = useState<string | null>(null);
@@ -27,6 +21,8 @@ const SidebarHeader = () => {
   );
   const auth = useRouteLoaderData('root') as AuthObj;
   const location = useLocation();
+  // const fetcher = useFetcher();
+  const submit = useSubmit();
 
   useEffect(() => {
     if (location.pathname === '/messenger/new') {
@@ -64,6 +60,19 @@ const SidebarHeader = () => {
   if (displayingModal === 'addUser') {
     modalElement = <AddUserModal dismissHandler={dismissModalHandler} />;
   }
+
+  const menuItems = [
+    {
+      content: 'Settings',
+      link: '/settings'
+    },
+    {
+      content: 'Logout',
+      onClick: () => {
+        submit(null, { action: '/logout', method: 'post' });
+      }
+    }
+  ];
 
   return (
     <div className="border-b border-gray-300 flex items-center px-4 h-14">
