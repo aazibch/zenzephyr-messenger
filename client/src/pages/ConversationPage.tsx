@@ -82,10 +82,18 @@ export const action = async ({
 
     if (response.statusText === 'success') {
       console.log('[ConversationPage] action blockOrUnblock', response.data);
-      // socket.emit('blockOrUnblock', {
-      //   conversation: response.data!.conversation,
-      //   recipientId: data.id
-      // });
+      const { data } = response;
+
+      if (data) {
+        socket.emit(
+          'blockOrUnblock',
+          data.user._id,
+          data.recipientUser._id,
+          data.user.connections,
+          data.recipientUser.connections
+        );
+      }
+
       return response;
     }
 

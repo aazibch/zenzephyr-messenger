@@ -1,7 +1,5 @@
 import { Server, Socket } from 'socket.io';
 import { IConversation, IUser, MessageObj, SocketUserDataObj } from '../types';
-import User from '../models/UserModel';
-import { ObjectId } from 'mongoose';
 
 const onlineUsers: SocketUserDataObj[] = [];
 
@@ -91,6 +89,7 @@ const sendOnlineConnectionsToConnections = (
 
     if (user) {
       const onlineConnections = getOnlineConnections(user.connections);
+      onlineConnections.unshift(user);
 
       io.to(user.socketId).emit('onlineUsers', onlineConnections);
     }
@@ -99,7 +98,6 @@ const sendOnlineConnectionsToConnections = (
 
 const onConnection = (io: Server) => {
   return (socket: Socket) => {
-    let userDatabaseId: string;
     console.log('[Socket server] A user connected.');
 
     socket.on(
@@ -127,78 +125,62 @@ const onConnection = (io: Server) => {
         }
 
         const onlineConnections = getOnlineConnections(connections);
-        io.to(socket.id).emit('onlineUsers', onlineConnections);
         sendOnlineConnectionsToConnections(onlineConnections, io);
+        const updatedUser = getUser(databaseId);
+        onlineConnections.unshift(updatedUser);
+        io.to(socket.id).emit('onlineUsers', onlineConnections);
       }
     );
 
-    // socket.on(
-    //   'typing',
-    //   (data: {
-    //     sender: string;
-    //     recipient: string;
-    //     conversation: string;
-    //     isTyping: boolean;
-    //   }) => {
-    //     const recipient = getUser(data.recipient);
+    socket.on(
+      'typing',
+      (data: {
+        sender: string;
+        recipient: string;
+        conversation: string;
+        isTyping: boolean;
+      }) => {
+        const recipient = getUser(data.recipient);
 
-    //     if (recipient && recipient.activeConversation === data.conversation) {
-    //       io.to(recipient.socketId).emit('typingStatus', data.isTyping);
-    //     }
-    //   }
-    // );
+        if (recipient && recipient.activeConversation === data.conversation) {
+          io.to(recipient.socketId).emit('typingStatus', data.isTyping);
+        }
+      }
+    );
 
-    // socket.on('updateUser', (data: IUser) => {
-    //   console.log('["updateUser"]', data);
-    // });
+    // Updates active conversation AND connections.
+    socket.on(
+      'updateActiveConversation',
+      async ({
+        databaseId,
+        conversationId,
+        connections
+      }: {
+        databaseId: string;
+        conversationId: string | null;
+        connections: string[];
+      }) => {
+        const user = getUser(databaseId);
 
-    // socket.on(
-    //   'updateActiveConversation',
-    //   async ({
-    //     databaseId,
-    //     conversationId
-    //   }: {
-    //     databaseId: string;
-    //     conversationId: string | null;
-    //   }) => {
-    //     const user = getUser(databaseId);
-    //     let userDoc;
+        if (user) {
+          updateUser(user.databaseId, {
+            socketId: socket.id,
+            activeConversation: conversationId,
+            connections
+          });
+        }
 
-    //     if (user) {
-    //       updateUser({
-    //         socketId: socket.id,
-    //         activeConversation: conversationId
-    //       });
-    //     } else {
-    //       userDoc = await User.findById(databaseId);
-
-    //       if (userDoc) {
-    //         saveUser({
-    //           databaseId,
-    //           socketId: socket.id,
-    //           activeConversation: conversationId,
-    //           connections: userDoc.connections
-    //         });
-    //       }
-    //     }
-
-    //     if (!userDatabaseId && userDoc) {
-    //       userDatabaseId = userDoc._id.toString();
-    //     }
-
-    //     const onlineConnections = getOnlineConnections(
-    //       io,
-    //       user?.connections || userDoc?.connections
-    //     );
-    //     io.to(socket.id).emit('onlineUsers', onlineConnections);
-    //     console.log(
-    //       '["updateActiveConversation"] onlineConnections',
-    //       databaseId,
-    //       onlineConnections
-    //     );
-    //     console.log('onlineUsers', onlineUsers);
-    //   }
-    // );
+        const onlineConnections = getOnlineConnections(connections);
+        sendOnlineConnectionsToConnections(onlineConnections, io);
+        const updatedUser = getUser(databaseId);
+        onlineConnections.unshift(updatedUser);
+        io.to(socket.id).emit('onlineUsers', onlineConnections);
+        console.log(
+          '["updateActiveConversation" listener] onlineUsers',
+          onlineUsers
+        );
+      }
+    );
 
     socket.on('sendMessage', (message: MessageObj) => {
       const recipient = getUser(message.recipient);
@@ -224,18 +206,24 @@ const onConnection = (io: Server) => {
             socketId: socket.id,
             connections: userConnections
           });
+
+          const onlineConnections = getOnlineConnections(user.connections);
+          sendOnlineConnectionsToConnections(onlineConnections, io);
+          onlineConnections.unshift(user);
+          io.to(socket.id).emit('onlineUsers', onlineConnections);
         }
 
         if (recipient) {
           updateUser(recipientDatabaseId, {
             connections: recipientConnections
           });
-          // io.to(recipient.socketId).emit(
-          //   'blockedOrUnblockedConversation',
-          //   conversationData.conversation
-          // );
+
+          const onlineConnections = getOnlineConnections(recipient.connections);
+          sendOnlineConnectionsToConnections(onlineConnections, io);
+          onlineConnections.unshift(recipient);
+          io.to(recipient.socketId).emit('blockedOrUnblocked');
+          io.to(recipient.socketId).emit('onlineUsers', onlineConnections);
         }
-        console.log('["blockOrUnblock"] onlineUsers', onlineUsers);
       }
     );
 

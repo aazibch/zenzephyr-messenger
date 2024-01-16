@@ -55,7 +55,8 @@ const ConversationContainer = () => {
     if (socketUser && socketUser.activeConversation !== activeConversationId) {
       socket.emit('updateActiveConversation', {
         databaseId: user._id,
-        conversationId: activeConversationId
+        conversationId: activeConversationId,
+        connections: user.connections
       });
     }
   }, [activeConversationId, onlineUsers]);
@@ -64,28 +65,23 @@ const ConversationContainer = () => {
     return () => {
       socket.emit('updateActiveConversation', {
         databaseId: user._id,
-        conversationId: null
+        conversationId: null,
+        connections: user.connections
       });
     };
   }, []);
 
   useEffect(() => {
-    const onBlockedOrUnblockedConversation = () => {
+    const onBlockedOrUnblocked = () => {
       if (revalidator.state === 'idle') {
         revalidator.revalidate();
       }
     };
 
-    socket.on(
-      'blockedOrUnblockedConversation',
-      onBlockedOrUnblockedConversation
-    );
+    socket.on('blockedOrUnblocked', onBlockedOrUnblocked);
 
     return () => {
-      socket.off(
-        'blockedOrUnblockedConversation',
-        onBlockedOrUnblockedConversation
-      );
+      socket.off('blockedOrUnblocked', onBlockedOrUnblocked);
     };
   }, []);
 

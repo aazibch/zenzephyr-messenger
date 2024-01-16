@@ -127,7 +127,7 @@ export const blockUser = catchAsync(
       status: 'success',
       data: {
         user: user,
-        blockedUser: userToBlock,
+        recipientUser: userToBlock,
         conversation
       }
     });
@@ -220,7 +220,7 @@ export const unblockUser = catchAsync(
       status: 'success',
       data: {
         user: req.user,
-        unblockedUser: userToUnblock,
+        recipientUser: userToUnblock,
         conversation
       }
     });
