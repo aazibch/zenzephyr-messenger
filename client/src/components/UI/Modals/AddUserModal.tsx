@@ -120,7 +120,9 @@ const AddUserModal = ({ dismissHandler }: AddUserModalProps) => {
   };
 
   const isLoading =
-    fetcher.state === 'submitting' && fetcher.formAction === '/messenger';
+    fetcher.state === 'submitting' &&
+    (fetcher.formAction === '/messenger' ||
+      fetcher.formAction === '/messenger/:id');
 
   let recipientUserStatusElement;
 
