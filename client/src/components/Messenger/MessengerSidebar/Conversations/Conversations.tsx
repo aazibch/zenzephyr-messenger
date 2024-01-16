@@ -1,19 +1,8 @@
-import {
-  useLoaderData,
-  useParams,
-  // useRevalidator,
-  useRouteLoaderData
-} from 'react-router-dom';
+import { useLoaderData, useParams, useRouteLoaderData } from 'react-router-dom';
 import { useEffect, useState, useContext, useRef } from 'react';
 import Conversation from './Conversation';
-import {
-  AuthObj,
-  ConversationObj,
-  // MessageObj,
-  UserObj
-} from '../../../../types';
+import { AuthObj, ConversationObj, UserObj } from '../../../../types';
 import styles from './Conversations.module.css';
-// import socket from '../../../../services/socket';
 import MessengerContext from '../../../../store/messenger-context';
 
 const Conversations = () => {
@@ -26,7 +15,6 @@ const Conversations = () => {
   const user = (useRouteLoaderData('root') as AuthObj).user;
   const params = useParams();
   const messengerCtx = useContext(MessengerContext);
-  // const revalidator = useRevalidator();
 
   const { onlineUsers } = messengerCtx;
 
@@ -64,69 +52,9 @@ const Conversations = () => {
     setConversations(updatedConversations);
   };
 
-  // useEffect(() => {
-  //   const onChatMessage = (messageData: MessageObj) => {
-  //     const conversationId = messageData.conversation.toString();
-  //     let snippet: string;
-  //     let updateSnippetOnly = false;
-
-  //     if (messageData.contentProps.type === 'image') {
-  //       snippet = '**[imageIcon] Image**';
-  //     } else {
-  //       snippet = messageData.contentProps.text.content;
-  //     }
-
-  //     if (conversationId === paramsRef.current) {
-  //       updateSnippetOnly = true;
-  //     }
-
-  //     setConversations((prevConversations) => {
-  //       let updatedConversations = [...prevConversations];
-
-  //       const itemToModifyIndex = updatedConversations.findIndex(
-  //         (item) => item._id === conversationId
-  //       );
-  //       let itemToModify: ConversationObj | undefined;
-
-  //       if (itemToModifyIndex !== -1) {
-  //         itemToModify = { ...updatedConversations[itemToModifyIndex] };
-  //       }
-
-  //       updatedConversations = updatedConversations.filter(
-  //         (item) => item._id !== conversationId
-  //       );
-
-  //       if (itemToModify) {
-  //         if (updateSnippetOnly) {
-  //           itemToModify.snippet = snippet;
-  //         } else {
-  //           itemToModify.snippet = snippet;
-  //           itemToModify.unreadBy = user._id;
-  //         }
-
-  //         updatedConversations.unshift(itemToModify);
-  //       }
-
-  //       return updatedConversations;
-  //     });
-  //   };
-
-  //   socket.on('chatMessage', onChatMessage);
-
-  //   return () => {
-  //     socket.off('chatMessage', onChatMessage);
-  //   };
-  // }, []);
-
   useEffect(() => {
     updateConversationsWithOnlineState();
   }, [conversationsData, onlineUsers]);
-
-  const conversationClickHandler = () => {
-    // if (revalidator.state === 'idle') {
-    //   revalidator.revalidate();
-    // }
-  };
 
   let conversationElements: React.ReactElement[] = [];
 
@@ -141,7 +69,6 @@ const Conversations = () => {
           snippet={elem.snippet}
           isOnline={elem.isOnline}
           isUnread={elem.unreadBy === user._id}
-          clickHandler={conversationClickHandler}
         />
       );
     });
@@ -154,7 +81,6 @@ const Conversations = () => {
         link={`/messenger/new?userId=${newConversationUser._id}`}
         profileImageUrl={newConversationUser.profileImage}
         displayName={newConversationUser.fullName}
-        clickHandler={conversationClickHandler}
       />
     );
   }

@@ -5,58 +5,9 @@ import AutoLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
 import { apiUrl, clientUrl } from '../constants';
 import { clearAuthState } from '../utils/auth';
-// import { AuthObj, SocketUserDataObj } from '../types';
-// import { useContext, useEffect } from 'react';
-// import socket from '../services/socket';
-// import MessengerContext from '../store/messenger-context';
 import SocketsWrapper from '../components/WebSockets/SocketsWrapper';
 
 const RootPage = () => {
-  // const auth = useLoaderData() as AuthObj | undefined;
-  // const messengerCtx = useContext(MessengerContext);
-  // const userId = auth?.user._id;
-
-  // useEffect(() => {
-  //   if (userId) {
-  //     socket.connect();
-  //   }
-
-  //   return () => {
-  //     if (userId) {
-  //       socket.disconnect();
-  //     }
-  //   };
-  // }, [userId]);
-
-  // // useEffect(() => {
-  // //   if (userId) {
-  // //     socket.emit('updateUser', userId);
-  // //   }
-  // // }, [userId]);
-
-  // useEffect(() => {
-  //   if (auth?.user) {
-  //     socket.emit(
-  //       'updateUser',
-  //       auth.user._id,
-  //       undefined,
-  //       auth.user.connections
-  //     );
-  //   }
-  // }, [auth]);
-
-  // useEffect(() => {
-  //   const onOnlineUsers = (updatedOnlineUsers: SocketUserDataObj[]) => {
-  //     messengerCtx.updateOnlineUsers(updatedOnlineUsers);
-  //   };
-
-  //   socket.on('onlineUsers', onOnlineUsers);
-
-  //   return () => {
-  //     socket.off('onlineUsers', onOnlineUsers);
-  //   };
-  // }, []);
-
   return (
     <SocketsWrapper>
       <AutoLogoutWrapper>

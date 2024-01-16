@@ -2,7 +2,6 @@ import MessageInput from '../MessageInput/MessageInput';
 import ConversationContent from './ConversationContent';
 import ConversationHeader from './ConversationHeader';
 import {
-  // useLocation,
   useNavigation,
   useParams,
   useRevalidator,
@@ -11,7 +10,6 @@ import {
 import {
   AuthObj,
   ConversationObj,
-  // MessageObj,
   OptimisticMessageObj,
   SocketUserDataObj
 } from '../../../types';
@@ -51,8 +49,6 @@ const ConversationContainer = () => {
     const socketUser: SocketUserDataObj | undefined = onlineUsers.find(
       (socketUser) => socketUser.databaseId === user._id
     );
-
-    console.log('socketUser', socketUser);
 
     if (socketUser && socketUser.activeConversation !== activeConversationId) {
       socket.emit(

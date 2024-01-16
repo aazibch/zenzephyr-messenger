@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import catchAsync from '../middleware/catchAsync';
 import User from '../models/UserModel';
@@ -6,7 +6,6 @@ import Conversation from '../models/ConversationModel';
 import AppError from '../utils/AppError';
 import { AuthenticatedRequest } from '../types';
 import { ObjectId } from 'mongodb';
-import mongoose from 'mongoose';
 
 const sendUserNotFoundResponse = (
   res: Response,

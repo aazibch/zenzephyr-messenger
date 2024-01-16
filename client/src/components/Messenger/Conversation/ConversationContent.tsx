@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import {
   useLoaderData,
-  // useNavigation,
   useParams,
   useRevalidator,
   useRouteLoaderData
@@ -12,7 +11,6 @@ import {
   MessageObj,
   MessagesObj,
   OptimisticMessageObj
-  // OptimisticMessageObj
 } from '../../../types';
 import ImageModal from '../../UI/Modals/ImageModal';
 import socket from '../../../services/socket';
@@ -26,9 +24,6 @@ const ConversationContent = ({
   optimisticMessages
 }: ConversationContentProps) => {
   const [maximizedImage, setMaximizedImage] = useState<string>();
-  // const [optimisticMessage, setOptimisticMessage] = useState<
-  //   OptimisticMessageObj | undefined
-  // >();
   const messagesData = useLoaderData() as MessagesObj;
   const { messages: messagesFromLoader } = messagesData;
   const [messages, setMessages] = useState<MessageObj[]>(messagesData.messages);
@@ -87,7 +82,6 @@ const ConversationContent = ({
   }, [messagesElementRef.current]);
 
   // Scroll to the bottom of the messages when a new message is sent.
-  // TODO: Come back!
   useEffect(() => {
     if (messagesElementRef.current) {
       if (!isInitiallyScrolled) {

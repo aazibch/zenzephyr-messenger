@@ -1,8 +1,4 @@
-import {
-  RouterProvider,
-  createBrowserRouter
-  // useRouteLoaderData
-} from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import RootPage, { loader as rootLoader } from './pages/RootPage';
 import HomePage, { loader as homeLoader } from './pages/HomePage';
