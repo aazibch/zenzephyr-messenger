@@ -1,10 +1,31 @@
-import { json, Params, redirect } from 'react-router-dom';
+import {
+  json,
+  Params,
+  redirect,
+  useParams,
+  useRouteLoaderData
+} from 'react-router-dom';
 import ConversationContainer from '../components/Messenger/Conversation/ConversationContainer';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
 import socket from '../services/socket';
+import { useEffect } from 'react';
+import { ConversationObj } from '../types';
 
 const ConversationPage = () => {
+  const conversationsData = useRouteLoaderData(
+    'messenger'
+  ) as ConversationObj[];
+  const params = useParams();
+
+  const activeConversation = conversationsData.find(
+    (elem) => elem._id === params.id
+  );
+
+  useEffect(() => {
+    document.title = `${activeConversation?.otherParticipant.fullName} | ZephyrMessenger`;
+  }, []);
+
   return <ConversationContainer />;
 };
 

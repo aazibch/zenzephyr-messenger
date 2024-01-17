@@ -4,12 +4,15 @@ import Logo from '../components/UI/Logo';
 import AuthLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
 import { clearAuthState } from '../utils/auth';
 import SocketsWrapper from '../components/WebSockets/SocketsWrapper';
+import { useEffect } from 'react';
 
 const ErrorPage = () => {
   const error = useRouteError() as ErrorResponse;
   const navigate = useNavigate();
 
-  console.log('error', error);
+  useEffect(() => {
+    document.title = `Error | ZephyrMessenger`;
+  }, []);
 
   if (error.status === 401 && error.data === 'You are not logged in.') {
     setTimeout(() => {

@@ -1,22 +1,29 @@
-import { json, redirect } from 'react-router-dom';
+import { json, redirect, useLoaderData } from 'react-router-dom';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
-import ConversationMainHeader from '../components/Messenger/Conversation/ConversationHeader';
+import ConversationHeader from '../components/Messenger/Conversation/ConversationHeader';
 import MessageInput from '../components/Messenger/MessageInput/MessageInput';
 import NewConversationContent from '../components/Messenger/Conversation/NewConversationContent';
-import { useState } from 'react';
-import { OptimisticMessageObj } from '../types';
+import { useEffect, useState } from 'react';
+import { OptimisticMessageObj, UserObj } from '../types';
 
 const NewConversationPage = () => {
+  const newConversationUser = useLoaderData() as UserObj | undefined;
   const [optimisticMessage, setOptimisticMessage] =
     useState<OptimisticMessageObj>();
+
+  useEffect(() => {
+    if (newConversationUser) {
+      document.title = `${newConversationUser.fullName} | ZephyrMessenger`;
+    }
+  }, []);
 
   const saveOptimisticMessage = (optimisticMessage: OptimisticMessageObj) => {
     setOptimisticMessage(optimisticMessage);
   };
   return (
     <div className="flex flex-col justify-between flex-grow">
-      <ConversationMainHeader />
+      <ConversationHeader />
       <NewConversationContent optimisticMessage={optimisticMessage} />
       <MessageInput saveOptimisticMessage={saveOptimisticMessage} />
     </div>

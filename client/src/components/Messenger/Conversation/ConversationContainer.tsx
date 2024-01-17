@@ -32,7 +32,6 @@ const ConversationContainer = () => {
   );
   const revalidator = useRevalidator();
   const navigation = useNavigation();
-
   let isBlockedByMe;
 
   if (!user.blockedUsers) {
