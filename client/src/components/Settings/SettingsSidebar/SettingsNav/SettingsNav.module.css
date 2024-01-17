@@ -1,0 +1,19 @@
+.navItems a {
+  display: block;
+}
+
+.navItems a:hover {
+  background: #f3f4f6;
+}
+
+.navItems .active {
+  background: #f3f4f6;
+}
+
+.navItems:hover .active {
+  background: #fff;
+}
+
+.navItems:hover .active:hover {
+  background: #f3f4f6;
+}
