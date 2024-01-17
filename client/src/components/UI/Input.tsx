@@ -2,11 +2,19 @@ import { ComponentPropsWithoutRef } from 'react';
 
 interface InputProps {
   className?: string;
+  inputClassName?: string;
   input: ComponentPropsWithoutRef<'input'>;
   label?: string;
+  message?: string;
 }
 
-const Input = ({ className, input, label }: InputProps) => {
+const Input = ({
+  message,
+  inputClassName,
+  className,
+  input,
+  label
+}: InputProps) => {
   return (
     <div className={`${className} mb-4`}>
       {label && (
@@ -18,9 +26,10 @@ const Input = ({ className, input, label }: InputProps) => {
       )}
 
       <input
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#4649ff] focus:border-[#4649ff] outline-none block w-full p-2 mb-1"
+        className={`${inputClassName} bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#4649ff] focus:border-[#4649ff] outline-none block w-full p-2 mb-1`}
         {...input}
       />
+      {message && <p className="text-sm text-gray-500">{message}</p>}
     </div>
   );
 };
