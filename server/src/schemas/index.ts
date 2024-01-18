@@ -104,3 +104,49 @@ export const conversationSchema = Joi.object({
   recipient: recipientId,
   text: messageText
 });
+
+export const updateMeSchema = Joi.object({
+  fullName: Joi.string()
+    .pattern(new RegExp(/^[a-zA-Z ]*$/))
+    .min(3)
+    .max(75)
+    .messages({
+      'string.pattern.base':
+        'The full name may only contain alphabets and spaces.',
+      'string.min': generateValidationMessage('min', 'full name', 3),
+      'string.max': generateValidationMessage('max', 'full name', 75)
+    }),
+  email: Joi.string()
+    .min(5)
+    .max(50)
+    .email()
+    .messages({
+      'string.min': generateValidationMessage('min', 'email address', 5),
+      'string.max': generateValidationMessage('max', 'email address', 50),
+      'string.email': generateValidationMessage('email')
+    }),
+  password: Joi.string()
+    .min(8)
+    .messages({
+      'string.min': generateValidationMessage('min', 'password', 8)
+    }),
+  currentPassword: Joi.string().when('password', {
+    is: Joi.exist(),
+    then: Joi.string().required(),
+    otherwise: Joi.string().forbidden()
+  }),
+  passwordConfirmation: Joi.string()
+    .valid(Joi.ref('password'))
+    .when('password', {
+      is: Joi.exist(),
+      then: Joi.string().required(),
+      otherwise: Joi.string().forbidden()
+    })
+    .messages({
+      'any.required': generateValidationMessage(
+        'required',
+        'password confirmation'
+      ),
+      'any.only': generateValidationMessage('passwordConfirmation')
+    })
+});

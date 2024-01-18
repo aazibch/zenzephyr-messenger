@@ -4,8 +4,11 @@ import catchAsync from '../middleware/catchAsync';
 import User from '../models/UserModel';
 import Conversation from '../models/ConversationModel';
 import AppError from '../utils/AppError';
-import { AuthenticatedRequest } from '../types';
+import { AuthenticatedRequest, AuthenticatedRequestWithFile } from '../types';
 import { ObjectId } from 'mongodb';
+import { updateMeSchema } from '../schemas';
+import { pick } from 'lodash';
+import { createSendToken } from './authController';
 
 const sendUserNotFoundResponse = (
   res: Response,
@@ -105,6 +108,94 @@ export const getMe = catchAsync(
     });
   }
 );
+
+export const updateMe = catchAsync(
+  async (
+    req: AuthenticatedRequestWithFile,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { error, value } = updateMeSchema.validate(req.body);
+    let toReauthenticate = false;
+
+    let user = await User.findById(req.user._id).select('+password');
+
+    if (error)
+      return next(
+        new AppError(error.details[0].message, StatusCodes.BAD_REQUEST)
+      );
+
+    if (value.password) {
+      if (
+        !(await user.isPasswordCorrect(req.body.currentPassword, user.password))
+      ) {
+        toReauthenticate = true;
+        return next(
+          new AppError('Incorrect value for the current password.', 400)
+        );
+      }
+    }
+
+    const filteredBody: {
+      fullName?: string;
+      profileImage?: string;
+      email?: string;
+      password?: string;
+    } = pick({ ...value }, ['fullName', 'email', 'password']);
+
+    if (req.file?.image) {
+      filteredBody.profileImage = req.file.image.url;
+    }
+
+    if (filteredBody.fullName) {
+      user.fullName = filteredBody.fullName;
+    }
+
+    if (filteredBody.email) {
+      user.email = filteredBody.email;
+    }
+
+    if (filteredBody.password) {
+      user.password = filteredBody.password;
+    }
+
+    await user.save();
+    user = user.toObject();
+    delete user.password;
+
+    let token;
+    if (toReauthenticate) {
+      token = createSendToken(user._id.toString(), req, res);
+    }
+
+    res.status(StatusCodes.OK).json({
+      status: 'success',
+      data: {
+        user,
+        auth: {
+          token,
+          tokenExpirationDate: new Date(
+            Date.now() +
+              parseInt(process.env.JWT_COOKIE_EXPIRATION) * 24 * 60 * 60 * 1000
+          )
+        }
+      }
+    });
+  }
+);
+
+// export const updateMyPassword = catchAsync(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+//   const user = await User.findById(req.user._id).select('+password');
+
+//   if (
+//     !(await user.isPasswordCorrect(req.body.currentPassword, user.password))
+//   ) {
+//     return next(new AppError('Incorrect value for the current password.', StatusCodes.BAD_REQUEST));
+//   }
+
+//   user.password = req.body.password;
+//   user.pass
+// });
 
 export const blockUser = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {

@@ -7,8 +7,8 @@ import {
 import { protect } from '../controllers/authController';
 import messagesRouter from './messagesRoutes';
 import {
-  editAttachedImage,
-  saveAttachedImageToCloud,
+  editImage,
+  saveImageToCloud,
   uploadAttachedImage
 } from '../middleware/imageUpload';
 
@@ -21,8 +21,8 @@ router.post(
   '/',
   protect,
   uploadAttachedImage,
-  editAttachedImage,
-  saveAttachedImageToCloud,
+  editImage('attachedImage'),
+  saveImageToCloud('attachedImage'),
   createConversation
 );
 router.delete('/:id', protect, deleteConversation);

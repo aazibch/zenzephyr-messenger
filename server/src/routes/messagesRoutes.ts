@@ -1,8 +1,8 @@
 import express from 'express';
 import { createMessage, getMessages } from '../controllers/messagesController';
 import {
-  editAttachedImage,
-  saveAttachedImageToCloud,
+  editImage,
+  saveImageToCloud,
   uploadAttachedImage
 } from '../middleware/imageUpload';
 import { protect } from '../controllers/authController';
@@ -16,8 +16,8 @@ router.post(
   '/',
   protect,
   uploadAttachedImage,
-  editAttachedImage,
-  saveAttachedImageToCloud,
+  editImage('attachedImage'),
+  saveImageToCloud('attachedImage'),
   createMessage
 );
 

@@ -17,7 +17,7 @@ const signToken = (id: string | ObjectId) => {
   });
 };
 
-const createSendToken = (
+export const createSendToken = (
   id: string | ObjectId,
   req: Request,
   res: Response
