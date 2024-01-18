@@ -21,6 +21,7 @@ const SettingsNav = () => {
       <nav className={styles.navItems}>
         {navItems.map((item) => (
           <SettingsNavItem
+            key={item.content}
             content={item.content}
             link={item.link}
             icon={item.icon}

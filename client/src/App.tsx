@@ -7,7 +7,7 @@ import SignupPage, { action as signupAction } from './pages/Auth/SignupPage';
 import NewConversationPage, {
   loader as newConversationLoader,
   action as newConversationAction
-} from './pages/NewConversationPage';
+} from './pages/Conversation/NewConversationPage';
 import { action as logoutAction } from './pages/Auth/LogoutPage';
 import ErrorPage from './pages/ErrorPage';
 import { protectLoader } from './utils/auth';
@@ -18,11 +18,11 @@ import MessengerPage, {
 import ConversationPage, {
   loader as conversationLoader,
   action as conversationAction
-} from './pages/ConversationPage';
-import NoConversationPage from './pages/NoConversationPage';
-import SettingsPage from './pages/SettingsPage';
-import NoSettingsPage from './pages/NoSettingsPage';
-import ProfileSettingsPage from './pages/ProfileSettingsPage';
+} from './pages/Conversation/ConversationPage';
+import NoConversationPage from './pages/Conversation/NoConversationPage';
+import SettingsPage from './pages/Settings/SettingsPage';
+import NoSettingsPage from './pages/Settings/NoSettingsPage';
+import ProfileSettingsPage from './pages/Settings/ProfileSettingsPage';
 
 const router = createBrowserRouter([
   {

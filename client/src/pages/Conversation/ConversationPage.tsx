@@ -5,12 +5,12 @@ import {
   useParams,
   useRouteLoaderData
 } from 'react-router-dom';
-import ConversationContainer from '../components/Messenger/Conversation/ConversationContainer';
-import { apiUrl } from '../constants';
-import { generateHttpConfig, sendHttpRequest } from '../utils';
-import socket from '../services/socket';
+import ConversationContainer from '../../components/Messenger/Conversation/ConversationContainer';
+import { apiUrl } from '../../constants';
+import { generateHttpConfig, sendHttpRequest } from '../../utils';
+import socket from '../../services/socket';
 import { useEffect } from 'react';
-import { ConversationObj } from '../types';
+import { ConversationObj } from '../../types';
 
 const ConversationPage = () => {
   const conversationsData = useRouteLoaderData(

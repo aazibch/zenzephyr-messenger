@@ -54,5 +54,7 @@ export const loader = async ({ request }: { request: Request }) => {
     };
   }
 
+  console.log('clearingAuthState');
+  clearAuthState();
   return null;
 };

@@ -1,11 +1,11 @@
 import { json, redirect, useLoaderData } from 'react-router-dom';
-import { apiUrl } from '../constants';
-import { generateHttpConfig, sendHttpRequest } from '../utils';
-import ConversationHeader from '../components/Messenger/Conversation/ConversationHeader';
-import MessageInput from '../components/Messenger/MessageInput/MessageInput';
-import NewConversationContent from '../components/Messenger/Conversation/NewConversationContent';
+import { apiUrl } from '../../constants';
+import { generateHttpConfig, sendHttpRequest } from '../../utils';
+import ConversationHeader from '../../components/Messenger/Conversation/ConversationHeader';
+import MessageInput from '../../components/Messenger/MessageInput/MessageInput';
+import NewConversationContent from '../../components/Messenger/Conversation/NewConversationContent';
 import { useEffect, useState } from 'react';
-import { OptimisticMessageObj, UserObj } from '../types';
+import { OptimisticMessageObj, UserObj } from '../../types';
 
 const NewConversationPage = () => {
   const newConversationUser = useLoaderData() as UserObj | undefined;

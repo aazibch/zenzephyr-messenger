@@ -8,6 +8,7 @@ const AuthLogoutWrapper = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!auth) {
+      // submit(null, { action: '/logout', method: 'post' });
       return;
     }
 

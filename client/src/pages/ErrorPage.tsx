@@ -1,7 +1,7 @@
 import { ErrorResponse, useNavigate, useRouteError } from 'react-router-dom';
 import Layout from '../components/UI/Layout';
 import Logo from '../components/UI/Logo';
-import AuthLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
+import AutoLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
 import { clearAuthState } from '../utils/auth';
 import SocketsWrapper from '../components/WebSockets/SocketsWrapper';
 import { useEffect } from 'react';
@@ -13,6 +13,8 @@ const ErrorPage = () => {
   useEffect(() => {
     document.title = `Error | ZephyrMessenger`;
   }, []);
+
+  console.log('[ErrorPage.tsx] error', error);
 
   if (error.status === 401 && error.data === 'You are not logged in.') {
     setTimeout(() => {
@@ -33,7 +35,7 @@ const ErrorPage = () => {
 
   return (
     <SocketsWrapper>
-      <AuthLogoutWrapper>
+      <AutoLogoutWrapper>
         <Layout>
           <div className="flex items-center justify-center max-w-2xl h-full mx-auto">
             <div>
@@ -45,7 +47,7 @@ const ErrorPage = () => {
             </div>
           </div>
         </Layout>
-      </AuthLogoutWrapper>
+      </AutoLogoutWrapper>
     </SocketsWrapper>
   );
 };

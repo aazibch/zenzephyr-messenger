@@ -1,14 +1,15 @@
 import { Form, useRouteLoaderData } from 'react-router-dom';
-import Input from '../components/UI/Input';
-import Button from '../components/UI/Button';
-import ProfileImage from '../components/UI/ProfileImage';
-import { AuthObj } from '../types';
+import Input from '../../components/UI/Input';
+import Button from '../../components/UI/Button';
+import ProfileImage from '../../components/UI/ProfileImage';
+import { AuthObj } from '../../types';
 
 const ProfileSettingsPage = () => {
-  const user = (useRouteLoaderData('root') as AuthObj).user;
+  const auth = useRouteLoaderData('root') as AuthObj;
+  const user = auth.user;
 
   return (
-    <div className="w-full max-w-[40rem] mx-auto mt-20">
+    <div className="w-full max-w-[40rem] mx-auto mt-16">
       <Form
         action="/"
         method="post"

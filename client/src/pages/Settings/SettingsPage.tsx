@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import SettingsSidebar from '../components/Settings/SettingsSidebar/SettingsSidebar';
+import SettingsSidebar from '../../components/Settings/SettingsSidebar/SettingsSidebar';
 import { Outlet } from 'react-router-dom';
 
 const SettingsPage = () => {
