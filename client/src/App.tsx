@@ -20,7 +20,9 @@ import ConversationPage, {
   action as conversationAction
 } from './pages/Conversation/ConversationPage';
 import NoConversationPage from './pages/Conversation/NoConversationPage';
-import SettingsPage from './pages/Settings/SettingsPage';
+import SettingsPage, {
+  action as settingsAction
+} from './pages/Settings/SettingsPage';
 import NoSettingsPage from './pages/Settings/NoSettingsPage';
 import ProfileSettingsPage from './pages/Settings/ProfileSettingsPage';
 
@@ -78,7 +80,9 @@ const router = createBrowserRouter([
       {
         path: 'settings',
         loader: protectLoader,
+        action: settingsAction,
         element: <SettingsPage />,
+        id: 'settings',
         children: [
           { index: true, element: <NoSettingsPage /> },
           { path: 'profile', element: <ProfileSettingsPage /> }

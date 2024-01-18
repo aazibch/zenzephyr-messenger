@@ -1,23 +1,105 @@
-import { Form, useRouteLoaderData } from 'react-router-dom';
+import { useFetcher, useRouteLoaderData } from 'react-router-dom';
 import Input from '../../components/UI/Input';
 import Button from '../../components/UI/Button';
 import ProfileImage from '../../components/UI/ProfileImage';
 import { AuthObj } from '../../types';
+import { useEffect, useRef, useState } from 'react';
 
 const ProfileSettingsPage = () => {
+  const [profileImage, setProfileImage] = useState<string>();
+  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
   const auth = useRouteLoaderData('root') as AuthObj;
-  const user = auth.user;
+  const user = auth?.user;
+  const fetcher = useFetcher();
+  const fullNameInputRef = useRef<HTMLInputElement>(null);
+  const profileImageInputRef = useRef<HTMLInputElement>(null);
+
+  const isLoading =
+    fetcher.state === 'submitting' && fetcher.formAction === '/settings';
+
+  useEffect(() => {
+    if (user) {
+      setProfileImage(user.profileImage);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    let timeoutId: number;
+
+    if (fetcher.data?.statusText === 'success') {
+      setShowSuccessMessage(true);
+
+      timeoutId = setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 1500);
+    } else {
+      setShowSuccessMessage(false);
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [fetcher.data]);
+
+  const fileInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const profileImage = e.target.files?.[0];
+
+    if (profileImage) {
+      const reader = new FileReader();
+
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        if (
+          e.target &&
+          e.target.result &&
+          typeof e.target.result === 'string'
+        ) {
+          const imageUrl: string = e.target.result;
+
+          // Create an Image element to get image dimensions
+          const img = new Image();
+          img.onload = () => {
+            // save to state.
+            setProfileImage(imageUrl);
+          };
+
+          img.src = imageUrl;
+        }
+      };
+
+      reader.readAsDataURL(profileImage);
+    }
+  };
+
+  const formSubmitHandler = (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData();
+
+    const profileImage = profileImageInputRef.current!.files?.[0];
+    const fullName = fullNameInputRef.current!.value;
+
+    if (profileImage) {
+      formData.append('profileImage', profileImage);
+    }
+
+    if (fullName !== user.fullName) {
+      formData.append('fullName', fullName);
+    }
+
+    fetcher.submit(formData, {
+      action: '/settings',
+      method: 'PATCH',
+      encType: 'multipart/form-data'
+    });
+  };
 
   return (
     <div className="w-full max-w-[40rem] mx-auto mt-16">
-      <Form
-        action="/"
-        method="post"
-        encType="application/x-www-form-urlencoded"
-        className="rounded-md"
-      >
+      <form onSubmit={formSubmitHandler}>
         <div className="bg-[#f3f4f6] rounded-md p-4 mb-4 flex justify-between items-center">
-          <ProfileImage size="large" src={user.profileImage} />
+          {profileImage && <ProfileImage size="large" src={profileImage} />}
+
           <label
             className="text-gray-600 bg-white border-gray-300 hover:bg-[#e5e5e5] disabled:hover:bg-white font-inter px-4 py-2 rounded-md text-center disabled:opacity-50 border cursor-pointer"
             htmlFor="profile-image-upload"
@@ -25,6 +107,8 @@ const ProfileSettingsPage = () => {
             Change photo
           </label>
           <input
+            onChange={fileInputChangeHandler}
+            ref={profileImageInputRef}
             id="profile-image-upload"
             className="hidden"
             type="file"
@@ -34,6 +118,7 @@ const ProfileSettingsPage = () => {
           {/* <Button>Change photo</Button> */}
         </div>
         <Input
+          ref={fullNameInputRef}
           label="Full Name"
           input={{
             id: 'fullName',
@@ -55,10 +140,20 @@ const ProfileSettingsPage = () => {
           }}
           message="You cannot change the username."
         />
-        <Button type="submit" styleType="primary">
-          Save
-        </Button>
-      </Form>
+        <div className="flex items-center">
+          <Button
+            className="mr-3"
+            type="submit"
+            styleType="primary"
+            disabled={isLoading}
+          >
+            Save
+          </Button>
+          {showSuccessMessage && (
+            <p className="text-yellow-400 font-semibold">Success!</p>
+          )}
+        </div>
+      </form>
     </div>
   );
 };

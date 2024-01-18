@@ -117,6 +117,7 @@ export const updateMe = catchAsync(
   ) => {
     const { error, value } = updateMeSchema.validate(req.body);
     let toReauthenticate = false;
+    console.log('updateMe', req.file?.image);
 
     let user = await User.findById(req.user._id).select('+password');
 
@@ -144,7 +145,7 @@ export const updateMe = catchAsync(
     } = pick({ ...value }, ['fullName', 'email', 'password']);
 
     if (req.file?.image) {
-      filteredBody.profileImage = req.file.image.url;
+      user.profileImage = req.file.image.url;
     }
 
     if (filteredBody.fullName) {

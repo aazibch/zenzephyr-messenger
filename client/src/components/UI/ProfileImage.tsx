@@ -27,7 +27,7 @@ const ProfileImage = ({
   } = {
     src,
     alt: 'Profile image',
-    className: `rounded-full`
+    className: `rounded-full object-cover h-full w-full`
   };
 
   if (clickHandler) {

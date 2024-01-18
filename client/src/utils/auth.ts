@@ -20,7 +20,6 @@ export const getTokenDuration = () => {
 
 export const protect = () => {
   const isAuth = localStorage.getItem('isAuth');
-  console.log('[protect] isAuth', isAuth);
 
   if (!isAuth) {
     return json({ message: 'Page not found.' }, { status: 404 });
@@ -31,7 +30,6 @@ export const protect = () => {
 
 export const protectLoader = () => {
   const notFoundError = protect();
-  console.log('[protectLoader] notFoundError', notFoundError);
 
   if (notFoundError) throw notFoundError;
 
