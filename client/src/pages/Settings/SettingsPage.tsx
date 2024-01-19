@@ -31,6 +31,7 @@ export const action = async ({ request }: { request: Request }) => {
   const response = await sendHttpRequest(httpConfig);
 
   if (response.statusText === 'success') {
+    console.log('response.data.auth', response.data);
     if (response.data?.auth) {
       setAuthState(response.data?.auth.tokenExpirationDate);
     }

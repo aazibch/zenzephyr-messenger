@@ -115,7 +115,6 @@ const ProfileSettingsPage = () => {
             name="image"
             accept="image/png, image/gif, image/jpeg"
           />
-          {/* <Button>Change photo</Button> */}
         </div>
         <Input
           ref={fullNameInputRef}

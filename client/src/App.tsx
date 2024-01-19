@@ -25,6 +25,7 @@ import SettingsPage, {
 } from './pages/Settings/SettingsPage';
 import NoSettingsPage from './pages/Settings/NoSettingsPage';
 import ProfileSettingsPage from './pages/Settings/ProfileSettingsPage';
+import AccountSettingsPage from './pages/Settings/AccountSettingsPage';
 
 const router = createBrowserRouter([
   {
@@ -85,7 +86,8 @@ const router = createBrowserRouter([
         id: 'settings',
         children: [
           { index: true, element: <NoSettingsPage /> },
-          { path: 'profile', element: <ProfileSettingsPage /> }
+          { path: 'profile', element: <ProfileSettingsPage /> },
+          { path: 'account', element: <AccountSettingsPage /> }
         ]
       },
       {

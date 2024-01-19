@@ -127,10 +127,10 @@ export const updateMe = catchAsync(
       );
 
     if (value.password) {
+      toReauthenticate = true;
       if (
         !(await user.isPasswordCorrect(req.body.currentPassword, user.password))
       ) {
-        toReauthenticate = true;
         return next(
           new AppError('Incorrect value for the current password.', 400)
         );
@@ -163,6 +163,8 @@ export const updateMe = catchAsync(
     await user.save();
     user = user.toObject();
     delete user.password;
+
+    console.log('toReauthenticate', toReauthenticate);
 
     let token;
     if (toReauthenticate) {
