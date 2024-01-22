@@ -6,7 +6,7 @@ const SettingsSidebarHeader = () => {
   const navigate = useNavigate();
 
   const backButtonClickHandler = () => {
-    navigate(-1);
+    navigate('/messenger');
   };
 
   return (
