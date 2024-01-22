@@ -21,6 +21,16 @@ const Conversation = ({
   link
 }: ConversationProps) => {
   let snippetContent: React.ReactElement | string | undefined = snippet;
+  const snippetClasses = [
+    'text-sm',
+    'text-gray-600',
+    'max-w-[18rem]',
+    'truncate'
+  ];
+
+  if (isUnread) {
+    snippetClasses.push('font-bold');
+  }
 
   if (snippetContent === '**[imageIcon] Image**') {
     snippetContent = (
@@ -52,9 +62,7 @@ const Conversation = ({
           </div>
 
           {snippet && (
-            <div className="text-sm text-gray-600 max-w-[18rem] truncate">
-              {snippetContent}
-            </div>
+            <div className={snippetClasses.join(' ')}>{snippetContent}</div>
           )}
         </div>
         {isUnread && (
