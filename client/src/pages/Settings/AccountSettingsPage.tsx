@@ -3,6 +3,8 @@ import Button from '../../components/UI/Button';
 import Input from '../../components/UI/Input';
 import { AuthObj, HttpResponseDataObj } from '../../types';
 import { useEffect, useRef, useState } from 'react';
+import EmailForm from '../../components/Settings/AccountSettings/EmailForm';
+import PasswordForm from '../../components/Settings/AccountSettings/PasswordForm';
 
 const AccountSettingsPage = () => {
   const [responseData, setResponseData] = useState<HttpResponseDataObj>();
@@ -14,10 +16,6 @@ const AccountSettingsPage = () => {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>();
   const user = (useRouteLoaderData('root') as AuthObj).user;
   const fetcher = useFetcher();
-  const emailInputRef = useRef<HTMLInputElement>(null);
-  const currentPasswordRef = useRef<HTMLInputElement>(null);
-  const newPasswordRef = useRef<HTMLInputElement>(null);
-  const newPasswordConfirmationRef = useRef<HTMLInputElement>(null);
 
   const isLoading =
     fetcher.state === 'submitting' && fetcher.formAction === '/settings';
@@ -78,13 +76,10 @@ const AccountSettingsPage = () => {
     };
   }, [submittedEmailForm, submittedPasswordForm, responseData]);
 
-  const emailFormSubmitHandler = (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitNewEmail = (email: string) => {
     const formData = new FormData();
 
-    const email = emailInputRef.current!.value;
-
-    if (email !== user.fullName) {
+    if (email !== user.email) {
       formData.append('email', email);
     }
 
@@ -98,13 +93,12 @@ const AccountSettingsPage = () => {
     setSubmittedEmailForm(true);
   };
 
-  const passwordFormSubmitHandler = (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitNewPassword = (
+    currentPassword: string,
+    newPassword: string,
+    newPasswordConfirmation: string
+  ) => {
     const formData = new FormData();
-
-    const currentPassword = currentPasswordRef.current!.value;
-    const newPassword = newPasswordRef.current!.value;
-    const newPasswordConfirmation = newPasswordConfirmationRef.current!.value;
 
     formData.append('currentPassword', currentPassword);
     formData.append('newPassword', newPassword);
@@ -115,10 +109,6 @@ const AccountSettingsPage = () => {
       method: 'PATCH',
       encType: 'multipart/form-data'
     });
-
-    currentPasswordRef.current!.value = '';
-    newPasswordRef.current!.value = '';
-    newPasswordConfirmationRef.current!.value = '';
 
     setSubmittedEmailForm(false);
     setSubmittedPasswordForm(true);
@@ -134,95 +124,20 @@ const AccountSettingsPage = () => {
 
   return (
     <div className="w-full max-w-[40rem] mx-auto mt-16">
-      <form
-        onChange={emailFormChangeHandler}
-        onSubmit={emailFormSubmitHandler}
-        className="mb-8"
-      >
-        <h3 className="text-lg font-semibold mb-4">Change the Email Address</h3>
-        <Input
-          label="Email"
-          ref={emailInputRef}
-          className="mb-5"
-          input={{
-            id: 'email',
-            type: 'email',
-            name: 'email',
-            defaultValue: user.email
-          }}
-        />
-        <div className="flex items-center">
-          <Button
-            className="mr-3"
-            type="submit"
-            styleType="primary"
-            disabled={isLoading}
-          >
-            Save
-          </Button>
-          {showSuccessMessage && submittedEmailForm && (
-            <p className="text-yellow-400 font-semibold">Success!</p>
-          )}
-          {emailErrorMessage && (
-            <p className="text-red-500 font-semibold">{emailErrorMessage}</p>
-          )}
-        </div>
-      </form>
-      <form
-        onChange={passwordFormChangeHandler}
-        onSubmit={passwordFormSubmitHandler}
-      >
-        <h3
-          onSubmit={passwordFormSubmitHandler}
-          className="text-lg font-semibold mb-4"
-        >
-          Change the Password
-        </h3>
-        <Input
-          label="Current Password"
-          ref={currentPasswordRef}
-          input={{
-            id: 'currentPassword',
-            type: 'password',
-            name: 'currentPassword'
-          }}
-        />
-        <Input
-          label="New Password"
-          ref={newPasswordRef}
-          input={{
-            id: 'newPassword',
-            type: 'password',
-            name: 'newPassword'
-          }}
-        />
-        <Input
-          label="New Password Confirmation"
-          className="mb-5"
-          ref={newPasswordConfirmationRef}
-          input={{
-            id: 'newPasswordConfirmation',
-            type: 'password',
-            name: 'newPasswordConfirmation'
-          }}
-        />
-        <div className="flex items-center">
-          <Button
-            className="mr-3"
-            type="submit"
-            styleType="primary"
-            disabled={isLoading}
-          >
-            Save
-          </Button>
-          {showSuccessMessage && submittedPasswordForm && (
-            <p className="text-yellow-400 font-semibold">Success!</p>
-          )}
-          {passwordErrorMessage && (
-            <p className="text-red-500 font-semibold">{passwordErrorMessage}</p>
-          )}
-        </div>
-      </form>
+      <EmailForm
+        showSuccessMessage={showSuccessMessage && submittedEmailForm}
+        errorMessage={emailErrorMessage}
+        isLoading={isLoading}
+        submitNewEmail={submitNewEmail}
+        emailFormChangeHandler={emailFormChangeHandler}
+      />
+      <PasswordForm
+        showSuccessMessage={showSuccessMessage && submittedPasswordForm}
+        errorMessage={passwordErrorMessage}
+        isLoading={isLoading}
+        submitNewPassword={submitNewPassword}
+        passwordFormChangeHandler={passwordFormChangeHandler}
+      />
     </div>
   );
 };
