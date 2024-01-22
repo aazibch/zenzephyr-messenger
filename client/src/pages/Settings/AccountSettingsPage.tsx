@@ -103,12 +103,12 @@ const AccountSettingsPage = () => {
     const formData = new FormData();
 
     const currentPassword = currentPasswordRef.current!.value;
-    const password = newPasswordRef.current!.value;
-    const passwordConfirmation = newPasswordConfirmationRef.current!.value;
+    const newPassword = newPasswordRef.current!.value;
+    const newPasswordConfirmation = newPasswordConfirmationRef.current!.value;
 
     formData.append('currentPassword', currentPassword);
-    formData.append('password', password);
-    formData.append('passwordConfirmation', passwordConfirmation);
+    formData.append('newPassword', newPassword);
+    formData.append('newPasswordConfirmation', newPasswordConfirmation);
 
     fetcher.submit(formData, {
       action: '/settings',
@@ -193,7 +193,7 @@ const AccountSettingsPage = () => {
           input={{
             id: 'newPassword',
             type: 'password',
-            name: 'password'
+            name: 'newPassword'
           }}
         />
         <Input
@@ -203,7 +203,7 @@ const AccountSettingsPage = () => {
           input={{
             id: 'newPasswordConfirmation',
             type: 'password',
-            name: 'passwordConfirmation'
+            name: 'newPasswordConfirmation'
           }}
         />
         <div className="flex items-center">

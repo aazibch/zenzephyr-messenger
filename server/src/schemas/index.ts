@@ -125,19 +125,29 @@ export const updateMeSchema = Joi.object({
       'string.max': generateValidationMessage('max', 'email address', 50),
       'string.email': generateValidationMessage('email')
     }),
-  password: Joi.string()
+  currentPassword: Joi.string()
+    // .when('newPassword', {
+    //   is: Joi.exist(),
+    //   then: Joi.string().required()
+    // })
+    .messages({
+      'any.required': generateValidationMessage('required', 'current password'),
+      'string.empty': generateValidationMessage('required', 'current password')
+    }),
+  newPassword: Joi.string()
+    .when('currentPassword', {
+      is: Joi.exist(),
+      then: Joi.string().required()
+    })
     .min(8)
     .messages({
-      'string.min': generateValidationMessage('min', 'password', 8)
+      'string.min': generateValidationMessage('min', 'new password', 8),
+      'string.empty': generateValidationMessage('required', 'new password')
     }),
-  currentPassword: Joi.string().when('password', {
-    is: Joi.exist(),
-    then: Joi.string().required(),
-    otherwise: Joi.string().forbidden()
-  }),
-  passwordConfirmation: Joi.string()
-    .valid(Joi.ref('password'))
-    .when('password', {
+
+  newPasswordConfirmation: Joi.string()
+    .valid(Joi.ref('newPassword'))
+    .when('newPassword', {
       is: Joi.exist(),
       then: Joi.string().required(),
       otherwise: Joi.string().forbidden()
@@ -145,8 +155,8 @@ export const updateMeSchema = Joi.object({
     .messages({
       'any.required': generateValidationMessage(
         'required',
-        'password confirmation'
+        'new password confirmation'
       ),
-      'any.only': generateValidationMessage('passwordConfirmation')
+      'any.only': generateValidationMessage('newPasswordConfirmation')
     })
 });

@@ -29,6 +29,10 @@ export const generateValidationMessage = (
     return 'The passwords do not match.';
   }
 
+  if (type === 'newPasswordConfirmation') {
+    return 'The new passwords do not match.';
+  }
+
   if (type === 'only') {
     if (Array.isArray(restriction)) {
       const updatedRestriction = restriction.map((elem) => `"${elem}"`);

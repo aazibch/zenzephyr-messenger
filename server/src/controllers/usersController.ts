@@ -117,7 +117,6 @@ export const updateMe = catchAsync(
   ) => {
     const { error, value } = updateMeSchema.validate(req.body);
     let toReauthenticate = false;
-    console.log('updateMe', req.file?.image);
 
     let user = await User.findById(req.user._id).select('+password');
 
@@ -126,7 +125,7 @@ export const updateMe = catchAsync(
         new AppError(error.details[0].message, StatusCodes.BAD_REQUEST)
       );
 
-    if (value.password) {
+    if (value.newPassword) {
       toReauthenticate = true;
       if (
         !(await user.isPasswordCorrect(req.body.currentPassword, user.password))
@@ -141,8 +140,8 @@ export const updateMe = catchAsync(
       fullName?: string;
       profileImage?: string;
       email?: string;
-      password?: string;
-    } = pick({ ...value }, ['fullName', 'email', 'password']);
+      newPassword?: string;
+    } = pick({ ...value }, ['fullName', 'email', 'newPassword']);
 
     if (req.file?.image) {
       user.profileImage = req.file.image.url;
@@ -156,15 +155,13 @@ export const updateMe = catchAsync(
       user.email = filteredBody.email;
     }
 
-    if (filteredBody.password) {
-      user.password = filteredBody.password;
+    if (filteredBody.newPassword) {
+      user.password = filteredBody.newPassword;
     }
 
     await user.save();
     user = user.toObject();
     delete user.password;
-
-    console.log('toReauthenticate', toReauthenticate);
 
     let token;
     if (toReauthenticate) {
@@ -186,19 +183,6 @@ export const updateMe = catchAsync(
     });
   }
 );
-
-// export const updateMyPassword = catchAsync(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-//   const user = await User.findById(req.user._id).select('+password');
-
-//   if (
-//     !(await user.isPasswordCorrect(req.body.currentPassword, user.password))
-//   ) {
-//     return next(new AppError('Incorrect value for the current password.', StatusCodes.BAD_REQUEST));
-//   }
-
-//   user.password = req.body.password;
-//   user.pass
-// });
 
 export const blockUser = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
