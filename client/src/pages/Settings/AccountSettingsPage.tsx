@@ -1,8 +1,6 @@
 import { useFetcher, useRouteLoaderData } from 'react-router-dom';
-import Button from '../../components/UI/Button';
-import Input from '../../components/UI/Input';
 import { AuthObj, HttpResponseDataObj } from '../../types';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import EmailForm from '../../components/Settings/AccountSettings/EmailForm';
 import PasswordForm from '../../components/Settings/AccountSettings/PasswordForm';
 
