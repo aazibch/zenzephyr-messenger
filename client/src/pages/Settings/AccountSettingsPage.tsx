@@ -10,6 +10,8 @@ const AccountSettingsPage = () => {
   const [submittedPasswordForm, setSubmittedPasswordForm] =
     useState<boolean>(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState<string>();
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>();
   const user = (useRouteLoaderData('root') as AuthObj).user;
   const fetcher = useFetcher();
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -24,6 +26,18 @@ const AccountSettingsPage = () => {
     if (fetcher.data?.statusText === 'success') {
       setResponseData(fetcher.data);
     }
+
+    if (fetcher.data?.statusText === 'failure') {
+      if (submittedEmailForm) {
+        setEmailErrorMessage(fetcher.data.message);
+        setSubmittedEmailForm(false);
+      }
+
+      if (submittedPasswordForm) {
+        setPasswordErrorMessage(fetcher.data.message);
+        setSubmittedPasswordForm(false);
+      }
+    }
   }, [fetcher.data]);
 
   useEffect(() => {
@@ -31,6 +45,14 @@ const AccountSettingsPage = () => {
 
     if (submittedEmailForm || submittedPasswordForm) {
       if (responseData) {
+        if (submittedEmailForm) {
+          setEmailErrorMessage(undefined);
+        }
+
+        if (submittedPasswordForm) {
+          setPasswordErrorMessage(undefined);
+        }
+
         setShowSuccessMessage(true);
 
         timeoutId = setTimeout(() => {
@@ -72,6 +94,7 @@ const AccountSettingsPage = () => {
       encType: 'multipart/form-data'
     });
 
+    setSubmittedPasswordForm(false);
     setSubmittedEmailForm(true);
   };
 
@@ -97,12 +120,25 @@ const AccountSettingsPage = () => {
     newPasswordRef.current!.value = '';
     newPasswordConfirmationRef.current!.value = '';
 
+    setSubmittedEmailForm(false);
     setSubmittedPasswordForm(true);
+  };
+
+  const emailFormChangeHandler = () => {
+    setEmailErrorMessage(undefined);
+  };
+
+  const passwordFormChangeHandler = () => {
+    setPasswordErrorMessage(undefined);
   };
 
   return (
     <div className="w-full max-w-[40rem] mx-auto mt-16">
-      <form onSubmit={emailFormSubmitHandler} className="mb-8">
+      <form
+        onChange={emailFormChangeHandler}
+        onSubmit={emailFormSubmitHandler}
+        className="mb-8"
+      >
         <h3 className="text-lg font-semibold mb-4">Change the Email Address</h3>
         <Input
           label="Email"
@@ -127,9 +163,15 @@ const AccountSettingsPage = () => {
           {showSuccessMessage && submittedEmailForm && (
             <p className="text-yellow-400 font-semibold">Success!</p>
           )}
+          {emailErrorMessage && (
+            <p className="text-red-500 font-semibold">{emailErrorMessage}</p>
+          )}
         </div>
       </form>
-      <form onSubmit={passwordFormSubmitHandler}>
+      <form
+        onChange={passwordFormChangeHandler}
+        onSubmit={passwordFormSubmitHandler}
+      >
         <h3
           onSubmit={passwordFormSubmitHandler}
           className="text-lg font-semibold mb-4"
@@ -175,6 +217,9 @@ const AccountSettingsPage = () => {
           </Button>
           {showSuccessMessage && submittedPasswordForm && (
             <p className="text-yellow-400 font-semibold">Success!</p>
+          )}
+          {passwordErrorMessage && (
+            <p className="text-red-500 font-semibold">{passwordErrorMessage}</p>
           )}
         </div>
       </form>

@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 const ProfileSettingsPage = () => {
   const [profileImage, setProfileImage] = useState<string>();
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>();
   const auth = useRouteLoaderData('root') as AuthObj;
   const user = auth?.user;
   const fetcher = useFetcher();
@@ -32,8 +33,15 @@ const ProfileSettingsPage = () => {
       timeoutId = setTimeout(() => {
         setShowSuccessMessage(false);
       }, 1500);
-    } else {
+    }
+
+    if (fetcher.data?.statusText === 'failure') {
       setShowSuccessMessage(false);
+      setErrorMessage(fetcher.data.message);
+
+      // timeoutId = setTimeout(() => {
+      //   setErrorMessage(undefined);
+      // }, 1500);
     }
 
     return () => {
@@ -94,9 +102,13 @@ const ProfileSettingsPage = () => {
     });
   };
 
+  const formChangeHandler = () => {
+    setErrorMessage(undefined);
+  };
+
   return (
     <div className="w-full max-w-[40rem] mx-auto mt-16">
-      <form onSubmit={formSubmitHandler}>
+      <form onChange={formChangeHandler} onSubmit={formSubmitHandler}>
         <div className="bg-[#f3f4f6] rounded-md p-4 mb-4 flex justify-between items-center">
           {profileImage && <ProfileImage size="large" src={profileImage} />}
 
@@ -150,6 +162,9 @@ const ProfileSettingsPage = () => {
           </Button>
           {showSuccessMessage && (
             <p className="text-yellow-400 font-semibold">Success!</p>
+          )}
+          {errorMessage && (
+            <p className="text-red-500 font-semibold">{errorMessage}</p>
           )}
         </div>
       </form>

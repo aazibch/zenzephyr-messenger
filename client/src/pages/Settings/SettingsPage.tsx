@@ -39,6 +39,10 @@ export const action = async ({ request }: { request: Request }) => {
     return response;
   }
 
+  if (response.statusText === 'failure') {
+    return response;
+  }
+
   throw json(response.message, { status: response.status });
 };
 
