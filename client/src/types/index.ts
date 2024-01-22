@@ -90,3 +90,8 @@ export interface AuthObj {
   tokenDuration: number;
   user: UserObj;
 }
+
+export interface AuthFormComponentProps {
+  formChangeHandler: () => void;
+  errorMessage?: string;
+}

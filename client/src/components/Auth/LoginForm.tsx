@@ -1,11 +1,13 @@
-import { useNavigation, Form, useActionData } from 'react-router-dom';
+import { useNavigation, Form } from 'react-router-dom';
 import Input from '../UI/Input';
 import Button from '../UI/Button';
-import { HttpResponseDataObj } from '../../types';
+import { AuthFormComponentProps } from '../../types';
 
-const LoginForm = () => {
+const LoginForm = ({
+  formChangeHandler,
+  errorMessage
+}: AuthFormComponentProps) => {
   const navigation = useNavigation();
-  const actionData = useActionData() as HttpResponseDataObj | undefined;
 
   const isLoading =
     navigation.state === 'submitting' &&
@@ -15,13 +17,14 @@ const LoginForm = () => {
 
   return (
     <Form
+      onChange={formChangeHandler}
       action="/"
       method="post"
       encType="application/x-www-form-urlencoded"
       className="rounded-md"
     >
-      {actionData?.message && (
-        <p className="mb-5 text-red-500 text-center">{actionData.message}</p>
+      {errorMessage && (
+        <p className="mb-5 text-red-500 text-center">{errorMessage}</p>
       )}
       <Input
         label="Email"
