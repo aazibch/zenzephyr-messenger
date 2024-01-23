@@ -3,13 +3,16 @@ import {
   useLoaderData,
   useSubmit,
   useNavigation,
-  useRouteLoaderData
+  useRouteLoaderData,
+  useNavigate
 } from 'react-router-dom';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 
 import { MessagesObj, UserObj } from '../../../types';
 import DialogModal from '../../UI/Modals/DialogModal';
 import DropdownMenu from '../../UI/DropdownMenu';
+import { IoIosArrowBack } from 'react-icons/io';
+import Button from '../../UI/Button';
 
 interface ConversationHeaderProps {
   isBlockedByMe?: boolean;
@@ -25,6 +28,7 @@ const ConversationHeader = ({ isBlockedByMe }: ConversationHeaderProps) => {
   const newConversationUser = useRouteLoaderData('new-conversation') as
     | UserObj
     | undefined;
+  const navigate = useNavigate();
 
   const isLoading =
     navigation.state === 'submitting' &&
@@ -129,9 +133,20 @@ const ConversationHeader = ({ isBlockedByMe }: ConversationHeaderProps) => {
     fullName = messagesData.otherParticipant.fullName;
   }
 
+  const backButtonClickHandler = () => {
+    navigate('/messenger');
+  };
+
   return (
     <div className="flex border-b border-gray-300 h-14 shrink-0 items-center px-4">
       {modalElement}
+      <Button
+        onClick={backButtonClickHandler}
+        iconButton
+        className="mr-3 md:hidden"
+      >
+        <IoIosArrowBack size="1.25em" />
+      </Button>
       <h2>{fullName}</h2>
       {!newConversationUser && (
         <div className="ml-auto">

@@ -103,9 +103,11 @@ const Message = ({
         )}
         <div className={messageClassNames}>{messageContentElement}</div>
       </div>
-      <span className={metaClassNames}>
-        {isOptimistic ? 'Sending...' : formattedTimestamp}
-      </span>
+      {(isOptimistic || timestamp) && (
+        <span className={metaClassNames}>
+          {isOptimistic ? 'Sending...' : formattedTimestamp}
+        </span>
+      )}
     </div>
   );
 };

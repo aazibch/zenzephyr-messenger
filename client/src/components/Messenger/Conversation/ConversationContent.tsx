@@ -20,6 +20,15 @@ interface ConversationContentProps {
   optimisticMessages: OptimisticMessageObj[];
 }
 
+const getTimeDifference = (
+  currentTimestamp: string,
+  previousTimestamp: string
+): number => {
+  const current = new Date(currentTimestamp).getTime();
+  const previous = new Date(previousTimestamp).getTime();
+  return current - previous;
+};
+
 const ConversationContent = ({
   optimisticMessages
 }: ConversationContentProps) => {
@@ -134,16 +143,32 @@ const ConversationContent = ({
   let messagesContent;
 
   if (messages.length !== 0) {
-    messagesContent = messages.map((elem) => {
-      return (
-        <Message
-          key={elem._id}
-          byLoggedInUser={elem.sender.toString() === user._id}
-          messageContent={elem.contentProps}
-          timestamp={elem.createdAt}
-          attachedImageClickHandler={attachedImageClickHandler}
-        />
-      );
+    messagesContent = messages.map((elem, index) => {
+      if (
+        index === 0 ||
+        getTimeDifference(elem.createdAt, messages[index - 1].createdAt) >
+          60000 ||
+        index === messages.length - 1
+      ) {
+        return (
+          <Message
+            key={elem._id}
+            byLoggedInUser={elem.sender.toString() === user._id}
+            messageContent={elem.contentProps}
+            timestamp={elem.createdAt}
+            attachedImageClickHandler={attachedImageClickHandler}
+          />
+        );
+      } else {
+        return (
+          <Message
+            key={elem._id}
+            byLoggedInUser={elem.sender.toString() === user._id}
+            messageContent={elem.contentProps}
+            attachedImageClickHandler={attachedImageClickHandler}
+          />
+        );
+      }
     });
   }
 

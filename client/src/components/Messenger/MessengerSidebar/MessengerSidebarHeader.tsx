@@ -21,7 +21,6 @@ const SidebarHeader = () => {
   );
   const auth = useRouteLoaderData('root') as AuthObj;
   const location = useLocation();
-  // const fetcher = useFetcher();
   const submit = useSubmit();
 
   useEffect(() => {

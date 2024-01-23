@@ -1,9 +1,11 @@
-import ProfileSettingsForm from '../../components/Settings/ProfileSettings/ProfileSettingsForm/ProfileSettingsForm';
+import ProfileSettingsContent from '../../components/Settings/ProfileSettings/ProfileSettingsContent';
+import ProfileSettingsHeader from '../../components/Settings/ProfileSettings/ProfileSettingsHeader';
 
 const ProfileSettingsPage = () => {
   return (
-    <div className="w-full max-w-[40rem] mx-auto mt-16">
-      <ProfileSettingsForm />
+    <div className="flex-grow">
+      <ProfileSettingsHeader />
+      <ProfileSettingsContent />
     </div>
   );
 };
