@@ -1,29 +1,14 @@
-import { useMatch } from 'react-router-dom';
+import SidebarContainer from '../../UI/SidebarContainer';
 import Conversations from './Conversations/Conversations';
-import SidebarHeader from './MessengerSidebarHeader';
+import MessengerSidebarHeader from './MessengerSidebarHeader';
 
-const Sidebar = () => {
-  const sidebarClasses = [
-    'grow',
-    'border-r',
-    'border-gray-300',
-    'h-full',
-    'flex-col',
-    'md:basis-[25rem]',
-    'md:grow-0'
-  ];
-
-  if (useMatch('/messenger/*') && !useMatch('/messenger/')) {
-    sidebarClasses.push('hidden');
-    sidebarClasses.push('md:block');
-  }
-
+const MessengerSidebar = () => {
   return (
-    <div className={sidebarClasses.join(' ')}>
-      <SidebarHeader />
+    <SidebarContainer routeHiddenOn="/messenger/*">
+      <MessengerSidebarHeader />
       <Conversations />
-    </div>
+    </SidebarContainer>
   );
 };
 
-export default Sidebar;
+export default MessengerSidebar;
