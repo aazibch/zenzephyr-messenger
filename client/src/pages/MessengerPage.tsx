@@ -10,6 +10,10 @@ const MessengerPage = () => {
   const revalidator = useRevalidator();
 
   useEffect(() => {
+    document.title = 'ZephyrMessenger - Connect with your favorite people';
+  }, []);
+
+  useEffect(() => {
     const onChatMessage = () => {
       console.log('new chat message');
       if (revalidator.state === 'idle') {

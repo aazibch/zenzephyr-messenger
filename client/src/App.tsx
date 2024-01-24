@@ -90,12 +90,6 @@ const router = createBrowserRouter([
           { path: 'account', element: <AccountSettingsPage /> }
         ]
       },
-      {
-        path: 'test',
-        loader: () => {
-          throw new Error('Something is not right');
-        }
-      },
       { path: 'logout', loader: protectLoader, action: logoutAction }
     ]
   }
