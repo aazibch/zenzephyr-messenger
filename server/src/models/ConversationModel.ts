@@ -2,7 +2,7 @@ import mongoose, { ObjectId } from 'mongoose';
 import { IConversation } from '../types';
 
 const checkIfValidParticipant = function (val: ObjectId) {
-  return this.otherUsers.includes(val);
+  return this.participants.includes(val);
 };
 
 const checkIfValidNumOfParticipants = function (val: ObjectId[]) {
@@ -10,7 +10,7 @@ const checkIfValidNumOfParticipants = function (val: ObjectId[]) {
 };
 
 const conversationSchema = new mongoose.Schema<IConversation>({
-  otherUsers: {
+  participants: {
     type: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -19,7 +19,7 @@ const conversationSchema = new mongoose.Schema<IConversation>({
     ],
     validate: [
       checkIfValidNumOfParticipants,
-      'There must be 2 otherUsers in a conversation.'
+      'There must be 2 participants in a conversation.'
     ],
     required: true
   },

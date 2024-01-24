@@ -16,7 +16,7 @@ import { ObjectId } from 'mongoose';
 export const getConversations = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const conversations = await Conversation.find({
-      otherUsers: {
+      participants: {
         $in: [req.user._id]
       },
       deletedBy: {
@@ -27,7 +27,7 @@ export const getConversations = catchAsync(
     const otherUsersIds: Promise<IUser>[] = [];
 
     conversations.forEach((elem) => {
-      const otherUser = elem.otherUsers.find(
+      const otherUser = elem.participants.find(
         (participantId: ObjectId) =>
           participantId.toString() !== req.user._id.toString()
       );
@@ -36,19 +36,17 @@ export const getConversations = catchAsync(
 
     const otherUsers = await Promise.all(otherUsersIds);
 
-    const conversationsWithOtherParticipants = conversations.map(
-      (elem, index) => {
-        const conversation: Record<string, any> = { ...elem.toObject() };
+    const conversationsWithOtherUsers = conversations.map((elem, index) => {
+      const conversation: Record<string, any> = { ...elem.toObject() };
 
-        conversation.otherUser = otherUsers[index];
-        return conversation;
-      }
-    );
+      conversation.otherUser = otherUsers[index];
+      return conversation;
+    });
 
     res.status(StatusCodes.OK).json({
       status: 'success',
       data: {
-        conversations: conversationsWithOtherParticipants
+        conversations: conversationsWithOtherUsers
       }
     });
   }
@@ -91,7 +89,7 @@ export const createConversation = catchAsync(
     }
 
     const existingConversation = await Conversation.findOne({
-      otherUsers: { $all: [req.user._id, req.body.recipient] },
+      participants: { $all: [req.user._id, req.body.recipient] },
       isBlocked: false
     });
 
@@ -105,7 +103,7 @@ export const createConversation = catchAsync(
 
     if (!existingConversation && !blocked) {
       const conversationBody = {
-        otherUsers: [req.user._id, req.body.recipient],
+        participants: [req.user._id, req.body.recipient],
         startedBy: req.user._id,
         unreadBy: req.body.recipient
       };
@@ -217,7 +215,7 @@ export const deleteConversation = catchAsync(
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const conversation = await Conversation.findOne({
       _id: req.params.id,
-      otherUsers: {
+      participants: {
         $in: [req.user._id]
       }
     });
@@ -227,7 +225,7 @@ export const deleteConversation = catchAsync(
         new AppError('Conversation not found.', StatusCodes.NOT_FOUND)
       );
 
-    const recipientId = conversation.otherUsers.find(
+    const recipientId = conversation.participants.find(
       (val) => val.toString() !== req.user._id.toString()
     );
 

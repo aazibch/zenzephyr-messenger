@@ -25,7 +25,7 @@ const ConversationContainer = () => {
   const [optimisticMessages, setOptimisticMessages] = useState<
     OptimisticMessageObj[]
   >([]);
-  const user = (useRouteLoaderData('root') as AuthObj).user;
+  const user = (useRouteLoaderData('root') as AuthObj).authenticatedUser;
   const messengerCtx = useContext(MessengerContext);
   const activeConversation = conversationsData.find(
     (elem) => elem._id === params.id
@@ -38,7 +38,7 @@ const ConversationContainer = () => {
     isBlockedByMe = false;
   } else {
     isBlockedByMe = user.blockedUsers.includes(
-      activeConversation!.otherParticipant._id.toString()
+      activeConversation!.otherUser._id.toString()
     );
   }
 
@@ -68,20 +68,6 @@ const ConversationContainer = () => {
       if (socketUser) {
         socket.emit('updateUser', user._id, null, user.connections);
       }
-    };
-  }, []);
-
-  useEffect(() => {
-    const onBlockedOrUnblocked = () => {
-      if (revalidator.state === 'idle') {
-        revalidator.revalidate();
-      }
-    };
-
-    socket.on('blockedOrUnblocked', onBlockedOrUnblocked);
-
-    return () => {
-      socket.off('blockedOrUnblocked', onBlockedOrUnblocked);
     };
   }, []);
 

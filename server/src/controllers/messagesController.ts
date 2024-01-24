@@ -43,7 +43,7 @@ export const getMessages = catchAsync(
         new AppError('Conversation not found.', StatusCodes.NOT_FOUND)
       );
 
-    const otherUserId = conversation.otherUsers.find(
+    const otherUserId = conversation.participants.find(
       (participantId: ObjectId) =>
         participantId.toString() !== req.user._id.toString()
     );
@@ -71,7 +71,7 @@ export const createMessage = catchAsync(
 
     const conversation = await Conversation.findOne({
       _id: conversationId,
-      otherUsers: {
+      participants: {
         $in: [req.user._id]
       },
       isBlocked: false
@@ -82,13 +82,13 @@ export const createMessage = catchAsync(
         new AppError('Conversation not found.', StatusCodes.NOT_FOUND)
       );
 
-    const recipient = conversation.otherUsers.find(
+    const otherUser = conversation.participants.find(
       (element) => element.toString() !== req.user._id.toString()
     );
 
     if (req.body.unread) {
       await Conversation.findByIdAndUpdate(conversation._id, {
-        unreadBy: recipient
+        unreadBy: otherUser
       });
     }
 
@@ -126,7 +126,7 @@ export const createMessage = catchAsync(
 
     const messageBody = {
       conversation: conversationId,
-      recipient,
+      recipient: otherUser,
       sender: req.user._id,
       contentProps
     };

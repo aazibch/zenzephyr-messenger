@@ -10,7 +10,7 @@ const ProfileSettingsForm = () => {
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>();
   const auth = useRouteLoaderData('root') as AuthObj;
-  const user = auth?.user;
+  const user = auth?.authenticatedUser;
   const fetcher = useFetcher();
   const fullNameInputRef = useRef<HTMLInputElement>(null);
   const profileImageInputRef = useRef<HTMLInputElement>(null);

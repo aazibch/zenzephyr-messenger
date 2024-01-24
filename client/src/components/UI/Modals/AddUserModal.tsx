@@ -25,14 +25,14 @@ const AddUserModal = ({ dismissHandler }: AddUserModalProps) => {
     // User is sent with id only when the status is 'blockedByYou.'
     // This is because we need the id for the unblock button.
     if (
-      fetcher.data?.recipientUser &&
-      fetcher.data?.recipientUserStatus !== 'blockedByYou'
+      fetcher.data?.otherUser &&
+      fetcher.data?.otherUserStatus !== 'blockedByYou'
     ) {
-      setFoundUser(fetcher.data.recipientUser);
+      setFoundUser(fetcher.data.otherUser);
 
       if (
         fetcher.formAction === '/messenger/:id' &&
-        fetcher.data.recipientUser._id === toUnblockUserId
+        fetcher.data.otherUser._id === toUnblockUserId
       ) {
         setToUnblockUserId(undefined);
         setErrorMessage(undefined);
@@ -41,27 +41,27 @@ const AddUserModal = ({ dismissHandler }: AddUserModalProps) => {
     }
 
     if (
-      fetcher.data?.recipientUser === null ||
-      fetcher.data?.recipientUserStatus === 'blockedByYou'
+      fetcher.data?.otherUser === null ||
+      fetcher.data?.otherUserStatus === 'blockedByYou'
     ) {
       setFoundUser(null);
     }
 
-    if (fetcher.data?.recipientUserStatus === 'blockedByYou') {
-      setToUnblockUserId(fetcher.data.recipientUser._id);
+    if (fetcher.data?.otherUserStatus === 'blockedByYou') {
+      setToUnblockUserId(fetcher.data.otherUser._id);
     }
 
-    if (fetcher.data?.recipientUserStatus === 'existingConversation') {
+    if (fetcher.data?.otherUserStatus === 'existingConversation') {
       setErrorMessage(
         'There is already an existing conversation with this user.'
       );
     }
 
-    if (fetcher.data?.recipientUserStatus === 'blockedByOther') {
+    if (fetcher.data?.otherUserStatus === 'blockedByOther') {
       setErrorMessage('You have been blocked by this user.');
     }
 
-    if (fetcher.data?.recipientUserStatus === 'blockedByYou') {
+    if (fetcher.data?.otherUserStatus === 'blockedByYou') {
       setErrorMessage('You have blocked this user.');
       setShowUnblockButton(true);
     }

@@ -6,6 +6,7 @@ import MessageInput from '../../components/Messenger/MessageInput/MessageInput';
 import NewConversationContent from '../../components/Messenger/Conversation/NewConversationContent';
 import { useEffect, useState } from 'react';
 import { OptimisticMessageObj, UserObj } from '../../types';
+import socket from '../../services/socket';
 
 const NewConversationPage = () => {
   const newConversationUser = useLoaderData() as UserObj | undefined;
@@ -45,11 +46,11 @@ export const loader = async ({ request }: { request: Request }) => {
 
   const response = await sendHttpRequest(httpConfig);
 
-  if (response.statusText === 'success' && response.data!.recipientUser) {
-    return response.data!.recipientUser;
+  if (response.statusText === 'success' && response.data!.otherUser) {
+    return response.data!.otherUser;
   }
 
-  if (response.statusText === 'success' && !response.data!.user) {
+  if (response.statusText === 'success' && !response.data!.authenticatedUser) {
     throw json('User not found.', { status: 404 });
   }
 
@@ -75,6 +76,7 @@ export const action = async ({ request }: { request: Request }) => {
     const response = await sendHttpRequest(httpConfig);
 
     if (response.statusText === 'success') {
+      socket.emit('sendMessage', response.data!.message);
       return redirect(`/messenger/${response.data!.conversation._id}`);
     }
 

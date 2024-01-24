@@ -3,7 +3,7 @@ import Layout from '../components/UI/Layout';
 import Logo from '../components/UI/Logo';
 import AutoLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
 import { clearAuthState } from '../utils/auth';
-import SocketsWrapper from '../components/WebSockets/SocketsWrapper';
+import SocketWrapper from '../components/WebSockets/SocketWrapper';
 import { useEffect } from 'react';
 
 const ErrorPage = () => {
@@ -34,7 +34,7 @@ const ErrorPage = () => {
   }
 
   return (
-    <SocketsWrapper>
+    <SocketWrapper>
       <AutoLogoutWrapper>
         <Layout>
           <div className="flex items-center justify-center max-w-2xl h-full mx-auto">
@@ -48,7 +48,7 @@ const ErrorPage = () => {
           </div>
         </Layout>
       </AutoLogoutWrapper>
-    </SocketsWrapper>
+    </SocketWrapper>
   );
 };
 

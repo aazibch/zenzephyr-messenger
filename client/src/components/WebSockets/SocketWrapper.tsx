@@ -6,7 +6,7 @@ import MessengerContext from '../../store/messenger-context';
 
 const SocketsWrapper = ({ children }: { children: React.ReactNode }) => {
   const auth = useRouteLoaderData('root') as AuthObj;
-  const userId = auth?.user._id;
+  const userId = auth?.authenticatedUser._id;
   const messengerCtx = useContext(MessengerContext);
 
   useEffect(() => {
@@ -22,12 +22,12 @@ const SocketsWrapper = ({ children }: { children: React.ReactNode }) => {
   }, [userId]);
 
   useEffect(() => {
-    if (auth?.user) {
+    if (auth?.authenticatedUser) {
       socket.emit(
         'updateUser',
-        auth.user._id,
+        auth.authenticatedUser._id,
         undefined,
-        auth.user.connections
+        auth.authenticatedUser.connections
       );
     }
   }, [auth]);

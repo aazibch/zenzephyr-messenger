@@ -12,7 +12,7 @@ const AccountSettingsContent = () => {
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState<string>();
   const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>();
-  const user = (useRouteLoaderData('root') as AuthObj).user;
+  const user = (useRouteLoaderData('root') as AuthObj).authenticatedUser;
   const fetcher = useFetcher();
 
   const isLoading =

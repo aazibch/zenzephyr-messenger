@@ -63,7 +63,7 @@ export const getUser = catchAsync(
     }
 
     const conversation = await Conversation.findOne({
-      otherUsers: { $all: [user._id, req.user._id] },
+      participants: { $all: [user._id, req.user._id] },
       deletedBy: { $ne: req.user._id }
     });
 
@@ -103,7 +103,7 @@ export const getMe = catchAsync(
     res.status(StatusCodes.OK).json({
       status: 'success',
       data: {
-        user
+        authenticatedUser: user
       }
     });
   }
@@ -200,7 +200,7 @@ export const blockUser = catchAsync(
 
     const conversation = await Conversation.findOneAndUpdate(
       {
-        otherUsers: {
+        participants: {
           $all: [req.user._id, userToBlock._id]
         }
       },
@@ -244,7 +244,7 @@ export const unblockUser = catchAsync(
 
     const conversation = await Conversation.findOneAndUpdate(
       {
-        otherUsers: {
+        participants: {
           $all: [req.user._id, userToUnblock._id]
         }
       },

@@ -24,7 +24,7 @@ const ConversationPage = () => {
   );
 
   useEffect(() => {
-    document.title = `${activeConversation?.otherParticipant.fullName} | ZephyrMessenger`;
+    document.title = `${activeConversation?.otherUser.fullName} | ZephyrMessenger`;
   }, []);
 
   return (
@@ -112,10 +112,10 @@ export const action = async ({
       if (data) {
         socket.emit(
           'blockOrUnblock',
-          data.user._id,
-          data.recipientUser._id,
-          data.user.connections,
-          data.recipientUser.connections
+          data.authenticatedUser._id,
+          data.otherUser._id,
+          data.authenticatedUser.connections,
+          data.otherUser.connections
         );
       }
 

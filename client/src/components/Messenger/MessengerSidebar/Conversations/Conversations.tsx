@@ -12,7 +12,7 @@ const Conversations = () => {
     | undefined;
   const [conversations, setConversations] =
     useState<ConversationObj[]>(conversationsData);
-  const user = (useRouteLoaderData('root') as AuthObj).user;
+  const user = (useRouteLoaderData('root') as AuthObj).authenticatedUser;
   const params = useParams();
   const messengerCtx = useContext(MessengerContext);
 
@@ -39,8 +39,7 @@ const Conversations = () => {
     const updatedConversations = conversations.map((conversation) => {
       if (!conversation.isBlocked) {
         const isOnline = onlineUsers.some(
-          (userData) =>
-            userData.databaseId === conversation.otherParticipant._id
+          (userData) => userData.databaseId === conversation.otherUser._id
         );
 
         return { ...conversation, isOnline };
@@ -64,8 +63,8 @@ const Conversations = () => {
         <Conversation
           key={elem._id}
           link={`/messenger/${elem._id}`}
-          profileImageUrl={elem.otherParticipant.profileImage}
-          displayName={elem.otherParticipant.fullName}
+          profileImageUrl={elem.otherUser.profileImage}
+          displayName={elem.otherUser.fullName}
           snippet={elem.snippet}
           isOnline={elem.isOnline}
           isUnread={elem.unreadBy === user._id}

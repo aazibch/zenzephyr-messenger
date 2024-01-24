@@ -37,10 +37,10 @@ const MessageInput = ({
   const params = useParams();
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const user = (useRouteLoaderData('root') as AuthObj).user;
+  const user = (useRouteLoaderData('root') as AuthObj).authenticatedUser;
 
   const recipientId =
-    messagesData?.otherParticipant?._id || searchParams.get('userId');
+    messagesData?.otherUser?._id || searchParams.get('userId');
 
   const isSubmitting =
     navigation.state === 'submitting' &&

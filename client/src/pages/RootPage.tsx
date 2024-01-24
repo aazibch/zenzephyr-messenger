@@ -5,17 +5,17 @@ import AutoLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
 import { apiUrl, clientUrl } from '../constants';
 import { clearAuthState } from '../utils/auth';
-import SocketsWrapper from '../components/WebSockets/SocketsWrapper';
+import SocketWrapper from '../components/WebSockets/SocketWrapper';
 
 const RootPage = () => {
   return (
-    <SocketsWrapper>
+    <SocketWrapper>
       <AutoLogoutWrapper>
         <Layout>
           <Outlet />
         </Layout>
       </AutoLogoutWrapper>
-    </SocketsWrapper>
+    </SocketWrapper>
   );
 };
 
@@ -50,7 +50,7 @@ export const loader = async ({ request }: { request: Request }) => {
     return {
       status: 'AUTHENTICATED',
       tokenDuration,
-      user: response.data?.user
+      authenticatedUser: response.data?.authenticatedUser
     };
   }
 

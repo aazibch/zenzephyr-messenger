@@ -20,7 +20,7 @@ const EmailForm = ({
   errorMessage
 }: EmailFormProps) => {
   const emailInputRef = useRef<HTMLInputElement>(null);
-  const user = (useRouteLoaderData('root') as AuthObj).user;
+  const user = (useRouteLoaderData('root') as AuthObj).authenticatedUser;
 
   const emailFormSubmitHandler = (e: React.FormEvent) => {
     e.preventDefault();

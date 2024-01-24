@@ -1,10 +1,43 @@
-import { Outlet, json, redirect } from 'react-router-dom';
+import { Outlet, json, redirect, useRevalidator } from 'react-router-dom';
 import MessengerSidebar from '../components/Messenger/MessengerSidebar/MessengerSidebar';
 import { apiUrl } from '../constants';
 import { generateHttpConfig, sendHttpRequest } from '../utils';
 import { protect } from '../utils/auth';
+import { useEffect } from 'react';
+import socket from '../services/socket';
 
 const MessengerPage = () => {
+  const revalidator = useRevalidator();
+
+  useEffect(() => {
+    const onChatMessage = () => {
+      console.log('new chat message');
+      if (revalidator.state === 'idle') {
+        revalidator.revalidate();
+      }
+    };
+
+    socket.on('chatMessage', onChatMessage);
+
+    return () => {
+      socket.off('chatMessage', onChatMessage);
+    };
+  }, []);
+
+  useEffect(() => {
+    const onBlockedOrUnblocked = () => {
+      if (revalidator.state === 'idle') {
+        revalidator.revalidate();
+      }
+    };
+
+    socket.on('blockedOrUnblocked', onBlockedOrUnblocked);
+
+    return () => {
+      socket.off('blockedOrUnblocked', onBlockedOrUnblocked);
+    };
+  }, []);
+
   return (
     <div className="flex h-full overflow-hidden">
       <MessengerSidebar />

@@ -79,7 +79,7 @@ const SidebarHeader = () => {
       <ProfileImage
         className="cursor-pointer"
         clickHandler={profileImageClickHandler}
-        src={auth.user.profileImage}
+        src={auth.authenticatedUser.profileImage}
       />
       <div className="ml-auto">
         <Button iconButton className="mr-1" onClick={addUserButtonHandler}>

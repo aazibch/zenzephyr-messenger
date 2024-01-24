@@ -1,14 +1,9 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import {
-  useLoaderData,
-  useParams,
-  useRevalidator,
-  useRouteLoaderData
-} from 'react-router-dom';
+import { useLoaderData, useParams, useRouteLoaderData } from 'react-router-dom';
 import Message from './Message';
 import {
   AuthObj,
-  MessageObj,
+  // MessageObj,
   MessagesObj,
   OptimisticMessageObj
 } from '../../../types';
@@ -33,18 +28,15 @@ const ConversationContent = ({
   optimisticMessages
 }: ConversationContentProps) => {
   const [maximizedImage, setMaximizedImage] = useState<string>();
-  const messagesData = useLoaderData() as MessagesObj;
-  const { messages: messagesFromLoader } = messagesData;
-  const [messages, setMessages] = useState<MessageObj[]>(messagesData.messages);
+  const messages = (useLoaderData() as MessagesObj).messages;
   const [isRecipientTyping, setIsRecipientTyping] = useState<boolean>(false);
   const [isInitiallyScrolled, setIsInitiallyScrolled] =
     useState<boolean>(false);
   const [wasScrolledToBottom, setWasScrolledToBottom] =
     useState<boolean>(false);
-  const user = (useRouteLoaderData('root') as AuthObj).user;
+  const user = (useRouteLoaderData('root') as AuthObj).authenticatedUser;
   const messagesElementRef = useRef<HTMLDivElement>(null);
   const params = useParams();
-  const revalidator = useRevalidator();
   const paramsRef = useRef(params.id);
 
   useEffect(() => {
@@ -65,26 +57,6 @@ const ConversationContent = ({
     paramsRef.current = params.id;
   }, [params.id]);
 
-  useEffect(() => {
-    if (messagesFromLoader) {
-      setMessages(messagesFromLoader);
-    }
-  }, [messagesFromLoader]);
-
-  useEffect(() => {
-    const onChatMessage = () => {
-      if (revalidator.state === 'idle') {
-        revalidator.revalidate();
-      }
-    };
-
-    socket.on('chatMessage', onChatMessage);
-
-    return () => {
-      socket.off('chatMessage', onChatMessage);
-    };
-  }, []);
-
   const scrollToBottom = useCallback(() => {
     messagesElementRef.current!.scrollTop =
       messagesElementRef.current!.scrollHeight;
@@ -104,7 +76,7 @@ const ConversationContent = ({
   }, [
     messagesElementRef.current,
     scrollToBottom,
-    messagesData,
+    messages,
     optimisticMessages,
     isInitiallyScrolled,
     wasScrolledToBottom

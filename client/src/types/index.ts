@@ -23,7 +23,7 @@ export interface ConversationObj {
   participants: string[];
   startedBy: string;
   unreadBy: string;
-  otherParticipant: UserObj;
+  otherUser: UserObj;
   snippet?: string;
   isBlocked: boolean;
   isOnline?: boolean;
@@ -63,7 +63,7 @@ export interface OptimisticMessageObj {
 }
 
 export interface MessagesObj {
-  otherParticipant: UserObj;
+  otherUser: UserObj;
   messages: MessageObj[];
 }
 
@@ -88,7 +88,7 @@ export interface MessengerContextObj {
 export interface AuthObj {
   status: 'AUTHENTICATED' | 'EXPIRED';
   tokenDuration: number;
-  user: UserObj;
+  authenticatedUser: UserObj;
 }
 
 export interface AuthFormComponentProps {

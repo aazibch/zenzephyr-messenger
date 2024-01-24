@@ -67,7 +67,7 @@ const ConversationHeader = ({ isBlockedByMe }: ConversationHeaderProps) => {
   const blockUnblockUserHandler = () => {
     if (displayingModal === 'block') {
       return submit(
-        { id: messagesData.otherParticipant._id, action: 'block' },
+        { id: messagesData.otherUser._id, action: 'block' },
         {
           method: 'PATCH',
           encType: 'application/json'
@@ -77,7 +77,7 @@ const ConversationHeader = ({ isBlockedByMe }: ConversationHeaderProps) => {
 
     if (displayingModal === 'unblock') {
       return submit(
-        { id: messagesData.otherParticipant._id, action: 'unblock' },
+        { id: messagesData.otherUser._id, action: 'unblock' },
         {
           method: 'PATCH',
           encType: 'application/json'
@@ -130,7 +130,7 @@ const ConversationHeader = ({ isBlockedByMe }: ConversationHeaderProps) => {
   if (newConversationUser) {
     fullName = newConversationUser.fullName;
   } else {
-    fullName = messagesData.otherParticipant.fullName;
+    fullName = messagesData.otherUser.fullName;
   }
 
   const backButtonClickHandler = () => {
