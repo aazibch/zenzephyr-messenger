@@ -66,7 +66,7 @@ export const signup = catchAsync(
       status: 'success',
       token,
       data: {
-        user,
+        authenticatedUser: user,
         auth: {
           token,
           tokenExpirationDate: new Date(
@@ -118,7 +118,7 @@ export const login = catchAsync(
       status: 'success',
       token,
       data: {
-        user,
+        authenticatedUser: user,
         auth: {
           token,
           tokenExpirationDate: new Date(

@@ -17,7 +17,7 @@ export interface IUser {
 export interface IConversation {
   _id: string | ObjectId;
   __v: number;
-  participants: ObjectId[];
+  otherUsers: ObjectId[];
   startedBy: ObjectId;
   isBlocked?: boolean;
   deletedBy?: ObjectId;

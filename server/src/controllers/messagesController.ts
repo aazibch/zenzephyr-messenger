@@ -43,17 +43,17 @@ export const getMessages = catchAsync(
         new AppError('Conversation not found.', StatusCodes.NOT_FOUND)
       );
 
-    const otherParticipantId = conversation.participants.find(
+    const otherUserId = conversation.otherUsers.find(
       (participantId: ObjectId) =>
         participantId.toString() !== req.user._id.toString()
     );
 
-    const otherParticipant = await User.findById(otherParticipantId);
+    const otherUser = await User.findById(otherUserId);
 
     res.status(StatusCodes.OK).json({
       status: 'success',
       data: {
-        otherParticipant: otherParticipant,
+        otherUser: otherUser,
         messages
       }
     });
@@ -71,7 +71,7 @@ export const createMessage = catchAsync(
 
     const conversation = await Conversation.findOne({
       _id: conversationId,
-      participants: {
+      otherUsers: {
         $in: [req.user._id]
       },
       isBlocked: false
@@ -82,7 +82,7 @@ export const createMessage = catchAsync(
         new AppError('Conversation not found.', StatusCodes.NOT_FOUND)
       );
 
-    const recipient = conversation.participants.find(
+    const recipient = conversation.otherUsers.find(
       (element) => element.toString() !== req.user._id.toString()
     );
 

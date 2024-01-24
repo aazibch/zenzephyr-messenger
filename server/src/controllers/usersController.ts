@@ -12,22 +12,22 @@ import { createSendToken } from './authController';
 
 const sendUserNotFoundResponse = (
   res: Response,
-  recipientUserStatus?: string,
+  otherUserStatus?: string,
   id?: string
 ) => {
   const data: {
-    recipientUser: null | { _id: string };
-    recipientUserStatus?: string;
+    otherUser: null | { _id: string };
+    otherUserStatus?: string;
   } = {
-    recipientUser: null
+    otherUser: null
   };
 
-  if (recipientUserStatus) {
-    data.recipientUserStatus = recipientUserStatus;
+  if (otherUserStatus) {
+    data.otherUserStatus = otherUserStatus;
   }
 
-  if (recipientUserStatus === 'blockedByYou') {
-    data.recipientUser = {
+  if (otherUserStatus === 'blockedByYou') {
+    data.otherUser = {
       _id: id
     };
   }
@@ -63,7 +63,7 @@ export const getUser = catchAsync(
     }
 
     const conversation = await Conversation.findOne({
-      participants: { $all: [user._id, req.user._id] },
+      otherUsers: { $all: [user._id, req.user._id] },
       deletedBy: { $ne: req.user._id }
     });
 
@@ -90,7 +90,7 @@ export const getUser = catchAsync(
     res.status(StatusCodes.OK).json({
       status: 'success',
       data: {
-        recipientUser: user
+        otherUser: user
       }
     });
   }
@@ -171,7 +171,7 @@ export const updateMe = catchAsync(
     res.status(StatusCodes.OK).json({
       status: 'success',
       data: {
-        user,
+        authenticatedUser: user,
         auth: {
           token,
           tokenExpirationDate: new Date(
@@ -200,7 +200,7 @@ export const blockUser = catchAsync(
 
     const conversation = await Conversation.findOneAndUpdate(
       {
-        participants: {
+        otherUsers: {
           $all: [req.user._id, userToBlock._id]
         }
       },
@@ -222,8 +222,8 @@ export const blockUser = catchAsync(
     res.status(StatusCodes.OK).json({
       status: 'success',
       data: {
-        user: user,
-        recipientUser: userToBlock,
+        authenticatedUser: user,
+        otherUser: userToBlock,
         conversation
       }
     });
@@ -244,7 +244,7 @@ export const unblockUser = catchAsync(
 
     const conversation = await Conversation.findOneAndUpdate(
       {
-        participants: {
+        otherUsers: {
           $all: [req.user._id, userToUnblock._id]
         }
       },
@@ -254,7 +254,7 @@ export const unblockUser = catchAsync(
 
     const userToUnblockUpdates: Record<string, any> = {};
 
-    const loggedInUserUpdates: Record<string, any> = {
+    const authenticatedUserUpdates: Record<string, any> = {
       $pull: { blockedUsers: userToUnblock._id }
     };
 
@@ -263,7 +263,7 @@ export const unblockUser = catchAsync(
         (id) => id.toString() === req.user._id.toString()
       );
 
-      const loggedInUserConnectionsContainId = req.user.connections.some(
+      const authenticatedUserConnectionsContainId = req.user.connections.some(
         (id) => id.toString() === userToUnblock._id.toString()
       );
 
@@ -274,8 +274,8 @@ export const unblockUser = catchAsync(
           };
         }
 
-        if (!loggedInUserConnectionsContainId) {
-          loggedInUserUpdates.$push = {
+        if (!authenticatedUserConnectionsContainId) {
+          authenticatedUserUpdates.$push = {
             connections: userToUnblock._id
           };
         }
@@ -290,8 +290,8 @@ export const unblockUser = catchAsync(
       } else if (
         conversation.deletedBy.toString() === userToUnblock._id.toString()
       ) {
-        if (!loggedInUserConnectionsContainId) {
-          loggedInUserUpdates.$push = {
+        if (!authenticatedUserConnectionsContainId) {
+          authenticatedUserUpdates.$push = {
             connections: userToUnblock._id
           };
         }
@@ -305,7 +305,7 @@ export const unblockUser = catchAsync(
 
       const user = await User.findByIdAndUpdate(
         req.user._id,
-        loggedInUserUpdates,
+        authenticatedUserUpdates,
         { new: true }
       );
 
@@ -315,8 +315,8 @@ export const unblockUser = catchAsync(
     res.status(StatusCodes.OK).json({
       status: 'success',
       data: {
-        user: req.user,
-        recipientUser: userToUnblock,
+        authenticatedUser: req.user,
+        otherUser: userToUnblock,
         conversation
       }
     });
