@@ -1,6 +1,11 @@
+import { useEffect } from 'react';
 import { BiConversation } from 'react-icons/bi';
 
 const NoConversationPage = () => {
+  useEffect(() => {
+    document.title = 'ZephyrMessenger - Connect with your favorite people';
+  }, []);
+
   return (
     <div className="hidden items-center flex-col grow md:flex p-4">
       <div className="flex items-center flex-col text-center text-xl mt-32 text-gray-600">

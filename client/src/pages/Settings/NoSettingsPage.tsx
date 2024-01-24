@@ -1,7 +1,12 @@
 import { BiCog } from 'react-icons/bi';
 import MainContentContainer from '../../components/UI/MainContentContainer';
+import { useEffect } from 'react';
 
 const NoSettingsPage = () => {
+  useEffect(() => {
+    document.title = 'Settings | ZephyrMessenger';
+  }, []);
+
   return (
     <MainContentContainer hideOnSmallScreen={true}>
       <div className="flex items-center flex-col flex-grow">

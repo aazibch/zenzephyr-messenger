@@ -1,7 +1,12 @@
 import { Outlet, redirect } from 'react-router-dom';
 import AppIntro from '../components/UI/AppIntro';
+import { useEffect } from 'react';
 
 const HomePage = () => {
+  useEffect(() => {
+    document.title = 'ZephyrMessenger - Connect with your favorite people';
+  }, []);
+
   return (
     <div className="flex h-full">
       <section className="lg:flex hidden items-center justify-center basis-1/2 border-r p-4">

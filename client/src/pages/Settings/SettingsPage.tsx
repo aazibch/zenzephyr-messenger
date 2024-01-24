@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import SettingsSidebar from '../../components/Settings/SettingsSidebar/SettingsSidebar';
 import { Outlet, json } from 'react-router-dom';
 import { apiUrl } from '../../constants';
@@ -6,10 +5,6 @@ import { generateHttpConfig, sendHttpRequest } from '../../utils';
 import { setAuthState } from '../../utils/auth';
 
 const SettingsPage = () => {
-  useEffect(() => {
-    document.title = 'Settings | ZephyrMessenger';
-  }, []);
-
   return (
     <div className="flex h-full overflow-hidden">
       <SettingsSidebar />
