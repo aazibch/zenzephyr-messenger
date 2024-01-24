@@ -22,52 +22,57 @@ const AddUserModal = ({ dismissHandler }: AddUserModalProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // User is sent with id only when the status is 'blockedByYou.'
-    // This is because we need the id for the unblock button.
-    if (
-      fetcher.data?.otherUser &&
-      fetcher.data?.otherUserStatus !== 'blockedByYou'
-    ) {
-      setFoundUser(fetcher.data.otherUser);
-
-      if (
-        fetcher.formAction === '/messenger/:id' &&
-        fetcher.data.otherUser._id === toUnblockUserId
-      ) {
+    if (fetcher.formAction === '/messenger/:id') {
+      if (fetcher.data.otherUser._id === toUnblockUserId) {
+        searchHandler(usernameInputRef.current!.value);
         setToUnblockUserId(undefined);
         setErrorMessage(undefined);
+        setFoundUser(undefined);
         setShowUnblockButton(false);
       }
     }
+  }, [fetcher.data]);
 
-    if (
-      fetcher.data?.otherUser === null ||
-      fetcher.data?.otherUserStatus === 'blockedByYou'
-    ) {
-      setFoundUser(null);
-    }
+  useEffect(() => {
+    // User is sent with id only when the status is 'blockedByYou.'
+    // This is because we need the id for the unblock button.
+    if (fetcher.formAction === '/messenger') {
+      if (
+        fetcher.data?.otherUser &&
+        fetcher.data?.otherUserStatus !== 'blockedByYou'
+      ) {
+        setFoundUser(fetcher.data.otherUser);
+      }
 
-    if (fetcher.data?.otherUserStatus === 'blockedByYou') {
-      setToUnblockUserId(fetcher.data.otherUser._id);
-    }
+      if (
+        fetcher.data?.otherUser === null ||
+        fetcher.data?.otherUserStatus === 'blockedByYou'
+      ) {
+        setFoundUser(null);
+      }
 
-    if (fetcher.data?.otherUserStatus === 'existingConversation') {
-      setErrorMessage(
-        'There is already an existing conversation with this user.'
-      );
-    }
+      if (fetcher.data?.otherUserStatus === 'blockedByYou') {
+        setToUnblockUserId(fetcher.data.otherUser._id);
+      }
 
-    if (fetcher.data?.otherUserStatus === 'blockedByOther') {
-      setErrorMessage('You have been blocked by this user.');
-    }
+      if (fetcher.data?.otherUserStatus === 'existingConversation') {
+        setErrorMessage(
+          'There is already an existing conversation with this user.'
+        );
+      }
 
-    if (fetcher.data?.otherUserStatus === 'blockedByYou') {
-      setErrorMessage('You have blocked this user.');
-      setShowUnblockButton(true);
+      if (fetcher.data?.otherUserStatus === 'blockedByOther') {
+        setErrorMessage('You have been blocked by this user.');
+      }
+
+      if (fetcher.data?.otherUserStatus === 'blockedByYou') {
+        setErrorMessage('You have blocked this user.');
+        setShowUnblockButton(true);
+      }
     }
   }, [fetcher.data]);
 
-  const changeHandler = () => {
+  const clearState = () => {
     if (foundUser !== undefined) {
       setFoundUser(undefined);
     }
@@ -80,6 +85,10 @@ const AddUserModal = ({ dismissHandler }: AddUserModalProps) => {
     if (toUnblockUserId) {
       setToUnblockUserId(undefined);
     }
+  };
+
+  const changeHandler = () => {
+    clearState();
   };
 
   const searchHandler = (username: string) => {

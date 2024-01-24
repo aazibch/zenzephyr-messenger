@@ -96,13 +96,6 @@ const onConnection = (io: Server) => {
       ) => {
         const user = getUser(databaseId);
 
-        // console.log(
-        //   'databaseId',
-        //   databaseId,
-        //   'activeConversation',
-        //   activeConversation
-        // );
-
         if (!user) {
           saveUser({
             databaseId,
@@ -123,7 +116,6 @@ const onConnection = (io: Server) => {
         const updatedUser = getUser(databaseId);
         onlineConnections.unshift(updatedUser);
         io.to(socket.id).emit('onlineUsers', onlineConnections);
-        // console.log('[after update] onlineUsers', onlineUsers);
       }
     );
 
@@ -144,11 +136,7 @@ const onConnection = (io: Server) => {
     );
 
     socket.on('sendMessage', (message: MessageObj) => {
-      console.log('message', message);
-
       const recipient = getUser(message.recipient);
-
-      console.log('recipient', recipient);
 
       if (recipient) {
         io.to(recipient.socketId).emit('chatMessage', message);
