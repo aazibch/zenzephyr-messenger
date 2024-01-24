@@ -4,9 +4,19 @@ import { generateHttpConfig } from '../../utils';
 import { apiUrl } from '../../constants';
 import { json, redirect } from 'react-router-dom';
 import { setAuthState } from '../../utils/auth';
+import Logo from '../../components/UI/Logo';
 
 const LoginPage = () => {
-  return <AuthFormContainer mode="login" />;
+  return (
+    <div className="h-full p-4">
+      <div className="lg:hidden">
+        <Logo className="text-[1.4rem] mt-2 justify-center" />
+      </div>
+      <div className="h-full mt-[-2rem] lg:mt-0 flex items-center grow justify-center">
+        <AuthFormContainer mode="login" />
+      </div>
+    </div>
+  );
 };
 
 export default LoginPage;
