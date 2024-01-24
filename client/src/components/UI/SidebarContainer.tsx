@@ -25,6 +25,8 @@ const SidebarContainer = ({
   if (useMatch(routeToHideOn) && !useMatch(routeToNotHideOn)) {
     sidebarClasses.push('hidden');
     sidebarClasses.push('md:block');
+  } else {
+    sidebarClasses.splice(sidebarClasses.indexOf('border-r'), 1);
   }
 
   return <div className={sidebarClasses.join(' ')}>{children}</div>;
