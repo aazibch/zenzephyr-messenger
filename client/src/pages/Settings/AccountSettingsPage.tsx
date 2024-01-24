@@ -1,11 +1,11 @@
 import AccountSettingsContent from '../../components/Settings/AccountSettings/AccountSettingsContent';
-import AccountSettingsHeader from '../../components/Settings/AccountSettings/AccountSettingsHeader';
 import MainContentContainer from '../../components/UI/MainContentContainer';
+import PageHeader from '../../components/UI/PageHeader';
 
 const AccountSettingsPage = () => {
   return (
     <MainContentContainer>
-      <AccountSettingsHeader />
+      <PageHeader heading="Account" backButtonUrl="/settings" />
       <AccountSettingsContent />
     </MainContentContainer>
   );

@@ -1,11 +1,11 @@
 import ProfileSettingsContent from '../../components/Settings/ProfileSettings/ProfileSettingsContent';
-import ProfileSettingsHeader from '../../components/Settings/ProfileSettings/ProfileSettingsHeader';
 import MainContentContainer from '../../components/UI/MainContentContainer';
+import PageHeader from '../../components/UI/PageHeader';
 
 const ProfileSettingsPage = () => {
   return (
     <MainContentContainer>
-      <ProfileSettingsHeader />
+      <PageHeader heading="Profile" backButtonUrl="/settings" />
       <ProfileSettingsContent />
     </MainContentContainer>
   );
