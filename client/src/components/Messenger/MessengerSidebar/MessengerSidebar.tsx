@@ -4,7 +4,7 @@ import MessengerSidebarHeader from './MessengerSidebarHeader';
 
 const MessengerSidebar = () => {
   return (
-    <SidebarContainer routeHiddenOn="/messenger/*">
+    <SidebarContainer routeToHideOnWhenSmallScreen="/messenger/*">
       <MessengerSidebarHeader />
       <Conversations />
     </SidebarContainer>

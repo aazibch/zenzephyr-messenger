@@ -4,7 +4,7 @@ import SidebarContainer from '../../UI/SidebarContainer';
 
 const SettingsSidebar = () => {
   return (
-    <SidebarContainer routeHiddenOn="/settings/*">
+    <SidebarContainer routeToHideOnWhenSmallScreen="/settings/*">
       <SettingsSidebarHeader />
       <SettingsNav />
     </SidebarContainer>

@@ -1,12 +1,13 @@
 import ProfileSettingsContent from '../../components/Settings/ProfileSettings/ProfileSettingsContent';
 import ProfileSettingsHeader from '../../components/Settings/ProfileSettings/ProfileSettingsHeader';
+import MainContentContainer from '../../components/UI/MainContentContainer';
 
 const ProfileSettingsPage = () => {
   return (
-    <div className="flex-grow">
+    <MainContentContainer>
       <ProfileSettingsHeader />
       <ProfileSettingsContent />
-    </div>
+    </MainContentContainer>
   );
 };
 

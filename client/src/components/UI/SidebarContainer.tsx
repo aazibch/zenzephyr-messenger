@@ -2,12 +2,12 @@ import { useMatch } from 'react-router-dom';
 
 interface SidebarContainerProps {
   children: React.ReactNode;
-  routeHiddenOn: string;
+  routeToHideOnWhenSmallScreen: string;
 }
 
 const SidebarContainer = ({
   children,
-  routeHiddenOn
+  routeToHideOnWhenSmallScreen
 }: SidebarContainerProps) => {
   const sidebarClasses = [
     'grow',
@@ -19,8 +19,8 @@ const SidebarContainer = ({
     'md:grow-0'
   ];
 
-  const routeToHideOn = routeHiddenOn;
-  const routeToNotHideOn = routeHiddenOn.replace('*', '');
+  const routeToHideOn = routeToHideOnWhenSmallScreen;
+  const routeToNotHideOn = routeToHideOnWhenSmallScreen.replace('*', '');
 
   if (useMatch(routeToHideOn) && !useMatch(routeToNotHideOn)) {
     sidebarClasses.push('hidden');
