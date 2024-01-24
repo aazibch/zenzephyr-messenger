@@ -1,12 +1,13 @@
 import AccountSettingsContent from '../../components/Settings/AccountSettings/AccountSettingsContent';
 import AccountSettingsHeader from '../../components/Settings/AccountSettings/AccountSettingsHeader';
+import MainContentContainer from '../../components/UI/MainContentContainer';
 
 const AccountSettingsPage = () => {
   return (
-    <div className="flex-grow">
+    <MainContentContainer>
       <AccountSettingsHeader />
       <AccountSettingsContent />
-    </div>
+    </MainContentContainer>
   );
 };
 

@@ -11,6 +11,7 @@ import { generateHttpConfig, sendHttpRequest } from '../../utils';
 import socket from '../../services/socket';
 import { useEffect } from 'react';
 import { ConversationObj } from '../../types';
+import MainContentContainer from '../../components/UI/MainContentContainer';
 
 const ConversationPage = () => {
   const conversationsData = useRouteLoaderData(
@@ -26,7 +27,11 @@ const ConversationPage = () => {
     document.title = `${activeConversation?.otherParticipant.fullName} | ZephyrMessenger`;
   }, []);
 
-  return <ConversationContainer />;
+  return (
+    <MainContentContainer>
+      <ConversationContainer />
+    </MainContentContainer>
+  );
 };
 
 export default ConversationPage;
