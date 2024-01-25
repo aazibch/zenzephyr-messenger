@@ -14,8 +14,6 @@ const ErrorPage = () => {
     document.title = `Error | ZephyrMessenger`;
   }, []);
 
-  console.log('[ErrorPage.tsx] error', error);
-
   if (error.status === 401 && error.data === 'You are not logged in.') {
     setTimeout(() => {
       clearAuthState();

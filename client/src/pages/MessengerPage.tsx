@@ -25,7 +25,6 @@ const MessengerPage = () => {
 
   useEffect(() => {
     const onBlockedOrUnblocked = () => {
-      console.log('blockedOrUnblocked event');
       if (revalidator.state === 'idle') {
         revalidator.revalidate();
       }
