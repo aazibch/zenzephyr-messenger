@@ -6,7 +6,7 @@ import MessengerContext from '../../store/messenger-context';
 
 const SocketsWrapper = ({ children }: { children: React.ReactNode }) => {
   const auth = useRouteLoaderData('root') as AuthObj;
-  const userId = auth?.authenticatedUser._id;
+  const userId = auth?.authenticatedUser?._id;
   const messengerCtx = useContext(MessengerContext);
 
   useEffect(() => {
