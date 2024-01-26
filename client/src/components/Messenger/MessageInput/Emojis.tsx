@@ -19,17 +19,24 @@ const Emojis = ({ addEmoji }: { addEmoji: (value: string) => void }) => {
     setIsOpen((prevEmojiPickerOpen) => !prevEmojiPickerOpen);
   };
 
+  const emojisContainerClassNames = ['absolute', 'z-50', 'bottom-14', 'hidden'];
+
+  if (isOpen) {
+    emojisContainerClassNames.splice(
+      emojisContainerClassNames.indexOf('hidden'),
+      1
+    );
+  }
+
   return (
     <div ref={emojiPickerRef} className="relative">
-      <div className="absolute z-50 bottom-14">
-        {isOpen && (
-          <EmojiPicker
-            skinTonesDisabled
-            searchDisabled
-            width="20rem"
-            onEmojiClick={emojiClickHandler}
-          />
-        )}
+      <div className={emojisContainerClassNames.join(' ')}>
+        <EmojiPicker
+          skinTonesDisabled
+          searchDisabled
+          width="20rem"
+          onEmojiClick={emojiClickHandler}
+        />
       </div>
       <Button
         type="button"
