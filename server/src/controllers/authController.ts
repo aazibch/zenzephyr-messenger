@@ -31,7 +31,7 @@ export const createSendToken = (
     ),
     httpOnly: true,
     secure: req.secure,
-    sameSite: 'lax'
+    sameSite: 'none'
   });
 
   return token;
