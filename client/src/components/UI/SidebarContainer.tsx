@@ -13,8 +13,8 @@ const SidebarContainer = ({
     'grow',
     'md:border-r',
     'border-gray-300',
-    'h-full',
     'flex-col',
+    'flex-1',
     'md:basis-[25rem]',
     'md:grow-0'
   ];
@@ -24,7 +24,7 @@ const SidebarContainer = ({
 
   if (useMatch(routeToHideOn) && !useMatch(routeToNotHideOn)) {
     sidebarClasses.push('hidden');
-    sidebarClasses.push('md:block');
+    sidebarClasses.push('md:flex');
   }
 
   return <div className={sidebarClasses.join(' ')}>{children}</div>;
