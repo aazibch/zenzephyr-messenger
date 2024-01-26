@@ -5,7 +5,7 @@ let clientUrl = 'http://localhost:5173';
 if (import.meta.env.VITE_NODE_ENV !== 'development') {
   apiUrl = 'https://zephy-messenger-api.onrender.com';
   socketUrl = 'wss://zephy-messenger-api.onrender.com';
-  clientUrl = 'domain.com';
+  clientUrl = 'https://zephy-messenger.onrender.com';
 }
 
 export { apiUrl, clientUrl, socketUrl };
