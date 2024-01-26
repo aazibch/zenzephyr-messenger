@@ -12,7 +12,7 @@ const HomePage = () => {
       <section className="lg:flex hidden items-center justify-center basis-1/2 border-r p-4">
         <AppIntro />
       </section>
-      <section className="border grow">
+      <section className="grow">
         <Outlet />
       </section>
     </div>

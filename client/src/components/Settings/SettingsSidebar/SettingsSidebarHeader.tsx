@@ -10,7 +10,7 @@ const SettingsSidebarHeader = () => {
   };
 
   return (
-    <div className="border-b border-gray-300 flex items-center px-4 h-14">
+    <div className="border-b shrink-0 border-gray-300 flex items-center px-4 h-14">
       <Button onClick={backButtonClickHandler} iconButton className="mr-3">
         <IoIosArrowBack size="1.25em" />
       </Button>
