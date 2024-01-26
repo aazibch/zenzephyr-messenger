@@ -135,7 +135,8 @@ const sendLogoutCookie = (res: Response) => {
   res.cookie('jwt', '', {
     expires: new Date(Date.now() + 1000),
     httpOnly: true,
-    sameSite: 'strict'
+    secure: process.env.NODE_ENV !== 'development',
+    sameSite: 'none'
   });
 };
 
