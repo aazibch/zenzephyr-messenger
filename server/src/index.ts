@@ -5,6 +5,7 @@ import app from './app';
 import socketController from './controllers/socketController';
 import { Server } from 'socket.io';
 import { ClientToServerEvents, ServerToClientEvents } from './types';
+import { clientUrl } from './constants';
 
 dotenv.config();
 
@@ -12,7 +13,7 @@ const server = http.createServer(app);
 
 const io = new Server<ServerToClientEvents, ClientToServerEvents>(server, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: clientUrl,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
     credentials: true
   }
