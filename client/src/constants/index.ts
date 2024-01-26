@@ -3,8 +3,8 @@ let socketUrl = 'ws://localhost:8080';
 let clientUrl = 'http://localhost:5173';
 
 if (import.meta.env.VITE_NODE_ENV !== 'development') {
-  apiUrl = 'https://zephy-messenger-api.onrender.com';
-  socketUrl = 'wss://zephy-messenger-api.onrender.com';
+  apiUrl = 'https://zephyr-messenger-api.onrender.com';
+  socketUrl = 'wss://zephyr-messenger-api.onrender.com';
   clientUrl = 'https://zephy-messenger.onrender.com';
 }
 
