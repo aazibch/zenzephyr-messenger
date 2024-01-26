@@ -42,7 +42,8 @@ const EmailForm = ({
           id: 'email',
           type: 'email',
           name: 'email',
-          defaultValue: user.email
+          defaultValue: user.email,
+          autoComplete: 'on'
         }}
       />
       <div className="flex items-center">

@@ -31,7 +31,8 @@ const LoginForm = ({
         input={{
           id: 'email',
           type: 'email',
-          name: 'email'
+          name: 'email',
+          autoComplete: 'on'
         }}
       />
       <Input
@@ -40,7 +41,8 @@ const LoginForm = ({
         input={{
           id: 'password',
           type: 'password',
-          name: 'password'
+          name: 'password',
+          autoComplete: 'off'
         }}
       />
       <Button type="submit" styleType="primary" disabled={isLoading}>

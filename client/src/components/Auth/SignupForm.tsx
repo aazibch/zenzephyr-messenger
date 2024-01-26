@@ -25,7 +25,8 @@ const SignupForm = ({
         input={{
           id: 'fullName',
           type: 'name',
-          name: 'fullName'
+          name: 'fullName',
+          autoComplete: 'on'
         }}
       />
       <Input
@@ -34,7 +35,8 @@ const SignupForm = ({
         input={{
           id: 'username',
           type: 'name',
-          name: 'username'
+          name: 'username',
+          autoComplete: 'on'
         }}
       />
       <Input
@@ -43,7 +45,8 @@ const SignupForm = ({
         input={{
           id: 'email',
           type: 'email',
-          name: 'email'
+          name: 'email',
+          autoComplete: 'on'
         }}
       />
       <Input
@@ -52,7 +55,8 @@ const SignupForm = ({
         input={{
           id: 'password',
           type: 'password',
-          name: 'password'
+          name: 'password',
+          autoComplete: 'off'
         }}
       />
       <Input
@@ -61,7 +65,8 @@ const SignupForm = ({
         input={{
           id: 'passwordConfirmation',
           type: 'password',
-          name: 'passwordConfirmation'
+          name: 'passwordConfirmation',
+          autoComplete: 'off'
         }}
       />
       <Button type="submit" styleType="primary" disabled={isLoading}>

@@ -31,7 +31,7 @@ export const createSendToken = (
     ),
     httpOnly: true,
     secure: process.env.NODE_ENV !== 'development',
-    sameSite: 'none'
+    sameSite: process.env.NODE_ENV !== 'development' ? 'none' : 'lax'
   });
 
   return token;
@@ -136,7 +136,7 @@ const sendLogoutCookie = (res: Response) => {
     expires: new Date(Date.now() + 1000),
     httpOnly: true,
     secure: process.env.NODE_ENV !== 'development',
-    sameSite: 'none'
+    sameSite: process.env.NODE_ENV !== 'development' ? 'none' : 'lax'
   });
 };
 

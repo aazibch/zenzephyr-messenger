@@ -134,7 +134,8 @@ const ProfileSettingsForm = () => {
           id: 'fullName',
           type: 'name',
           name: 'fullName',
-          defaultValue: user.fullName
+          defaultValue: user.fullName,
+          autoComplete: 'on'
         }}
       />
       <Input
@@ -146,7 +147,8 @@ const ProfileSettingsForm = () => {
           type: 'text',
           name: 'username',
           defaultValue: user.username,
-          disabled: true
+          disabled: true,
+          autoComplete: 'off'
         }}
         message="You cannot change the username."
       />
