@@ -30,7 +30,7 @@ export const createSendToken = (
         parseInt(process.env.JWT_COOKIE_EXPIRATION) * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
-    secure: process.env.NODE_ENV !== 'development' ? true : false,
+    secure: process.env.NODE_ENV !== 'development',
     sameSite: 'none'
   });
 
