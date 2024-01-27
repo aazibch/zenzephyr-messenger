@@ -1,12 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useLoaderData, useParams, useRouteLoaderData } from 'react-router-dom';
 import Message from './Message';
-import {
-  AuthObj,
-  // MessageObj,
-  MessagesObj,
-  OptimisticMessageObj
-} from '../../../types';
+import { AuthObj, MessagesObj, OptimisticMessageObj } from '../../../types';
 import ImageModal from '../../UI/Modals/ImageModal';
 import socket from '../../../services/socket';
 import TypingIndicator from './TypingIndicator';
@@ -118,7 +113,7 @@ const ConversationContent = ({
     messagesContent = messages.map((elem, index) => {
       if (
         index === 0 ||
-        getTimeDifference(elem.createdAt, messages[index - 1].createdAt) >
+        getTimeDifference(elem.createdAt, messages[index - 1].createdAt) <
           60000 ||
         index === messages.length - 1
       ) {
