@@ -85,8 +85,50 @@ const Conversations = () => {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto">
-      <div className={styles.navItems}>{conversationElements}</div>
+    <div className="overflow-y-scroll">
+      <div className={styles.navItems}>
+        {conversationElements}
+        <Conversation
+          link="domain.com"
+          profileImageUrl="https://res.cloudinary.com/aazibch/image/upload/v1692366211/zephyr-messenger/users/default.jpg"
+          displayName="John Doe"
+        />
+        <Conversation
+          link="domain.com"
+          profileImageUrl="https://res.cloudinary.com/aazibch/image/upload/v1692366211/zephyr-messenger/users/default.jpg"
+          displayName="John Doe"
+        />
+        <Conversation
+          link="domain.com"
+          profileImageUrl="https://res.cloudinary.com/aazibch/image/upload/v1692366211/zephyr-messenger/users/default.jpg"
+          displayName="John Doe"
+        />
+        <Conversation
+          link="domain.com"
+          profileImageUrl="https://res.cloudinary.com/aazibch/image/upload/v1692366211/zephyr-messenger/users/default.jpg"
+          displayName="John Doe"
+        />
+        <Conversation
+          link="domain.com"
+          profileImageUrl="https://res.cloudinary.com/aazibch/image/upload/v1692366211/zephyr-messenger/users/default.jpg"
+          displayName="John Doe"
+        />
+        <Conversation
+          link="domain.com"
+          profileImageUrl="https://res.cloudinary.com/aazibch/image/upload/v1692366211/zephyr-messenger/users/default.jpg"
+          displayName="John Doe"
+        />
+        <Conversation
+          link="domain.com"
+          profileImageUrl="https://res.cloudinary.com/aazibch/image/upload/v1692366211/zephyr-messenger/users/default.jpg"
+          displayName="John Doe"
+        />
+        <Conversation
+          link="domain.com"
+          profileImageUrl="https://res.cloudinary.com/aazibch/image/upload/v1692366211/zephyr-messenger/users/default.jpg"
+          displayName="John Doe"
+        />
+      </div>
     </div>
   );
 };

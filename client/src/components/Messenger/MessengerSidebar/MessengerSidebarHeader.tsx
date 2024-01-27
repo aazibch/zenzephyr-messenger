@@ -74,7 +74,7 @@ const SidebarHeader = () => {
   ];
 
   return (
-    <div className="border-b border-gray-300 flex items-center px-4 h-14">
+    <div className="border-b border-gray-300 flex items-center px-4 h-14 shrink-0 grow">
       {modalElement}
       <ProfileImage
         className="cursor-pointer"

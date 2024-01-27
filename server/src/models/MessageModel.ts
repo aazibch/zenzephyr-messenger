@@ -86,7 +86,13 @@ messageSchema.statics.setSnippet = async function (messageDoc) {
   let snippet: string;
 
   if (messageDoc.contentProps.type === 'text') {
-    snippet = messageDoc.contentProps.text.content;
+    const unmodifiedSnippet = messageDoc.contentProps.text.content;
+
+    if (unmodifiedSnippet.length > 43) {
+      snippet = unmodifiedSnippet.slice(0, 40) + '...';
+    } else {
+      snippet = unmodifiedSnippet;
+    }
   } else if (messageDoc.contentProps.type === 'image') {
     snippet = '**[imageIcon] Image**';
   }

@@ -10,13 +10,13 @@ const SidebarContainer = ({
   routeToHideOnWhenSmallScreen
 }: SidebarContainerProps) => {
   const sidebarClasses = [
-    'grow',
     'md:border-r',
     'border-gray-300',
+    'flex',
     'flex-col',
-    'flex-1',
-    'md:basis-[25rem]',
-    'md:grow-0'
+    'grow',
+    'md:grow-0',
+    'md:basis-[25rem]'
   ];
 
   const routeToHideOn = routeToHideOnWhenSmallScreen;

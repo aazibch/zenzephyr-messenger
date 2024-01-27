@@ -21,12 +21,7 @@ const Conversation = ({
   link
 }: ConversationProps) => {
   let snippetContent: React.ReactElement | string | undefined = snippet;
-  const snippetClasses = [
-    'text-sm',
-    'text-gray-600',
-    'max-w-[18rem]',
-    'truncate'
-  ];
+  const snippetClasses = ['text-sm', 'text-gray-600'];
 
   if (isUnread) {
     snippetClasses.push('font-bold');
@@ -57,7 +52,7 @@ const Conversation = ({
           <div className="flex items-center">
             <h3 className="font-medium mr-2">{displayName}</h3>
             {isOnline && (
-              <div className="rounded-full h-[0.65rem] w-[0.65rem] bg-yellow-500"></div>
+              <div className="rounded-full h-[10px] w-[10px] bg-yellow-500"></div>
             )}
           </div>
 
@@ -66,7 +61,7 @@ const Conversation = ({
           )}
         </div>
         {isUnread && (
-          <div className="rounded-full h-[0.65rem] w-[0.65rem] bg-blue-500 ml-auto"></div>
+          <div className="shrink-0 grow-0 rounded-full h-[10px] w-[10px] bg-blue-500 ml-auto"></div>
         )}
       </div>
     </NavLink>
