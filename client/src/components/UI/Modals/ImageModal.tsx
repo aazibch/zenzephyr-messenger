@@ -14,16 +14,16 @@ const ImageModal = ({
   closeHandler
 }: ImageModalProps) => {
   const imageRef = useRef<HTMLImageElement>(null);
-  let imageClassNames = 'max-w-[800px] max-h-[600px] object-cover';
+  let imageClassNames = 'w-full max-w-[800px] h-auto object-cover';
   const imageContainerRef = useWhenClickedOutside(closeHandler);
 
   if (isProfileImage) {
     imageClassNames =
-      'max-w-[300px] max-h-[300px] object-cover border-2 border-gray-300 rounded-full';
+      'w-full max-w-[300px] h-auto object-cover border-2 border-gray-300 rounded-full';
   }
 
   return (
-    <div className="fixed top-0 left-0 z-10 w-screen h-screen bg-black/70 flex justify-center items-center">
+    <div className="px-2 fixed top-0 left-0 z-10 w-screen h-screen bg-black/70 flex justify-center items-center">
       {/* <!-- The close button --> */}
       <span
         className="fixed z-20 top-6 right-8 text-white text-5xl font-bold cursor-pointer"
@@ -33,7 +33,7 @@ const ImageModal = ({
       </span>
 
       {/* <!-- Image --> */}
-      <div ref={imageContainerRef}>
+      <div className="border-red-700" ref={imageContainerRef}>
         <img
           ref={imageRef}
           src={src}
