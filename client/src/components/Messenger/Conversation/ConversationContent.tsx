@@ -12,11 +12,11 @@ interface ConversationContentProps {
 
 const getTimeDifference = (
   currentTimestamp: string,
-  previousTimestamp: string
+  nextTimestamp: string
 ): number => {
   const current = new Date(currentTimestamp).getTime();
-  const previous = new Date(previousTimestamp).getTime();
-  return current - previous;
+  const next = new Date(nextTimestamp).getTime();
+  return next - current;
 };
 
 const ConversationContent = ({
@@ -111,31 +111,45 @@ const ConversationContent = ({
 
   if (messages.length !== 0) {
     messagesContent = messages.map((elem, index) => {
-      if (
-        index === 0 ||
-        getTimeDifference(elem.createdAt, messages[index - 1].createdAt) <
-          60000 ||
-        index === messages.length - 1
-      ) {
-        return (
-          <Message
-            key={elem._id}
-            byLoggedInUser={elem.sender.toString() === user._id}
-            messageContent={elem.contentProps}
-            timestamp={elem.createdAt}
-            attachedImageClickHandler={attachedImageClickHandler}
-          />
+      const isLastMessage = index === messages.length - 1;
+
+      if (!isLastMessage) {
+        const timeDifference = getTimeDifference(
+          elem.createdAt,
+          messages[index + 1].createdAt
         );
-      } else {
-        return (
-          <Message
-            key={elem._id}
-            byLoggedInUser={elem.sender.toString() === user._id}
-            messageContent={elem.contentProps}
-            attachedImageClickHandler={attachedImageClickHandler}
-          />
-        );
+
+        if (timeDifference > 60000) {
+          return (
+            <Message
+              key={elem._id}
+              byLoggedInUser={elem.sender.toString() === user._id}
+              messageContent={elem.contentProps}
+              timestamp={elem.createdAt}
+              attachedImageClickHandler={attachedImageClickHandler}
+            />
+          );
+        } else {
+          return (
+            <Message
+              key={elem._id}
+              byLoggedInUser={elem.sender.toString() === user._id}
+              messageContent={elem.contentProps}
+              attachedImageClickHandler={attachedImageClickHandler}
+            />
+          );
+        }
       }
+
+      return (
+        <Message
+          key={elem._id}
+          byLoggedInUser={elem.sender.toString() === user._id}
+          messageContent={elem.contentProps}
+          timestamp={elem.createdAt}
+          attachedImageClickHandler={attachedImageClickHandler}
+        />
+      );
     });
   }
 
