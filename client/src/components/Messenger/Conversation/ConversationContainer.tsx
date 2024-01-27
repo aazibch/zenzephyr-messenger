@@ -95,7 +95,7 @@ const ConversationContainer = () => {
   }, [isIdle]);
 
   return (
-    <div className="flex h-full flex-col flex-grow flex-shrink">
+    <div className="flex flex-col h-full">
       <ConversationHeader isBlockedByMe={isBlockedByMe} />
       <ConversationContent optimisticMessages={optimisticMessages} />
       <MessageInput

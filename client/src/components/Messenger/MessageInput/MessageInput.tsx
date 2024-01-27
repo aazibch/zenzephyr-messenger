@@ -203,7 +203,7 @@ const MessageInput = ({
           onKeyDown={keyDownHandler}
           value={textInput}
           name="text"
-          className="resize-none outline-none flex-1 mr-1 p-3"
+          className="resize-none outline-none flex-1 mr-1 p-3 w-0"
         />
         <label className={labelClassNames} htmlFor="image-upload">
           <BsCardImage size="1.25em" />
