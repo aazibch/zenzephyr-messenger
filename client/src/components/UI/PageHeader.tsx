@@ -22,7 +22,7 @@ const PageHeader = ({ heading, backButtonUrl }: PageHeaderProps) => {
         <Button
           onClick={backButtonClickHandler}
           iconButton
-          className="mr-3 md:hidden"
+          className="mr-3 lg:hidden"
         >
           <IoIosArrowBack size="1.25em" />
         </Button>

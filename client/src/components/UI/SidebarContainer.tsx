@@ -10,13 +10,13 @@ const SidebarContainer = ({
   routeToHideOnWhenSmallScreen
 }: SidebarContainerProps) => {
   const sidebarClasses = [
-    'md:border-r',
+    'lg:border-r',
     'border-gray-300',
     'flex',
     'flex-col',
     'grow',
-    'md:grow-0',
-    'md:basis-[25rem]'
+    'lg:grow-0',
+    'lg:basis-[25rem]'
   ];
 
   const routeToHideOn = routeToHideOnWhenSmallScreen;
@@ -24,7 +24,7 @@ const SidebarContainer = ({
 
   if (useMatch(routeToHideOn) && !useMatch(routeToNotHideOn)) {
     sidebarClasses.push('hidden');
-    sidebarClasses.push('md:flex');
+    sidebarClasses.push('lg:flex');
   }
 
   return <div className={sidebarClasses.join(' ')}>{children}</div>;

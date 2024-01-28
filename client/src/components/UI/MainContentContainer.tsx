@@ -7,11 +7,11 @@ const MainContentContainer = ({
   children,
   hideOnSmallScreen
 }: MainContentContainerProps) => {
-  const classNames = ['grow'];
+  const classNames = ['grow', 'flex', 'flex-col', 'h-full'];
 
   if (hideOnSmallScreen) {
     classNames.push('hidden');
-    classNames.push('md:flex');
+    classNames.push('lg:flex');
   }
 
   return <div className={classNames.join(' ')}>{children}</div>;

@@ -121,21 +121,23 @@ const AccountSettingsContent = () => {
   };
 
   return (
-    <div className="w-full max-w-[40rem] mx-auto mt-16 p-4">
-      <EmailForm
-        showSuccessMessage={showSuccessMessage && submittedEmailForm}
-        errorMessage={emailErrorMessage}
-        isLoading={isLoading}
-        submitNewEmail={submitNewEmail}
-        emailFormChangeHandler={emailFormChangeHandler}
-      />
-      <PasswordForm
-        showSuccessMessage={showSuccessMessage && submittedPasswordForm}
-        errorMessage={passwordErrorMessage}
-        isLoading={isLoading}
-        submitNewPassword={submitNewPassword}
-        passwordFormChangeHandler={passwordFormChangeHandler}
-      />
+    <div className="flex flex-col grow overflow-y-auto">
+      <div className="w-full max-w-[40rem] mx-auto my-16 p-4">
+        <EmailForm
+          showSuccessMessage={showSuccessMessage && submittedEmailForm}
+          errorMessage={emailErrorMessage}
+          isLoading={isLoading}
+          submitNewEmail={submitNewEmail}
+          emailFormChangeHandler={emailFormChangeHandler}
+        />
+        <PasswordForm
+          showSuccessMessage={showSuccessMessage && submittedPasswordForm}
+          errorMessage={passwordErrorMessage}
+          isLoading={isLoading}
+          submitNewPassword={submitNewPassword}
+          passwordFormChangeHandler={passwordFormChangeHandler}
+        />
+      </div>
     </div>
   );
 };

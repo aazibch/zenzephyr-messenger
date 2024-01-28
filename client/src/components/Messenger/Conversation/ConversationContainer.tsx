@@ -95,14 +95,14 @@ const ConversationContainer = () => {
   }, [isIdle]);
 
   return (
-    <div className="flex flex-col h-full">
+    <>
       <ConversationHeader isBlockedByMe={isBlockedByMe} />
       <ConversationContent optimisticMessages={optimisticMessages} />
       <MessageInput
         saveOptimisticMessage={saveOptimisticMessage}
         isBlocked={activeConversation!.isBlocked}
       />
-    </div>
+    </>
   );
 };
 

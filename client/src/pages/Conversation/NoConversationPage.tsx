@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { BiConversation } from 'react-icons/bi';
+import MainContentContainer from '../../components/UI/MainContentContainer';
 
 const NoConversationPage = () => {
   useEffect(() => {
@@ -7,12 +8,12 @@ const NoConversationPage = () => {
   }, []);
 
   return (
-    <div className="hidden items-center flex-col grow md:flex p-4">
-      <div className="flex items-center flex-col text-center text-xl mt-32 text-gray-600">
+    <MainContentContainer hideOnSmallScreen={true}>
+      <div className="flex items-center flex-col text-center text-xl my-32 px-4 text-gray-600">
         <BiConversation size="2em" className="mb-2" />
         <p>Your selected conversation will appear here.</p>
       </div>
-    </div>
+    </MainContentContainer>
   );
 };
 
