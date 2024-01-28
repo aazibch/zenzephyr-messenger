@@ -1,5 +1,5 @@
 import { Outlet, redirect } from 'react-router-dom';
-import Layout from '../components/UI/Layout';
+import Layout from '../components/UI/Layout/Layout';
 import { getTokenDuration } from '../utils/auth';
 import AutoLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
 import { generateHttpConfig, sendHttpRequest } from '../utils';

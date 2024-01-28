@@ -1,5 +1,5 @@
 import { ErrorResponse, useNavigate, useRouteError } from 'react-router-dom';
-import Layout from '../components/UI/Layout';
+import Layout from '../components/UI/Layout/Layout';
 import Logo from '../components/UI/Logo';
 import AutoLogoutWrapper from '../components/Auth/AutoLogoutWrapper';
 import { clearAuthState } from '../utils/auth';
