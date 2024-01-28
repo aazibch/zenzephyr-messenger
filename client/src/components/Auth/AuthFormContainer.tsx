@@ -25,7 +25,7 @@ const AuthFormContainer = ({ mode }: { mode: 'login' | 'signup' }) => {
   };
 
   return (
-    <div className="border rounded-md border-gray-300 p-10 basis-[30rem] shadow-xl">
+    <div className="border rounded-md border-gray-300 p-10 basis-[30rem] shadow-xl my-16">
       {mode === 'login' ? (
         <LoginForm
           formChangeHandler={formChangeHandler}

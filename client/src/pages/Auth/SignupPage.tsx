@@ -8,11 +8,11 @@ import Logo from '../../components/UI/Logo';
 
 const SignupPage = () => {
   return (
-    <div className="h-full p-4">
-      <div className="lg:hidden">
-        <Logo className="text-[1.4rem] mt-2 justify-center" />
+    <div className="h-full p-4 flex flex-col">
+      <div className="lg:hidden mt-5">
+        <Logo className="text-[1.4rem] justify-center" />
       </div>
-      <div className="h-full mt-[-2rem] lg:mt-0 flex items-center grow justify-center">
+      <div className="flex justify-center items-center grow">
         <AuthFormContainer mode="signup" />
       </div>
     </div>
