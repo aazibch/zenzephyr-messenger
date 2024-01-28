@@ -9,7 +9,7 @@ const HomePage = () => {
 
   return (
     <div className="flex h-full">
-      <section className="lg:flex hidden items-center justify-center basis-1/2 border-r p-4">
+      <section className="lg:flex hidden items-center justify-center basis-1/2 border-r border-gray-300 p-4">
         <AppIntro />
       </section>
       <section className="grow">
