@@ -14,7 +14,7 @@ All images are stored using [Cloudinary](https://cloudinary.com/)'s SDK.
 
 ## Demo
 
-The demo can be accessed at https://zephy-messenger.onrender.com.
+The demo can be accessed at https://zephyr-messenger.onrender.com/.
 
 You can log into the application using the following credentials:
 
