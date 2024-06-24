@@ -71,6 +71,4 @@ const handleError = (
   sendError(err as AppError, req, res);
 };
 
-//TODO: Is looking for JWT errors necessary?
-
 export default handleError;
